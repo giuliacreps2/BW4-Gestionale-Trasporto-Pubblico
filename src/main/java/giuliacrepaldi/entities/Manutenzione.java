@@ -17,16 +17,16 @@ public class Manutenzione {
     private UUID id;
 
     @ManyToOne
-    @JoinColumn(name = "mezzo_di_trasporto_id")
+    @JoinColumn(name = "mezzo_di_trasporto_id", nullable = false)
     private MezzoTrasporto mezzoTrasporto;
 
-    @Column(name = "data_inizio_manutenzione")
+    @Column(name = "data_inizio_manutenzione", nullable = false)
     private LocalDate dataInizioManutenzione;
 
-    @Column(name = "data_fine_manutenzione")
+    @Column(name = "data_fine_manutenzione", nullable = false)
     private LocalDate dataFineManutenzione;
 
-    @Column(name = "costo_manutenzione")
+    @Column(name = "costo_manutenzione", nullable = false)
     private int manutenzione;
 
     protected Manutenzione (){}

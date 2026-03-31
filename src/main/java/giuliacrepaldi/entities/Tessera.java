@@ -49,6 +49,10 @@ public class Tessera {
         this.dataFineTessera = dataFineTessera;
     }
 
+    public UUID getId() {
+        return id;
+    }
+
     public List<Abbonamento> getAbbonamenti() {
         return abbonamenti;
     }
