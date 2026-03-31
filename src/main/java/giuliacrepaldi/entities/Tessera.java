@@ -9,12 +9,14 @@ import java.util.List;
 import java.util.UUID;
 
 @Entity
-@Table(name = "tessera")
+@Table(name = "tessere")
 public class Tessera {
 
     @Id
     @GeneratedValue
 
+    @Column(name = "tessera_id")
+    private UUID id;
     @OneToMany(mappedBy = "tessera_id")
     private List <Abbonamento> abbonamenti = new ArrayList<>();
 
@@ -38,7 +40,11 @@ public class Tessera {
 
     protected Tessera(){}
 
-    public Tessera(LocalDate dataInizioTessera, LocalDate dataFineTessera) {
+    public Tessera(Utente utente, LocalDate dataInizioTessera, LocalDate dataFineTessera) {
+        if (dataInizioTessera.isAfter(dataFineTessera)) {
+            throw new IllegalArgumentException("La data di inizio deve essere precedente alla data di fine");
+        }
+        this.utente = utente;
         this.dataInizioTessera = dataInizioTessera;
         this.dataFineTessera = dataFineTessera;
     }

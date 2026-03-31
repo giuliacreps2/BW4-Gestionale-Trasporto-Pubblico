@@ -6,7 +6,7 @@ import jakarta.persistence.*;
 import java.util.UUID;
 
 @Entity
-@Table(name = "utente")
+@Table(name = "utenti")
 public class Utente {
 
     @Id
@@ -32,24 +32,24 @@ public class Utente {
         this.email = email;
     }
 
-    public void setId(UUID id) {
-        this.id = id;
+    public UUID getId() {
+        return id;
     }
 
-    public void setNome(String nome) {
-        this.nome = nome;
+    public String getNome() {
+        return nome;
     }
 
-    public void setCognome(String cognome) {
-        this.cognome = cognome;
+    public String getCognome() {
+        return cognome;
     }
 
-    public void setEta(int eta) {
-        this.eta = eta;
+    public int getEta() {
+        return eta;
     }
 
-    public void setEmail(String email) {
-        this.email = email;
+    public String getEmail() {
+        return email;
     }
 
     @Override
