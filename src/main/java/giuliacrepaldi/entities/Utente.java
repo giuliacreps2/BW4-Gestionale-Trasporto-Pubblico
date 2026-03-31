@@ -14,12 +14,16 @@ public class Utente {
 
     @Column(name = "utente_id")
     private UUID id;
+
     @Column(name = "nome", nullable = false)
     private String nome;
+
     @Column(name = "cognome", nullable = false)
     private String cognome;
+
     @Column(name = "età", nullable = false)
     private int eta;
+
     @Column(name = "email", nullable = false)
     private String email;
 
