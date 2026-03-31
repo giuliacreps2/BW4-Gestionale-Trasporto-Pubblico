@@ -1,4 +1,9 @@
 package giuliacrepaldi.exceptions.biglietto;
 
-public class BigliettoNonTrovatoException {
+import giuliacrepaldi.interfaces.exceptions.BigliettoGenericException;
+
+public class BigliettoNonTrovatoException extends RuntimeException implements BigliettoGenericException {
+    public BigliettoNonTrovatoException(String targetIdentifier, String identifierType) {
+        super("Il biglietto con tipo identificatore " + identifierType + " con valore " + targetIdentifier + " non è stato trovato.");
+    }
 }
