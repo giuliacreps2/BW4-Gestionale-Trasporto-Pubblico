@@ -14,7 +14,7 @@ public class AppTest {
     public static void main(String[] args) {
 
 
-        System.out.println("*** SUCCESSFULLY CONNECTED TO DB (in AppTest) ***");
+        System.out.println("*** SUCCESSFULLY CONNECTED TO DB (in AppTest di Francesco) ***");
 
         EntityManager entityManager = entityManagerFactory.createEntityManager();
 
