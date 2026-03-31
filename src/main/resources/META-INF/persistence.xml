@@ -19,6 +19,8 @@
     <!-- DEVELOPER: GIUSEPPE   -->
     <persistence-unit name="GESTIONALE-TRASPORTI-PUBBLICI-giuseppe">
         <class>giuliacrepaldi.entities.VenditaTrasporto</class>
+        <class>giuliacrepaldi.entities.Biglietto</class>
+<!--        <class>giuliacrepaldi.entities.MezzoTrasporto</class>-->
         <properties>
             <property name="jakarta.persistence.jdbc.url"
                       value="jdbc:postgresql://localhost:5432/GESTIONALE-TRASPORTI-PUBBLICI"/>

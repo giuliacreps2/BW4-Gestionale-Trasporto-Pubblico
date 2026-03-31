@@ -1,5 +1,6 @@
 package giuliacrepaldi.tests.giuseppe;
 
+import giuliacrepaldi.entities.VenditaTrasporto;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.Persistence;
@@ -19,7 +20,7 @@ public class AppTest {
         EntityManager entityManager = entityManagerFactory.createEntityManager();
 
         // ****** DAO
-        
+
 
 
         entityManager.close();
