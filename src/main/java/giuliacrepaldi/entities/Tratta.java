@@ -1,7 +1,6 @@
 package giuliacrepaldi.entities;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
@@ -10,10 +9,18 @@ import java.util.UUID;
 @Table(name = "tratte")
 
 public class Tratta {
+    @Id
+    @GeneratedValue
+
+    @Column(name = "tratta_id")
     private UUID trattaId;
+    @Column(name = "tratta_km", nullable = false)
     private double trattaKm;
+    @Column(name = "tempo_previsto_tratta", nullable = false)
     private LocalDateTime tempoPrevistoTratta;
+    @Column(name = "zona_partenza", nullable = false)
     private String zonaPartenza;
+    @Column(name = "zona_arrivo", nullable = false)
     private String zonaArrivo;
 
     //Costruttore

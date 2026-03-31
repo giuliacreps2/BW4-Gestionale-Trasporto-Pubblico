@@ -1,13 +1,20 @@
 package giuliacrepaldi.entities;
 
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
 
+@Entity
+@Table(name = "percorrenze")
+
 public class Percorrenza {
+    @Id
+    @GeneratedValue
+
+    @Column(name = "percorrenza_id", nullable = false)
     private UUID percorrenzaId;
+    @Column(name = "tempo_effettivo_percorrenza", nullable = false)
     private LocalDateTime tempoEffettivoPercorrenza;
 
     @ManyToOne
@@ -28,7 +35,7 @@ public class Percorrenza {
         this.tempoEffettivoPercorrenza = tempoEffettivoPercorrenza;
     }
 
-    //Getter e Setter
+    //Getter & Setter
     public UUID getPercorrenzaId() {
         return percorrenzaId;
     }
