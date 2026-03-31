@@ -48,13 +48,18 @@ public class Biglietto extends VenditaTrasporto  {
         
         this.obliteratoDa = obliteratoDa;
         
+        LocalDate dataOggi = LocalDate.now();
+        
         // imposta data inizio obliterazione
-        this.dataEOraInizioObliterazione = LocalDate.now();
+        this.dataEOraInizioObliterazione = dataOggi;
         
         // imposta data fine obliterazione
-        this.dataEOraFineObliterazione =  LocalDate.now().plusDays(1);
+        this.dataEOraFineObliterazione =  calcolaDataEOraFineObliterazioneDa(dataOggi);
     }
     
+    private LocalDate calcolaDataEOraFineObliterazioneDa(LocalDate dataInizio) {
+        return dataInizio.plusDays(1);
+    }
 
     public LocalDate getDataEOraFineObliterazione() {
         return dataEOraFineObliterazione;
