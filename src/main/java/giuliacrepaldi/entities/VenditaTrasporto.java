@@ -1,80 +1,71 @@
 package giuliacrepaldi.entities;
 
-import giuliacrepaldi.enums.CategoriaProdoto;
+import giuliacrepaldi.exceptions.miscellanous.QuantitaNonValidaException;
+import giuliacrepaldi.helpers.Validatore;
 import jakarta.persistence.*;
 
-import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.UUID;
 
 @Entity
 @Table(name = "vendite_trasporti")
-public class VenditaTrasporto {
+@Inheritance(strategy = InheritanceType.JOINED)
+// che tipo di vendita? biglietti, abbonamenti, tessere
+@DiscriminatorColumn(name = "categoria_prodotto")
+public abstract class VenditaTrasporto {
 
     @Id
     @GeneratedValue
+    @Column(name = "vendita_trasporto_id")
     private UUID venditaTrasportoId;
-
+    
     @ManyToOne
     @JoinColumn(name = "punto_emissione_id", nullable = false)
     private PuntoEmissione puntoEmissione;
-
-    @Enumerated(EnumType.STRING)
+    
     @Column(nullable = false)
-    private CategoriaProdotto categoriaProdotto;
-
-    @Column(nullable = false, precision = 10, scale = 2)
-    private BigDecimal prezzo;
-
-    @Column(nullable = false)
+    private double prezzo;
+    
+    @Column(name = "data_vendita", nullable = false)
     private LocalDate dataVendita;
+    
+    protected VenditaTrasporto() {}
 
-    public VenditaTrasporto() {
-    }
-    public VenditaTrasporto(PuntoEmissione puntoEmissione, CategoriaProdotto categoriaProdotto, BigDecimal prezzo, LocalDate dataVendita) {
+    public VenditaTrasporto(PuntoEmissione puntoEmissione, double prezzo) {
         this.puntoEmissione = puntoEmissione;
-        this.categoriaProdotto = categoriaProdotto;
+        // verifica che quantità sia valida
+        if(!Validatore.eQuantitaValida(prezzo)) {
+            throw new QuantitaNonValidaException(prezzo);
+        }
         this.prezzo = prezzo;
-        this.dataVendita = dataVendita;
+        this.dataVendita = LocalDate.now();
     }
-    public UUID getVenditaTrasportoId() {
-        return venditaTrasportoId;
-    }
-    public void setVenditaTrasportoId(UUID venditaTrasportoId) {
-        this.venditaTrasportoId = venditaTrasportoId;
-    }
-    public PuntoEmissione getPuntoEmissione() {
-        return puntoEmissione;
-    }
-    public void setPuntoEmissione(PuntoEmissione puntoEmissione) {
-        this.puntoEmissione = puntoEmissione;
-    }
-    public CategoriaProdotto getCategoriaProdotto() {
-        return categoriaProdotto;
-    }
-    public void setCategoriaProdotto(CategoriaProdotto categoriaProdotto) {
-        this.categoriaProdotto = categoriaProdotto;
-    }
-    public BigDecimal getPrezzo() {
-        return prezzo;
-    }
-    public void setPrezzo(BigDecimal prezzo) {
-        this.prezzo = prezzo;
-    }
+
     public LocalDate getDataVendita() {
         return dataVendita;
     }
-    public void setDataVendita(LocalDate dataVendita) {
-        this.dataVendita = dataVendita;
+    
+
+    public double getPrezzo() {
+        return prezzo;
     }
+    
+
+    public UUID getVenditaTrasportoId() {
+        return venditaTrasportoId;
+    }
+    
+
+    public PuntoEmissione getPuntoEmissione() {
+        return puntoEmissione;
+    }
+
     @Override
     public String toString() {
         return "VenditaTrasporto{" +
-                "venditaTrasportoId=" + venditaTrasportoId +
-                ", puntoEmissione=" + (puntoEmissione != null ? puntoEmissione.getPuntoEmissioneId() : null) +
-                ", categoriaProdotto=" + categoriaProdotto +
-                ", prezzo=" + prezzo +
+                "prezzo=" + prezzo +
                 ", dataVendita=" + dataVendita +
+                ", venditaTrasportoId=" + venditaTrasportoId +
                 '}';
     }
 }

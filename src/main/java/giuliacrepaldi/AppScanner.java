@@ -1,4 +1,4 @@
-package giuliacrepaldi.programs;
+package giuliacrepaldi;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
