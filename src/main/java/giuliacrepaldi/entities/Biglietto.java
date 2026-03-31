@@ -35,7 +35,11 @@ public class Biglietto extends VenditaTrasporto  {
         return obliteratoDa;
     }
 
-    public void setObliteratoDa(MezzoTrasporto obliteratoDa) {
+    /**
+     * Modifica questo biglietto e lo imposta come obliterato.
+     * Imposta anche le date di inizio e fine obliterazione.
+     */
+    public void setObliteratoDa(MezzoTrasporto obliteratoDa) throws BigliettoGiaObliteratoException {
         // se il biglietto è stato già obliterato, non 
         // può essere di nuovo obliterato
         if(this.obliteratoDa != null) {
@@ -44,13 +48,18 @@ public class Biglietto extends VenditaTrasporto  {
         
         this.obliteratoDa = obliteratoDa;
         
+        LocalDate dataOggi = LocalDate.now();
+        
         // imposta data inizio obliterazione
-        this.dataEOraInizioObliterazione = LocalDate.now();
+        this.dataEOraInizioObliterazione = dataOggi;
         
         // imposta data fine obliterazione
-        this.dataEOraFineObliterazione = LocalDate.now().plusDays(1);
+        this.dataEOraFineObliterazione =  calcolaDataEOraFineObliterazioneDa(dataOggi);
     }
-
+    
+    private LocalDate calcolaDataEOraFineObliterazioneDa(LocalDate dataInizio) {
+        return dataInizio.plusDays(1);
+    }
 
     public LocalDate getDataEOraFineObliterazione() {
         return dataEOraFineObliterazione;
