@@ -3,8 +3,9 @@
              xmlns="http://xmlns.jcp.org/xml/ns/persistence"
              xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence http://xmlns.jcp.org/xml/ns/persistence/persistence_2_2.xsd">
 
+    <!-- APP   -->
     <persistence-unit name="GESTIONALE-TRASPORTI-PUBBLICI">
-        <class></class>
+        <!-- <class>giuliacrepaldi.entities.VenditaTrasporto</class>-->
         <properties>
             <property name="jakarta.persistence.jdbc.url"
                       value="jdbc:postgresql://localhost:5432/GESTIONALE-TRASPORTI-PUBBLICI"/>
@@ -14,4 +15,58 @@
             <property name="hibernate.hbm2ddl.auto" value="update"/>
         </properties>
     </persistence-unit>
+    
+    <!-- DEVELOPER: GIUSEPPE   -->
+    <persistence-unit name="GESTIONALE-TRASPORTI-PUBBLICI-giuseppe">
+        <class>giuliacrepaldi.entities.VenditaTrasporto</class>
+        <properties>
+            <property name="jakarta.persistence.jdbc.url"
+                      value="jdbc:postgresql://localhost:5432/GESTIONALE-TRASPORTI-PUBBLICI"/>
+            <property name="jakarta.persistence.jdbc.user" value="postgres"/>
+            <property name="jakarta.persistence.jdbc.password" value="1234"/>
+            <property name="jakarta.persistence.jdbc.driver" value="org.postgresql.Driver"/>
+            <property name="hibernate.hbm2ddl.auto" value="update"/>
+        </properties>
+    </persistence-unit>
+
+    <!-- DEVELOPER: GIULIA   -->
+    <persistence-unit name="GESTIONALE-TRASPORTI-PUBBLICI-giulia">
+    <!-- <class>giuliacrepaldi.entities.VenditaTrasporto</class>-->
+        <properties>
+            <property name="jakarta.persistence.jdbc.url"
+                      value="jdbc:postgresql://localhost:5432/GESTIONALE-TRASPORTI-PUBBLICI"/>
+            <property name="jakarta.persistence.jdbc.user" value="postgres"/>
+            <property name="jakarta.persistence.jdbc.password" value="1234"/>
+            <property name="jakarta.persistence.jdbc.driver" value="org.postgresql.Driver"/>
+            <property name="hibernate.hbm2ddl.auto" value="update"/>
+        </properties>
+    </persistence-unit>
+
+    <!-- DEVELOPER: CRISTIAN   -->
+    <persistence-unit name="GESTIONALE-TRASPORTI-PUBBLICI-cristian">
+        <!-- <class>giuliacrepaldi.entities.VenditaTrasporto</class>-->
+        <properties>
+            <property name="jakarta.persistence.jdbc.url"
+                      value="jdbc:postgresql://localhost:5432/GESTIONALE-TRASPORTI-PUBBLICI"/>
+            <property name="jakarta.persistence.jdbc.user" value="postgres"/>
+            <property name="jakarta.persistence.jdbc.password" value="1234"/>
+            <property name="jakarta.persistence.jdbc.driver" value="org.postgresql.Driver"/>
+            <property name="hibernate.hbm2ddl.auto" value="update"/>
+        </properties>
+    </persistence-unit>
+
+    <!-- DEVELOPER: FRANCESCO   -->
+    <persistence-unit name="GESTIONALE-TRASPORTI-PUBBLICI-francesco">
+        <!-- <class>giuliacrepaldi.entities.VenditaTrasporto</class>-->
+        <properties>
+            <property name="jakarta.persistence.jdbc.url"
+                      value="jdbc:postgresql://localhost:5432/GESTIONALE-TRASPORTI-PUBBLICI"/>
+            <property name="jakarta.persistence.jdbc.user" value="postgres"/>
+            <property name="jakarta.persistence.jdbc.password" value="1234"/>
+            <property name="jakarta.persistence.jdbc.driver" value="org.postgresql.Driver"/>
+            <property name="hibernate.hbm2ddl.auto" value="update"/>
+        </properties>
+    </persistence-unit>
+    
+    
 </persistence>

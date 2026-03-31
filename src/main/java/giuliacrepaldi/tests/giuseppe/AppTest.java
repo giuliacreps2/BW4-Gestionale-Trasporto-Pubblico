@@ -1,4 +1,4 @@
-package giuliacrepaldi.programs;
+package giuliacrepaldi.tests.giuseppe;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
@@ -9,7 +9,7 @@ import jakarta.persistence.Persistence;
 // e fai gli esperimenti che ti interessano     
 public class AppTest {
 
-    private static final EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("GESTIONALE-TRASPORTI-PUBBLICI");
+    private static final EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("GESTIONALE-TRASPORTI-PUBBLICI-giuseppe");
     
     public static void main(String[] args) {
 
@@ -19,7 +19,7 @@ public class AppTest {
         EntityManager entityManager = entityManagerFactory.createEntityManager();
 
         // ****** DAO
-
+        
 
 
         entityManager.close();
