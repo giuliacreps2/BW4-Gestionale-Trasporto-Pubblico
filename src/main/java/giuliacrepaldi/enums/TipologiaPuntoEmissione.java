@@ -1,4 +1,6 @@
 package giuliacrepaldi.enums;
 
-public class TipologiaPuntoEmissione {
+public enum TipologiaPuntoEmissione {
+    DISTRIBUTORE_AUTOMATICO,
+    RIVENDITORE_AUTORIZZATO
 }
