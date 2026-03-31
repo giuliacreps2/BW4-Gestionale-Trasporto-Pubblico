@@ -77,5 +77,14 @@ public class Abbonamento extends VenditaTrasporto {
     public TipoAbbonamento getTipoAbbonamento() {
         return tipoAbbonamento;
     }
-    
+
+    @Override
+    public String toString() {
+        return "Abbonamento{" +
+                "tipoAbbonamento=" + tipoAbbonamento +
+                ", dataFineAbbonamento=" + dataFineAbbonamento +
+                ", attivo=" + attivo +
+                ", dataInizioAbbonamento=" + dataInizioAbbonamento +
+                '}';
+    }
 }

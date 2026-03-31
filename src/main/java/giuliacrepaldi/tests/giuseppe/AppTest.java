@@ -1,5 +1,6 @@
 package giuliacrepaldi.tests.giuseppe;
 
+import giuliacrepaldi.entities.Biglietto;
 import giuliacrepaldi.entities.VenditaTrasporto;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
@@ -21,7 +22,8 @@ public class AppTest {
 
         // ****** DAO
 
-
+        // Biglietto biglietto1 = new Biglietto();
+        
 
         entityManager.close();
         entityManagerFactory.close();
