@@ -15,7 +15,7 @@
             <property name="hibernate.hbm2ddl.auto" value="update"/>
         </properties>
     </persistence-unit>
-    
+
     <!-- DEVELOPER: GIUSEPPE   -->
     <persistence-unit name="GESTIONALE-TRASPORTI-PUBBLICI-giuseppe">
         <class>giuliacrepaldi.entities.VenditaTrasporto</class>
@@ -40,7 +40,16 @@
 
     <!-- DEVELOPER: GIULIA   -->
     <persistence-unit name="GESTIONALE-TRASPORTI-PUBBLICI-giulia">
-    <!-- <class>giuliacrepaldi.entities.VenditaTrasporto</class>-->
+        <class>giuliacrepaldi.entities.VenditaTrasporto</class>
+        <class>giuliacrepaldi.entities.Biglietto</class>
+        <class>giuliacrepaldi.entities.Abbonamento</class>
+        <class>giuliacrepaldi.entities.PuntoEmissione</class>
+        <class>giuliacrepaldi.entities.MezzoTrasporto</class>
+        <class>giuliacrepaldi.entities.Manutenzione</class>
+        <class>giuliacrepaldi.entities.Tessera</class>
+        <class>giuliacrepaldi.entities.Utente</class>
+        <class>giuliacrepaldi.entities.Tratta</class>
+        <class>giuliacrepaldi.entities.Percorrenza</class>
         <properties>
             <property name="jakarta.persistence.jdbc.url"
                       value="jdbc:postgresql://localhost:5432/GESTIONALE-TRASPORTI-PUBBLICI"/>
@@ -77,6 +86,6 @@
             <property name="hibernate.hbm2ddl.auto" value="update"/>
         </properties>
     </persistence-unit>
-    
-    
+
+
 </persistence>

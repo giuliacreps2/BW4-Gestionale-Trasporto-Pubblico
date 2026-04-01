@@ -16,7 +16,7 @@ public class Percorrenza {
     private UUID percorrenzaId;
     @Column(name = "tempo_effettivo_percorrenza", nullable = false)
     private Long tempoEffettivoPercorrenza;
-    @Column(name = "data_percorrenza", nullable = true)
+    @Column(name = "data_percorrenza")
     private LocalDateTime dataPercorrenza;
 
     @ManyToOne
@@ -36,9 +36,11 @@ public class Percorrenza {
         this.tempoEffettivoPercorrenza = tempoEffettivoPercorrenza;
     }
 
-    public Percorrenza(Long tempoEffettivoPercorrenza, LocalDateTime dataPercorrenza) {
+    public Percorrenza(Long tempoEffettivoPercorrenza, LocalDateTime dataPercorrenza, Tratta tratta, MezzoTrasporto mezzoTrasporto) {
         this.tempoEffettivoPercorrenza = tempoEffettivoPercorrenza;
         this.dataPercorrenza = dataPercorrenza;
+        this.tratta = tratta;
+        this.mezzoTrasporto = mezzoTrasporto;
     }
 
     //Getter & Setter

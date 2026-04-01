@@ -1,7 +1,7 @@
 package giuliacrepaldi.dao;
 
 import giuliacrepaldi.entities.Tratta;
-import giuliacrepaldi.exceptions.tratta.TrattaNonTrovata;
+import giuliacrepaldi.exceptions.tratta.TrattaNonTrovataException;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
 import jakarta.persistence.Query;
@@ -21,6 +21,7 @@ public class TratteDAO {
     //1. save tratta
     public void saveTratta(Tratta tratta) {
         EntityTransaction transaction = em.getTransaction();
+        transaction.begin();
         em.persist(tratta);
         transaction.commit();
         System.out.println("Tratta salvata con successo!");
@@ -28,16 +29,23 @@ public class TratteDAO {
 
     public void update(Tratta tratta) {
         EntityTransaction transaction = em.getTransaction();
+        transaction.begin();
+        em.merge(tratta);
+        transaction.commit();
     }
 
     public void delete(Tratta tratta) {
         EntityTransaction transaction = em.getTransaction();
+        transaction.begin();
+        em.remove(em.contains(tratta) ? tratta : em.merge(tratta));
+        transaction.commit();
     }
 
     //2. findById trova tratta
     public Tratta findTrattaById(UUID trattaId) {
+        if (trattaId == null) throw new TrattaNonTrovataException(trattaId);
         Tratta found = em.find(Tratta.class, UUID.fromString(String.valueOf(trattaId)));
-        if (found == null) throw new TrattaNonTrovata(trattaId);
+        if (found == null) throw new TrattaNonTrovataException(trattaId);
         return found;
     }
 

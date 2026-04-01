@@ -9,20 +9,24 @@ public class MezziTrasportoDAO {
 
     private final EntityManager em;
 
-    public MezziTrasportoDAO(EntityManager em){
+    public MezziTrasportoDAO(EntityManager em) {
         this.em = em;
     }
 
-    public void save(MezzoTrasporto newMezzoTrasporto) throws MezzoTrasportoSalvataggioException{
+    public void save(MezzoTrasporto newMezzoTrasporto) throws MezzoTrasportoSalvataggioException {
         EntityTransaction transaction = em.getTransaction();
 
         try {
-        transaction.begin();
+            transaction.begin();
 
-        em.persist(newMezzoTrasporto);
+            em.persist(newMezzoTrasporto);
 
-        transaction.commit();
+            transaction.commit();
+            System.out.println("Il mezzo di trasporto è stato salvato con successo");
         } catch (Exception e) {
+            if (transaction.isActive()) {
+                transaction.rollback();
+            }
             throw new MezzoTrasportoSalvataggioException(newMezzoTrasporto);
         }
     }

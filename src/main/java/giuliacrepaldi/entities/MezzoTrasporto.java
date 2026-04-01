@@ -1,10 +1,9 @@
 package giuliacrepaldi.entities;
 
 
+import giuliacrepaldi.enums.TipoMezzo;
 import jakarta.persistence.*;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.UUID;
 
 @Entity
@@ -15,6 +14,10 @@ public class MezzoTrasporto {
     @GeneratedValue
     @Column(name = "mezzo_di_trasporto_id")
     private UUID mezzoDiTrasportoId;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "tipo_mezzo", nullable = false)
+    private TipoMezzo tipoMezzo;
 
     // @OneToMany(mappedBy = "mezzo_id")
     // private List <Manutenzione> manutenzioni = new ArrayList<>();
@@ -28,11 +31,27 @@ public class MezzoTrasporto {
     // @OneToMany(mappedBy = "mezzo_di_trasporto_id")
     // private List <Percorrenza> percorrenze = new ArrayList<>();
 
-    public MezzoTrasporto (){}
+    //Costruttore
+    public MezzoTrasporto() {
+    }
 
+    public MezzoTrasporto(TipoMezzo tipoMezzo) {
+        this.tipoMezzo = tipoMezzo;
+    }
+
+    //Getter & Setter
     public UUID getMezzoDiTrasportoId() {
         return mezzoDiTrasportoId;
     }
+
+    public TipoMezzo getTipoMezzo() {
+        return tipoMezzo;
+    }
+
+    public void setTipoMezzo(TipoMezzo tipoMezzo) {
+        this.tipoMezzo = tipoMezzo;
+    }
+
 
     // public List<Manutenzione> getManutenzioni() {
     //     return manutenzioni;

@@ -1,11 +1,16 @@
 package giuliacrepaldi.dao;
 
+import giuliacrepaldi.entities.MezzoTrasporto;
 import giuliacrepaldi.entities.Percorrenza;
-import giuliacrepaldi.exceptions.tratta.TrattaNonTrovata;
+import giuliacrepaldi.entities.Tratta;
+import giuliacrepaldi.exceptions.mezzo_trasporto.MezzoTrasportoNonTrovatoException;
+import giuliacrepaldi.exceptions.percorrenza.PercorrenzaNonTrovataException;
+import giuliacrepaldi.exceptions.tratta.TrattaNonTrovataException;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
 import jakarta.persistence.Query;
 
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
@@ -17,15 +22,13 @@ public class PercorrenzeDAO {
         this.em = em;
     }
 
-    // Un amministratore del sistema deve poter calcolare il tempo medio effettivo di percorrenza
-    // di una tratta da parte di un mezzo.
-    //TEMPO MEDIO EFFETTIVO
-
     //Metodi
 
     //1. save(Percorrenza p)
     public void savePercorrenza(Percorrenza percorrenza) {
+
         EntityTransaction transaction = em.getTransaction();
+        transaction.begin();
         em.persist(percorrenza);
         transaction.commit();
         System.out.println("Percorrenza salvata con successo");
@@ -33,53 +36,43 @@ public class PercorrenzeDAO {
 
     //2. findById(UUID id)
     public Percorrenza findPercorrenzaById(UUID percorrenzaId) {
-        Percorrenza found = em.find(Percorrenza.class, UUID.fromString(String.valueOf(percorrenzaId)));
-        if (found == null) throw new TrattaNonTrovata(percorrenzaId);
+        Percorrenza found = em.find(Percorrenza.class, percorrenzaId);
+        if (found == null) throw new PercorrenzaNonTrovataException(percorrenzaId);
         return found;
     }
 
     //3. findByMezzo(UUID mezzoId)
     public List<Percorrenza> findPercorrenzaByMezzo(UUID Id) {
-        if (Id == null) {
-            System.out.println("Percorrenza non trovata");
-            return null;
-        }
-        Query query = em.createQuery("SELECT p FROM Percorrenza p WHERE p.mezzoTrasportoId.Id", Percorrenza.class);
-        query.setParameter("Id", Id);
+        if (Id == null) throw new PercorrenzaNonTrovataException(Id);
+        Query query = em.createQuery("SELECT p FROM Percorrenza p WHERE p.mezzoTrasporto.mezzoDiTrasportoId = :mezzoId", Percorrenza.class);
+        query.setParameter("mezzoId", Id);
         List<Percorrenza> percorrenzeMezzi = query.getResultList();
         return percorrenzeMezzi;
     }
 
     //4. findByTratta(UUID trattaId)
     public List<Percorrenza> findPercorrenzaByTratta(UUID trattaId) {
-        if (trattaId == null) {
-            System.out.println("Percorrenza non trovata");
-            return null;
-        }
-        Query query = em.createQuery("SELECT p FROM Percorrenza p WHERE p.trattaId.trattaId", Percorrenza.class);
+        if (trattaId == null) throw new PercorrenzaNonTrovataException(trattaId);
+        Query query = em.createQuery("SELECT p FROM Percorrenza p WHERE p.tratta.trattaId = :trattaId", Percorrenza.class);
         query.setParameter("trattaId", trattaId);
         List<Percorrenza> percorrenzeTratte = query.getResultList();
         return percorrenzeTratte;
     }
 
     //5. findByMezzoAndTratta(UUID mezzoId, UUID trattaId)
-//    public List<Percorrenza> findByMezzoAndTratta(UUID mezzoId, UUID trattaId) {
-//
-//    }
+
+    //5.1 update e delete non sono previsti dal progetto, perchè la percorrenza
+    //è un dato storico che non muta, ma potrebbero
+    //essere implementati in caso di errore di
+    //inserimento da parte dell'amministratore.
 
 
     //6. countByMezzoAndTratta(UUID mezzoId, UUID trattaId) --->  quante volte un mezzo ha percorso una tratta
     public Long countByMezzoAndTratta(UUID Id, UUID trattaId, LocalDateTime dataInizio, LocalDateTime dataFine) {
-        if (trattaId == null) {
-            System.out.println("Tratta non trovata");
-            return null;
-        }
-        if (Id == null) {
-            System.out.println("Mezzo non trovato");
-            return null;
-        }
+        if (trattaId == null) throw new PercorrenzaNonTrovataException(trattaId);
+        if (Id == null) throw new PercorrenzaNonTrovataException(Id);
         Query query = em.createQuery("SELECT COUNT(p) FROM Percorrenza p WHERE p.mezzoTrasportoId.id = :mezzoId AND p.trattaId.trattaId = :trattaId AND p.dataPercorrenza BETWEEN :dataInizio AND :dataFine");
-        query.setParameter("Id", Id);
+        query.setParameter("mezzoId", Id);
         query.setParameter("trattaId", trattaId);
         query.setParameter("dataInizio", dataInizio);
         query.setParameter("dataFine", dataFine);
@@ -91,11 +84,19 @@ public class PercorrenzeDAO {
     //dato un mezzo x
     //data una tratta y
     //calcola il tempo medio effettivo di una percorrenza
-    public Double getTempoMedioEffettivo(UUID mezzoId, UUID trattaId, double trattaKm) {
-        Query query = em.createQuery("SELECT p FROM Percorrenza p WHERE p.mezzoTrasportoId.id = :mezzoId AND p.trattaId.trattaId = :trattaId ");
-        query.setParameter("mezzoTrasportoId", mezzoId);
-        query.setParameter("trattaId", trattaId);
-        return trattaKm / categoriaMezzo;
+    public Duration getTempoMedioEffettivo(UUID mezzoId, UUID trattaId) {
+        MezzoTrasporto mezzo = em.find(MezzoTrasporto.class, mezzoId);
+        if (mezzo == null) throw new MezzoTrasportoNonTrovatoException(mezzoId);
+
+        Tratta tratta = em.find(Tratta.class, trattaId);
+        if (tratta == null) throw new TrattaNonTrovataException(trattaId);
+        double velocità = mezzo.getTipoMezzo().getVelocitàMediaKmh();
+        double distanzaKm = tratta.getTrattaKm();
+
+        double tempoMedio = distanzaKm / velocità;
+        long minuti = Math.round(tempoMedio * 60);
+
+        return Duration.ofMinutes(minuti);
     }
 
 }
