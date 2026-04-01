@@ -1,7 +1,6 @@
 package giuliacrepaldi.entities;
 
 
-import giuliacrepaldi.enums.TipologiaMezzo;
 import jakarta.persistence.*;
 
 import java.util.ArrayList;
@@ -18,61 +17,44 @@ public class MezzoTrasporto {
     @Column(name = "mezzo_di_trasporto_id")
     private UUID id;
 
-    @OneToMany(mappedBy = "mezzo_id")
-    private List <Manutenzione> manutenzioni = new ArrayList<>();
-
-    @OneToMany(mappedBy = "obliterato_da")
-    private List <Biglietto> biglietti = new ArrayList<>();
-
-    @OneToMany(mappedBy = "obliterato_da")
-    private List <Tessera> tessere = new ArrayList<>();
-
-    @OneToMany(mappedBy = "mezzo_di_trasporto_id")
-    private List <Percorrenza> percorrenze = new ArrayList<>();
-
-    @Enumerated(EnumType.STRING)
-    @Column(name = "categoria", nullable = false)
-    private TipologiaMezzo tipologiaMezzo;
+    // @OneToMany(mappedBy = "mezzo_id")
+    // private List <Manutenzione> manutenzioni = new ArrayList<>();
+    //
+    // @OneToMany(mappedBy = "obliteratoDa")
+    // private List <Biglietto> biglietti = new ArrayList<>();
+    //
+    // @OneToMany(mappedBy = "obliterato_da")
+    // private List <Tessera> tessere = new ArrayList<>();
+    //
+    // @OneToMany(mappedBy = "mezzo_di_trasporto_id")
+    // private List <Percorrenza> percorrenze = new ArrayList<>();
 
     protected MezzoTrasporto (){}
-
-    public MezzoTrasporto(TipologiaMezzo tipologiaMezzo) {
-        this.tipologiaMezzo = tipologiaMezzo;
-    }
 
     public UUID getId() {
         return id;
     }
 
-    public TipologiaMezzo getTipologiaMezzo() {
-        return tipologiaMezzo;
-    }
-
-    public List<Manutenzione> getManutenzioni() {
-        return manutenzioni;
-    }
-
-    public List<Biglietto> getBiglietti() {
-        return biglietti;
-    }
-
-    public List<Tessera> getTessere() {
-        return tessere;
-    }
-
-    public List<Percorrenza> getPercorrenze() {
-        return percorrenze;
-    }
+    // public List<Manutenzione> getManutenzioni() {
+    //     return manutenzioni;
+    // }
+    //
+    // public List<Biglietto> getBiglietti() {
+    //     return biglietti;
+    // }
+    //
+    // public List<Tessera> getTessere() {
+    //     return tessere;
+    // }
+    //
+    // public List<Percorrenza> getPercorrenze() {
+    //     return percorrenze;
+    // }
 
     @Override
     public String toString() {
         return "MezzoTrasporto{" +
                 "id=" + id +
-                ", manutenzioni=" + manutenzioni +
-                ", biglietti=" + biglietti +
-                ", tessere=" + tessere +
-                ", percorrenze=" + percorrenze +
-                ", tipologiaMezzo=" + tipologiaMezzo +
                 '}';
     }
 }
