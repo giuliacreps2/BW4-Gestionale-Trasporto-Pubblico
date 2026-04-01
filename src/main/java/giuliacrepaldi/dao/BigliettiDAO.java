@@ -46,25 +46,25 @@ public class BigliettiDAO {
      * Ottieni il totale dei biglietti vidimati sul mezzo di trasporto in input.
      */
     // public int contaBigliettiVidimatiSuMezzoTrasporto(MezzoTrasporto mezzoTrasporto) {
-        
-        // trova i biglietti il cui mezzo di trasporto
-        // su cui sono stati obliterati, è uguale al 
-        // mezzo di trasporto in input. conta quanti
-        // sono questi biglietti.
-        
-        // TypedQuery<Biglietto> query = entityManager.createQuery(
-        //         "SELECT COUNT(b.venditaTrasportoId) AS totale FROM Biglietto b WHERE b.obliteratoDa = :mezzoTrasporto", 
-        //         Biglietto.class
-        // );
-        //
-        // query.setParameter("mezzoTrasporto", mezzoTrasporto);
-        // query.setMaxResults(1);
-        //
-        // // execute query
-        // // Biglietto totaleBiglietti = 
-        //        
-        // query.getSingleResult();
-        
+    //    
+    //     // trova i biglietti il cui mezzo di trasporto
+    //     // su cui sono stati obliterati, è uguale al 
+    //     // mezzo di trasporto in input. conta quanti
+    //     // sono questi biglietti.
+    //    
+    //     TypedQuery<Long> query = entityManager.createQuery(
+    //             "SELECT COUNT(b.venditaTrasportoId) AS totale FROM Biglietto b WHERE b.obliteratoDa = :mezzoTrasporto", 
+    //             Long.class
+    //     );
+    //
+    //     query.setParameter("mezzoTrasporto", mezzoTrasporto);
+    //     query.setMaxResults(1);
+    //
+    //     // execute query
+    //     // Biglietto totaleBiglietti = 
+    //
+    //     query.getSingleResult();
+    //    
     // }
 
     /**
