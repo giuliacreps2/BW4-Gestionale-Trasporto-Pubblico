@@ -52,7 +52,10 @@ public class AppTest {
                 "xyz@gmail.com"
         );
         
+        MezzoTrasporto mezzoTrasporto1 = new MezzoTrasporto();
         
+        
+        // mezziTrasportoDAO.save(mezzoTrasporto1);
         // puntiEmissioneDAO.save(puntoEmissione1);
         // utentiDAO.save(utente1);
         
