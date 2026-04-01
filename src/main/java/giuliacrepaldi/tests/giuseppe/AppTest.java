@@ -8,6 +8,7 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.Persistence;
 
+import javax.swing.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.UUID;
@@ -55,22 +56,28 @@ public class AppTest {
         // puntiEmissioneDAO.save(puntoEmissione1);
         // utentiDAO.save(utente1);
         
-        Utente utente1FromDB = utentiDAO.trovaPerId("f216c1c9-d335-4859-9315-ca82984bd8dc");
-        PuntoEmissione puntoEmissione1FromDB = puntiEmissioneDAO.findById(UUID.fromString("908d932c-e9ab-4c0a-9d04-929f3d7897bd"));
+        // Utente utente1FromDB = utentiDAO.trovaPerId("f216c1c9-d335-4859-9315-ca82984bd8dc");
+        // PuntoEmissione puntoEmissione1FromDB = puntiEmissioneDAO.findById(UUID.fromString("908d932c-e9ab-4c0a-9d04-929f3d7897bd"));
         // PuntoEmissione puntoEmissione1FromDB = puntiEmissioneDAO.findById(UUID.fromString("ea8feaae-62d2-4f5e-a73f-13838321ec58"));
+        Biglietto biglietto1FromDB = bigliettiDAO.trovaPerId("98628bf8-88a8-4968-9621-99bf2c0b0bd2");
+
+        // biglietto1FromDB.setObliteratoDa();
+                
         //
         // System.out.println(puntoEmissione1FromDB);
         // System.out.println(utente1FromDB);
+        // System.out.println(biglietto1FromDB);
+        
 
         // System.out.println(puntoEmissione1FromDB);
 
-        // Tessera
-        Tessera tessera1 = new Tessera(
-                puntoEmissione1FromDB,
-            45.231,
-            utente1FromDB, 
-                LocalDate.now()
-        );
+        // // Tessera
+        // Tessera tessera1 = new Tessera(
+        //         puntoEmissione1FromDB,
+        //     45.231,
+        //     utente1FromDB, 
+        //         LocalDate.now()
+        // );
 
         // System.out.println(tessera1);
         
@@ -88,10 +95,11 @@ public class AppTest {
         //         puntoEmissione1FromDB,
         //         23.45
         // );
-
+        //
         // Abbonamento abbonamento1 = new Abbonamento(
         //        puntoEmissione1FromDB,
-        //         43.23
+        //         43.23,
+        //        
         // );
         
         //
