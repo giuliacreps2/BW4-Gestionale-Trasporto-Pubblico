@@ -15,7 +15,7 @@ public class Percorrenza {
     @Column(name = "percorrenza_id", nullable = false)
     private UUID percorrenzaId;
     @Column(name = "tempo_effettivo_percorrenza", nullable = false)
-    private LocalDateTime tempoEffettivoPercorrenza;
+    private Long tempoEffettivoPercorrenza;
     @Column(name = "data_percorrenza", nullable = true)
     private LocalDateTime dataPercorrenza;
 
@@ -32,12 +32,11 @@ public class Percorrenza {
 
     }
 
-    public Percorrenza(LocalDateTime tempoEffettivoPercorrenza) {
+    public Percorrenza(Long tempoEffettivoPercorrenza) {
         this.tempoEffettivoPercorrenza = tempoEffettivoPercorrenza;
     }
 
-    public Percorrenza(UUID percorrenzaId, LocalDateTime tempoEffettivoPercorrenza, LocalDateTime dataPercorrenza) {
-        this.percorrenzaId = percorrenzaId;
+    public Percorrenza(Long tempoEffettivoPercorrenza, LocalDateTime dataPercorrenza) {
         this.tempoEffettivoPercorrenza = tempoEffettivoPercorrenza;
         this.dataPercorrenza = dataPercorrenza;
     }
@@ -47,11 +46,11 @@ public class Percorrenza {
         return percorrenzaId;
     }
 
-    public LocalDateTime getTempoEffettivoPercorrenza() {
+    public Long getTempoEffettivoPercorrenza() {
         return tempoEffettivoPercorrenza;
     }
 
-    public void setTempoEffettivoPercorrenza(LocalDateTime tempoEffettivoPercorrenza) {
+    public void setTempoEffettivoPercorrenza(Long tempoEffettivoPercorrenza) {
         this.tempoEffettivoPercorrenza = tempoEffettivoPercorrenza;
     }
 
@@ -77,10 +76,6 @@ public class Percorrenza {
                 "percorrenzaId=" + percorrenzaId +
                 ", tempoEffettivoPercorrenza=" + tempoEffettivoPercorrenza +
                 ", dataPercorrenza=" + dataPercorrenza +
-                ", tratta=" + tratta +
-                ", mezzoTrasporto=" + mezzoTrasporto +
-                ", percorrenzaId=" + percorrenzaId +
-                ", tempoEffettivoPercorrenza=" + tempoEffettivoPercorrenza +
                 '}';
     }
 }
