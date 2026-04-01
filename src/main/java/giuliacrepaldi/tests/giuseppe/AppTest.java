@@ -1,10 +1,7 @@
 package giuliacrepaldi.tests.giuseppe;
 
-import giuliacrepaldi.dao.BigliettiDAO;
-import giuliacrepaldi.dao.PuntiEmissioneDAO;
-import giuliacrepaldi.entities.Biglietto;
-import giuliacrepaldi.entities.PuntoEmissione;
-import giuliacrepaldi.entities.VenditaTrasporto;
+import giuliacrepaldi.dao.*;
+import giuliacrepaldi.entities.*;
 import giuliacrepaldi.enums.TipologiaPuntoEmissione;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
@@ -30,15 +27,27 @@ public class AppTest {
         // ****** DAO
         PuntiEmissioneDAO puntiEmissioneDAO = new PuntiEmissioneDAO(entityManager);
         BigliettiDAO bigliettiDAO = new BigliettiDAO(entityManager);
+        AbbonamentiDAO abbonamentiDAO = new AbbonamentiDAO(entityManager);
+        UtentiDAO utentiDAO = new UtentiDAO(entityManager);
+        TessereDAO tessereDAO = new TessereDAO(entityManager);
 
-        PuntoEmissione puntoEmissione1 = new PuntoEmissione(
-                "Roma",
-                TipologiaPuntoEmissione.RIVENDITORE_AUTORIZZATO,
-                true
+        // PuntoEmissione puntoEmissione1 = new PuntoEmissione(
+        //         "Roma",
+        //         TipologiaPuntoEmissione.RIVENDITORE_AUTORIZZATO,
+        //         true
+        // );
+        
+        Utente utente1 = new Utente(
+                "Giuseppe",
+                "Tavella",
+                29,
+                "xyz@gmail.com"
         );
         
         // puntiEmissioneDAO.save(puntoEmissione1);
+        // utentiDAO.save(utente1);
         
+        // Utente utente1FromDB = utentiDAO.
         // PuntoEmissione puntoEmissione1FromDB = puntiEmissioneDAO.findById(UUID.fromString("ea8feaae-62d2-4f5e-a73f-13838321ec58"));
         //
         // System.out.println(puntoEmissione1FromDB);
@@ -48,8 +57,15 @@ public class AppTest {
         //         puntoEmissione1FromDB,
         //         23.45
         // );
+
+        // Abbonamento abbonamento1 = new Abbonamento(
+        //        puntoEmissione1FromDB,
+        //         43.23
+        // );
+        
         //
         // bigliettiDAO.salva(biglietto1);
+        
 
         entityManager.close();
         entityManagerFactory.close();

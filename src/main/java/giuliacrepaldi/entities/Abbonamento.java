@@ -41,12 +41,17 @@ public class Abbonamento extends VenditaTrasporto {
     }
     
     private LocalDate calcolaDataFineAbbonamentoDa(LocalDate dataInizio) {
+        // non è stato definito ancora un tipo abbonamento,
+        // quindi non so come calcolare la sua fine
         if(tipoAbbonamento == null) {
             throw new TipoAbbonamentoNonDefinitoException(this);
         }
+        // abbonamento mensile
         if (tipoAbbonamento == TipoAbbonamento.MENSILE) {
             return dataInizio.plusMonths(1);
-        } else if (tipoAbbonamento == TipoAbbonamento.SETTIMANALE) {
+        }
+        // abbonamento settimanale
+        if (tipoAbbonamento == TipoAbbonamento.SETTIMANALE) {
             return dataInizio.plusWeeks(1);
         }
         throw new RuntimeException("C'è almeno un tipo abbonamento che non è stato coperto.");
