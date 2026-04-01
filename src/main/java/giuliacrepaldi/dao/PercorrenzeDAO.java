@@ -69,16 +69,6 @@ public class PercorrenzeDAO {
 
 
     //6. countByMezzoAndTratta(UUID mezzoId, UUID trattaId) --->  quante volte un mezzo ha percorso una tratta
-//public Integer countByMezzoAndTratta(UUID Id, UUID trattaId) {
-//        //dato un mezzo x
-//        //devo sapere quante volte
-//        //percorre la tratta y
-//    Query query = em.createQuery("SELECT p FROM Percorrenza p WHERE p.Id = :Id AND p.trattaId = :trattaId", Percorrenza.class);
-//    query.setParameter("Id", Id);
-//    query.setParameter("trattaId", trattaId);
-//    return risultato;
-//}
-
     public Long countByMezzoAndTratta(UUID Id, UUID trattaId, LocalDateTime dataInizio, LocalDateTime dataFine) {
         if (trattaId == null) {
             System.out.println("Tratta non trovata");
@@ -98,7 +88,9 @@ public class PercorrenzeDAO {
     }
 
     //7. getTempoMedioEffettivo(UUID mezzoId, UUID trattaId) ---> calcolare il tempo di una percorrenza
+    //dato un mezzo x
+    //data una tratta y
+    //calcola il tempo medio effettivo di una percorrenza
 
-//   s
-
+    
 }
