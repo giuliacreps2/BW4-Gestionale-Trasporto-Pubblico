@@ -64,7 +64,8 @@
 
     <!-- DEVELOPER: FRANCESCO   -->
     <persistence-unit name="GESTIONALE-TRASPORTI-PUBBLICI-francesco">
-        <!-- <class>giuliacrepaldi.entities.VenditaTrasporto</class>-->
+        <class>giuliacrepaldi.entities.PuntoEmissione</class>
+        <class>giuliacrepaldi.entities.VenditaTrasporto</class>
         <properties>
             <property name="jakarta.persistence.jdbc.url"
                       value="jdbc:postgresql://localhost:5432/GESTIONALE-TRASPORTI-PUBBLICI"/>
