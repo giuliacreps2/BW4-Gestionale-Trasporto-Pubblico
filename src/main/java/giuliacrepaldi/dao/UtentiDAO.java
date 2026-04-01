@@ -1,6 +1,7 @@
 package giuliacrepaldi.dao;
 
 import giuliacrepaldi.entities.Utente;
+import giuliacrepaldi.exceptions.utente.UtenteSalvataggioException;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
 
@@ -12,8 +13,10 @@ public class UtentiDAO {
         this.em = em;
     }
 
-    public void save(Utente newUtente){
+    public void save(Utente newUtente) throws UtenteSalvataggioException{
         EntityTransaction transaction = em.getTransaction();
+
+        try {
         transaction.begin();
 
         em.persist(newUtente);
@@ -21,5 +24,8 @@ public class UtentiDAO {
         transaction.commit();
 
         System.out.println("L'utente" + newUtente.getId() + "è stato salvato correttamente!");
+        } catch (Exception e){
+            throw new UtenteSalvataggioException(newUtente);
+        }
     }
 }

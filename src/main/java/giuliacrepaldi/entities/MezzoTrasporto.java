@@ -1,6 +1,7 @@
 package giuliacrepaldi.entities;
 
 
+import giuliacrepaldi.enums.TipologiaMezzo;
 import jakarta.persistence.*;
 
 import java.util.ArrayList;
@@ -29,10 +30,22 @@ public class MezzoTrasporto {
     @OneToMany(mappedBy = "mezzo_di_trasporto_id")
     private List <Percorrenza> percorrenze = new ArrayList<>();
 
+    @Enumerated(EnumType.STRING)
+    @Column(name = "categoria", nullable = false)
+    private TipologiaMezzo tipologiaMezzo;
+
     protected MezzoTrasporto (){}
+
+    public MezzoTrasporto(TipologiaMezzo tipologiaMezzo) {
+        this.tipologiaMezzo = tipologiaMezzo;
+    }
 
     public UUID getId() {
         return id;
+    }
+
+    public TipologiaMezzo getTipologiaMezzo() {
+        return tipologiaMezzo;
     }
 
     public List<Manutenzione> getManutenzioni() {
@@ -59,6 +72,7 @@ public class MezzoTrasporto {
                 ", biglietti=" + biglietti +
                 ", tessere=" + tessere +
                 ", percorrenze=" + percorrenze +
+                ", tipologiaMezzo=" + tipologiaMezzo +
                 '}';
     }
 }

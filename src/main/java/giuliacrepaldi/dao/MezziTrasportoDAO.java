@@ -1,7 +1,7 @@
 package giuliacrepaldi.dao;
 
 import giuliacrepaldi.entities.MezzoTrasporto;
-import giuliacrepaldi.entities.Utente;
+import giuliacrepaldi.exceptions.mezzo_trasporto.MezzoTrasportoSalvataggioException;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
 
@@ -13,14 +13,17 @@ public class MezziTrasportoDAO {
         this.em = em;
     }
 
-    public void save(MezzoTrasporto newMezzoTrasporto){
+    public void save(MezzoTrasporto newMezzoTrasporto) throws MezzoTrasportoSalvataggioException{
         EntityTransaction transaction = em.getTransaction();
+
+        try {
         transaction.begin();
 
         em.persist(newMezzoTrasporto);
 
         transaction.commit();
-
-        System.out.println("Il mezzo di trsporto" + newMezzoTrasporto.getId() + "è stato salvato correttamente!");
+        } catch (Exception e) {
+            throw new MezzoTrasportoSalvataggioException(newMezzoTrasporto);
+        }
     }
 }
