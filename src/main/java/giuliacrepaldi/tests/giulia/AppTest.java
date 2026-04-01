@@ -12,7 +12,6 @@ import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.Persistence;
 
 import java.time.LocalDateTime;
-import java.util.UUID;
 
 // qui vanno diversi tipi di test e sperimenti 
 // ad esempio, aggiungi i dati che ti interessano
@@ -59,7 +58,7 @@ public class AppTest {
 //        percorrenzeDAO.findPercorrenzaByMezzo(UUID.fromString("e4385a13-a720-4090-a747-ff30117a743a"));
 //        percorrenzeDAO.findPercorrenzaByTratta(UUID.fromString("b65152a2-782e-4402-8dcd-71de776baef0"));
 
-        tratteDAO.findTrattaById(UUID.fromString("b65152a2-782e-4402-8dcd-71de776baef0"));
+        // tratteDAO.findTrattaById(UUID.fromString("b65152a2-782e-4402-8dcd-71de776baef0"));
 //        tratteDAO.findByZonaPartenza("Piaz");
 //        tratteDAO.findAll();
 
@@ -67,8 +66,10 @@ public class AppTest {
 //        tratta1.setTrattaKm(15.0);
 //        tratteDAO.update(tratta1);
 
-        tratteDAO.delete(tratta1);
-        tratteDAO.delete(tratta2);
+
+        //System.out.println("UUID tratta1: " + tratta1.getTrattaId());
+        //tratteDAO.deleteById(UUID.fromString("35ff4907-0f3b-44b1-b254-931efb755929"));
+
 
         entityManager.close();
         entityManagerFactory.close();

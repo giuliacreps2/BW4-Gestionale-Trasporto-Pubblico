@@ -9,7 +9,7 @@ import java.util.UUID;
 
 public class Tratta {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.UUID)
 
     @Column(name = "tratta_id")
     private UUID trattaId;

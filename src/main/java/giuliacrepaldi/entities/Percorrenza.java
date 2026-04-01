@@ -10,7 +10,7 @@ import java.util.UUID;
 
 public class Percorrenza {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.UUID)
 
     @Column(name = "percorrenza_id", nullable = false)
     private UUID percorrenzaId;

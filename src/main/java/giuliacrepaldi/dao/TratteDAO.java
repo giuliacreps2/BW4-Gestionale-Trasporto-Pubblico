@@ -23,6 +23,7 @@ public class TratteDAO {
         EntityTransaction transaction = em.getTransaction();
         transaction.begin();
         em.persist(tratta);
+        em.flush();
         transaction.commit();
         System.out.println("Tratta salvata con successo!");
     }
@@ -35,13 +36,17 @@ public class TratteDAO {
         System.out.println("Tratta modificata con successo. Riepilogo info aggiornate: " + tratta);
     }
 
-    public void delete(Tratta tratta) {
-        EntityTransaction transaction = em.getTransaction();
-        transaction.begin();
-        em.remove(em.contains(tratta) ? tratta : em.merge(tratta));
-        transaction.commit();
-        System.out.println("Tratta eliminata con successo!");
-    }
+    //Per cancellare la tratta è necessario cancellare prima la percorrenza collegata attraverso
+    //il metodo deleteById apposito
+//    public void deleteById(UUID trattaId) {
+//        EntityTransaction transaction = em.getTransaction();
+//        transaction.begin();
+//        Tratta tratta = em.find(Tratta.class, trattaId);
+//        if (tratta == null) throw new TrattaNonTrovataException(trattaId);
+//        em.remove(tratta);
+//        transaction.commit();
+//        System.out.println("Tratta eliminata con successo!");
+//    }
 
     //2. findById trova tratta
     public Tratta findTrattaById(UUID trattaId) {
