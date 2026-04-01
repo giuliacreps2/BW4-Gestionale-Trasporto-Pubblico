@@ -2,7 +2,7 @@ package giuliacrepaldi.entities;
 
 import jakarta.persistence.*;
 
-import java.time.LocalDateTime;
+import java.time.Duration;
 import java.util.UUID;
 
 @Entity
@@ -17,7 +17,7 @@ public class Tratta {
     @Column(name = "tratta_km", nullable = false)
     private double trattaKm;
     @Column(name = "tempo_previsto_tratta", nullable = false)
-    private LocalDateTime tempoPrevistoTratta;
+    private Duration tempoPrevistoTratta;
     @Column(name = "zona_partenza", nullable = false)
     private String zonaPartenza;
     @Column(name = "zona_arrivo", nullable = false)
@@ -28,7 +28,7 @@ public class Tratta {
 
     }
 
-    public Tratta(UUID trattaId, double trattaKm, LocalDateTime tempoPrevistoTratta, String zonaPartenza, String zonaArrivo) {
+    public Tratta(UUID trattaId, double trattaKm, Duration tempoPrevistoTratta, String zonaPartenza, String zonaArrivo) {
         this.trattaId = trattaId;
         this.trattaKm = trattaKm;
         this.tempoPrevistoTratta = tempoPrevistoTratta;
@@ -51,11 +51,11 @@ public class Tratta {
         this.trattaKm = trattaKm;
     }
 
-    public LocalDateTime getTempoPrevistoTratta() {
+    public Duration getTempoPrevistoTratta() {
         return tempoPrevistoTratta;
     }
 
-    public void setTempoPrevistoTratta(LocalDateTime tempoPrevistoTratta) {
+    public void setTempoPrevistoTratta(Duration tempoPrevistoTratta) {
         this.tempoPrevistoTratta = tempoPrevistoTratta;
     }
 
