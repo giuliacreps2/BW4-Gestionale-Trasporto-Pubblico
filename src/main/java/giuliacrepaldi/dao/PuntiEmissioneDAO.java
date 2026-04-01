@@ -16,18 +16,14 @@ public class PuntiEmissioneDAO {
 
     public void save(PuntoEmissione puntoEmissione) {
         EntityTransaction transaction = entityManager.getTransaction();
-
         try {
             transaction.begin();
             entityManager.persist(puntoEmissione);
             transaction.commit();
             System.out.println("Punto di emissione salvato correttamente.");
         } catch (Exception e) {
-            if (transaction.isActive()) {
-                transaction.rollback();
-            }
-            System.out.println("Errore durante il salvataggio del punto di emissione.");
-            e.printStackTrace();
+            if (transaction.isActive()) transaction.rollback();
+            System.err.println("Errore durante il salvataggio: " + e.getMessage());
         }
     }
 
@@ -36,7 +32,7 @@ public class PuntiEmissioneDAO {
     }
 
     public void findByIdAndDelete(UUID id) {
-        PuntoEmissione puntoEmissioneTrovato = entityManager.find(PuntoEmissione.class, id);
+        PuntoEmissione puntoEmissioneTrovato = this.findById(id);
 
         if (puntoEmissioneTrovato == null) {
             System.out.println("Punto di emissione non trovato.");
@@ -44,23 +40,19 @@ public class PuntiEmissioneDAO {
         }
 
         EntityTransaction transaction = entityManager.getTransaction();
-
         try {
             transaction.begin();
             entityManager.remove(puntoEmissioneTrovato);
             transaction.commit();
             System.out.println("Punto di emissione eliminato correttamente.");
         } catch (Exception e) {
-            if (transaction.isActive()) {
-                transaction.rollback();
-            }
-            System.out.println("Errore durante l'eliminazione del punto di emissione.");
-            e.printStackTrace();
+            if (transaction.isActive()) transaction.rollback();
+            System.err.println("Errore durante l'eliminazione: " + e.getMessage());
         }
     }
 
     public void findByIdAndUpdate(UUID id, String nuovaCitta, boolean nuovoStato) {
-        PuntoEmissione puntoEmissioneTrovato = entityManager.find(PuntoEmissione.class, id);
+        PuntoEmissione puntoEmissioneTrovato = this.findById(id);
 
         if (puntoEmissioneTrovato == null) {
             System.out.println("Punto di emissione non trovato.");
@@ -68,7 +60,6 @@ public class PuntiEmissioneDAO {
         }
 
         EntityTransaction transaction = entityManager.getTransaction();
-
         try {
             transaction.begin();
             puntoEmissioneTrovato.setCitta(nuovaCitta);
@@ -77,11 +68,8 @@ public class PuntiEmissioneDAO {
             transaction.commit();
             System.out.println("Punto di emissione aggiornato correttamente.");
         } catch (Exception e) {
-            if (transaction.isActive()) {
-                transaction.rollback();
-            }
-            System.out.println("Errore durante l'aggiornamento del punto di emissione.");
-            e.printStackTrace();
+            if (transaction.isActive()) transaction.rollback();
+            System.err.println("Errore durante l'aggiornamento: " + e.getMessage());
         }
     }
 }
