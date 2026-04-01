@@ -61,6 +61,8 @@ public class Percorrenza {
 
     public void setDataPercorrenza(LocalDateTime dataPercorrenza) {
         this.dataPercorrenza = dataPercorrenza;
+    }
+
     public MezzoTrasporto getMezzoTrasporto() {
         return mezzoTrasporto;
     }

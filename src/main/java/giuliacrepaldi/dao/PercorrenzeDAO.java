@@ -78,7 +78,7 @@ public class PercorrenzeDAO {
             System.out.println("Mezzo non trovato");
             return null;
         }
-        Query query = em.createQuery("SELECT COUNT(p) FROM Percorrenza p WHERE p.mezzoTrasportoId.Id AND p.trattaId.trattaId AND p.dataPercorrenza BETWEEN :dataInizio AND :dataFine ");
+        Query query = em.createQuery("SELECT COUNT(p) FROM Percorrenza p WHERE p.mezzoTrasportoId.id = :mezzoId AND p.trattaId.trattaId = :trattaId AND p.dataPercorrenza BETWEEN :dataInizio AND :dataFine");
         query.setParameter("Id", Id);
         query.setParameter("trattaId", trattaId);
         query.setParameter("dataInizio", dataInizio);
@@ -91,6 +91,11 @@ public class PercorrenzeDAO {
     //dato un mezzo x
     //data una tratta y
     //calcola il tempo medio effettivo di una percorrenza
+    public Double getTempoMedioEffettivo(UUID mezzoId, UUID trattaId, double trattaKm) {
+        Query query = em.createQuery("SELECT p FROM Percorrenza p WHERE p.mezzoTrasportoId.id = :mezzoId AND p.trattaId.trattaId = :trattaId ");
+        query.setParameter("mezzoTrasportoId", mezzoId);
+        query.setParameter("trattaId", trattaId);
+        return trattaKm / categoriaMezzo;
+    }
 
-    
 }
