@@ -36,13 +36,17 @@ public class AppTest {
                 true
         );
         
+        // puntiEmissioneDAO.save(puntoEmissione1);
+        
+        
+        
         
         Biglietto biglietto1 = new Biglietto(
                 puntoEmissione1,
                 23.45
         );
         
-            
+        // bigliettiDAO.salva(biglietto1);
 
         entityManager.close();
         entityManagerFactory.close();
