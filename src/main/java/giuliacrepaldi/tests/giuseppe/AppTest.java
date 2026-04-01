@@ -25,11 +25,16 @@ public class AppTest {
         EntityManager entityManager = entityManagerFactory.createEntityManager();
 
         // ****** DAO
-        PuntiEmissioneDAO puntiEmissioneDAO = new PuntiEmissioneDAO(entityManager);
-        BigliettiDAO bigliettiDAO = new BigliettiDAO(entityManager);
         AbbonamentiDAO abbonamentiDAO = new AbbonamentiDAO(entityManager);
-        UtentiDAO utentiDAO = new UtentiDAO(entityManager);
+        BigliettiDAO bigliettiDAO = new BigliettiDAO(entityManager);
+        ManutenzioniDAO manutenzioniDAO = new ManutenzioniDAO(entityManager);
+        MezziTrasportoDAO mezziTrasportoDAO = new MezziTrasportoDAO(entityManager);
+        PercorrenzeDAO percorrenzeDAO = new PercorrenzeDAO(entityManager);
+        PuntiEmissioneDAO puntiEmissioneDAO = new PuntiEmissioneDAO(entityManager);
         TessereDAO tessereDAO = new TessereDAO(entityManager);
+        TratteDAO tratteDAO = new TratteDAO(entityManager);
+        UtentiDAO utentiDAO = new UtentiDAO(entityManager);
+        VenditeTrasportiDAO venditeTrasportiDAO = new VenditeTrasportiDAO(entityManager);
 
         // PuntoEmissione puntoEmissione1 = new PuntoEmissione(
         //         "Roma",
@@ -44,13 +49,16 @@ public class AppTest {
                 "xyz@gmail.com"
         );
         
+        // Tessera
+        
         // puntiEmissioneDAO.save(puntoEmissione1);
         // utentiDAO.save(utente1);
         
-        // Utente utente1FromDB = utentiDAO.
+        Utente utente1FromDB = utentiDAO.trovaPerId("5a0a1f36-3833-496b-8332-044c511d9260");
         // PuntoEmissione puntoEmissione1FromDB = puntiEmissioneDAO.findById(UUID.fromString("ea8feaae-62d2-4f5e-a73f-13838321ec58"));
         //
         // System.out.println(puntoEmissione1FromDB);
+        System.out.println(utente1FromDB);
         //
         //
         // Biglietto biglietto1 = new Biglietto(
@@ -65,6 +73,8 @@ public class AppTest {
         
         //
         // bigliettiDAO.salva(biglietto1);
+        
+        
         
 
         entityManager.close();
