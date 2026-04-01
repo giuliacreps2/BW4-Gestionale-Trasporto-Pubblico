@@ -19,7 +19,7 @@ public class TratteDAO {
 
     //Metodi
     //1. save tratta
-    public void save(Tratta tratta) {
+    public void saveTratta(Tratta tratta) {
         EntityTransaction transaction = em.getTransaction();
         em.persist(tratta);
         transaction.commit();
@@ -35,7 +35,7 @@ public class TratteDAO {
     }
 
     //2. findById trova tratta
-    public Tratta findById(UUID trattaId) {
+    public Tratta findTrattaById(UUID trattaId) {
         Tratta found = em.find(Tratta.class, UUID.fromString(String.valueOf(trattaId)));
         if (found == null) throw new TrattaNonTrovata(trattaId);
         return found;
