@@ -65,6 +65,8 @@ public class AppTest {
         Biglietto biglietto1FromDB = bigliettiDAO.trovaPerId("98628bf8-88a8-4968-9621-99bf2c0b0bd2");
 
         // biglietto1FromDB.setObliteratoDa();
+        
+        
                 
         //
         // System.out.println(puntoEmissione1FromDB);

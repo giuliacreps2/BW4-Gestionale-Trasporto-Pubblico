@@ -15,10 +15,9 @@ public class AppScanner {
 
         EntityManager entityManager = entityManagerFactory.createEntityManager();
         
-        // ****** DAO
-                
         
-
+        
+        
         entityManager.close();
         entityManagerFactory.close();
     }
