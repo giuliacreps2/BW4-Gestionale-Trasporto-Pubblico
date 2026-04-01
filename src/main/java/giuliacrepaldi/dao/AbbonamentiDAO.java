@@ -1,12 +1,9 @@
 package giuliacrepaldi.dao;
 
 import giuliacrepaldi.entities.Abbonamento;
-import giuliacrepaldi.entities.Tessera;
-import giuliacrepaldi.entities.Utente;
 import giuliacrepaldi.exceptions.abbonamento.AbbonamentoNonTrovatoException;
 import giuliacrepaldi.exceptions.abbonamento.AbbonamentoSalvataggioException;
 import giuliacrepaldi.exceptions.miscellanous.StringaUUIDNonValidaException;
-import giuliacrepaldi.exceptions.tessera.TesseraNonTrovataException;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
 import jakarta.persistence.NoResultException;
@@ -50,16 +47,16 @@ public class AbbonamentiDAO {
         return found;
     }
 
-    public boolean abbonamentoValido(String abbonamentoId) {
+    public boolean abbonamentoValido(String abbonamentoId) throws AbbonamentoNonTrovatoException, StringaUUIDNonValidaException{
         Abbonamento abbonamento = findAbbonamentoById(abbonamentoId);
 
         String jpql = "SELECT a FROM Abbonamento a " +
-                "WHERE a.id = :id " +
+                "WHERE a.venditaTrasportoId = :venditaTrasportoId " +
                 "AND CURRENT_DATE BETWEEN a.tessera.dataInizioTessera AND a.tessera.dataFineTessera";
 
         try {
             em.createQuery(jpql, Abbonamento.class)
-                    .setParameter("id", abbonamentoId.getId())
+                    .setParameter("venditaTrasportoId", abbonamento.getVenditaTrasportoId())
                     .getSingleResult();
             return true;
         } catch (NoResultException e) {
