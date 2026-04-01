@@ -1,31 +1,66 @@
 package giuliacrepaldi.dao;
 
 import giuliacrepaldi.entities.Utente;
+import giuliacrepaldi.exceptions.miscellanous.StringaUUIDNonValidaException;
+import giuliacrepaldi.exceptions.utente.UtenteNonTrovatoException;
 import giuliacrepaldi.exceptions.utente.UtenteSalvataggioException;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
+import jakarta.persistence.NoResultException;
+import jakarta.persistence.TypedQuery;
+
+import java.util.UUID;
 
 public class UtentiDAO {
 
-    private final EntityManager em;
+    private final EntityManager entityManager;
 
-    public UtentiDAO(EntityManager em){
-        this.em = em;
+    public UtentiDAO(EntityManager entityManager){
+        this.entityManager = entityManager;
     }
 
     public void save(Utente newUtente) throws UtenteSalvataggioException{
-        EntityTransaction transaction = em.getTransaction();
+        EntityTransaction transaction = entityManager.getTransaction();
 
         try {
-        transaction.begin();
-
-        em.persist(newUtente);
-
-        transaction.commit();
-
-        System.out.println("L'utente" + newUtente.getId() + "è stato salvato correttamente!");
-        } catch (Exception e){
+            
+            transaction.begin();
+            entityManager.persist(newUtente);
+            transaction.commit();
+        
+        } catch (RuntimeException e){
             throw new UtenteSalvataggioException(newUtente);
         }
     }
+
+    /**
+     * Trova un utente per il suo ID.
+     */
+    public Utente trovaPerId(String targetId) throws UtenteNonTrovatoException, StringaUUIDNonValidaException {
+        
+        TypedQuery<Utente> query = entityManager.createQuery(
+                "SELECT u FROM Utente u WHERE u.utenteId = :targetId",
+                Utente.class
+        );
+
+        // pass query params
+        try {
+
+            query.setParameter("targetId", UUID.fromString(targetId));
+
+        } catch(IllegalArgumentException ex) {
+            throw new StringaUUIDNonValidaException(targetId);
+        }
+
+        // execute query
+        try {
+
+            return query.getSingleResult();
+
+        } catch (NoResultException ex) {
+            throw new UtenteNonTrovatoException(targetId, "ID");
+        }
+        
+    }
+    
 }

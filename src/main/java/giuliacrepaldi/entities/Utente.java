@@ -11,9 +11,8 @@ public class Utente {
 
     @Id
     @GeneratedValue
-
     @Column(name = "utente_id")
-    private UUID id;
+    private UUID utenteId;
 
     @Column(name = "nome", nullable = false)
     private String nome;
@@ -36,8 +35,8 @@ public class Utente {
         this.email = email;
     }
 
-    public UUID getId() {
-        return id;
+    public UUID getUtenteId() {
+        return utenteId;
     }
 
     public String getNome() {
@@ -59,7 +58,7 @@ public class Utente {
     @Override
     public String toString() {
         return "Utente{" +
-                "id=" + id +
+                "utenteId=" + utenteId +
                 ", nome='" + nome + '\'' +
                 ", cognome='" + cognome + '\'' +
                 ", eta=" + eta +

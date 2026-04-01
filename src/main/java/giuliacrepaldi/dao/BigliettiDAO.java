@@ -2,14 +2,20 @@ package giuliacrepaldi.dao;
 
 import giuliacrepaldi.entities.Biglietto;
 import giuliacrepaldi.entities.MezzoTrasporto;
+import giuliacrepaldi.entities.Tessera;
 import giuliacrepaldi.exceptions.biglietto.BigliettoGiaObliteratoException;
+import giuliacrepaldi.exceptions.biglietto.BigliettoNonTrovatoException;
+import giuliacrepaldi.exceptions.miscellanous.StringaUUIDNonValidaException;
+import giuliacrepaldi.exceptions.tessera.TesseraNonTrovataException;
 import giuliacrepaldi.exceptions.vendita_trasporto.VenditaTrasportoSalvataggioException;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
+import jakarta.persistence.NoResultException;
 import jakarta.persistence.TypedQuery;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.UUID;
 
 public class BigliettiDAO {
 
@@ -17,6 +23,36 @@ public class BigliettiDAO {
     
     public BigliettiDAO(EntityManager entityManager) {
         this.entityManager = entityManager;
+    }
+
+    /**
+     * Trova un biglietto per ID.
+     */
+    public Biglietto trovaPerId(String targetId) throws BigliettoNonTrovatoException, StringaUUIDNonValidaException {
+
+        TypedQuery<Biglietto> query = entityManager.createQuery(
+                "SELECT b FROM Biglietto b WHERE b.venditaTrasportoId = :targetId",
+                Biglietto.class
+        );
+
+        // pass query params
+        try {
+
+            query.setParameter("targetId", UUID.fromString(targetId));
+
+        } catch(IllegalArgumentException ex) {
+            throw new StringaUUIDNonValidaException(targetId);
+        }
+
+        // execute query
+        try {
+
+            return query.getSingleResult();
+
+        } catch (NoResultException ex) {
+            throw new BigliettoNonTrovatoException(targetId, "ID");
+        }
+
     }
 
     /**

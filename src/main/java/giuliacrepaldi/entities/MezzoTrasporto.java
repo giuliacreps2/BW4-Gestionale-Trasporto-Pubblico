@@ -13,9 +13,8 @@ public class MezzoTrasporto {
 
     @Id
     @GeneratedValue
-
     @Column(name = "mezzo_di_trasporto_id")
-    private UUID id;
+    private UUID mezzoDiTrasportoId;
 
     // @OneToMany(mappedBy = "mezzo_id")
     // private List <Manutenzione> manutenzioni = new ArrayList<>();
@@ -29,10 +28,10 @@ public class MezzoTrasporto {
     // @OneToMany(mappedBy = "mezzo_di_trasporto_id")
     // private List <Percorrenza> percorrenze = new ArrayList<>();
 
-    protected MezzoTrasporto (){}
+    public MezzoTrasporto (){}
 
-    public UUID getId() {
-        return id;
+    public UUID getMezzoDiTrasportoId() {
+        return mezzoDiTrasportoId;
     }
 
     // public List<Manutenzione> getManutenzioni() {
@@ -54,7 +53,7 @@ public class MezzoTrasporto {
     @Override
     public String toString() {
         return "MezzoTrasporto{" +
-                "id=" + id +
+                "mezzoDiTrasportoId=" + mezzoDiTrasportoId +
                 '}';
     }
 }
