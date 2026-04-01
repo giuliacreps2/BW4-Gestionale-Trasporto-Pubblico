@@ -11,6 +11,7 @@ import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.Persistence;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 // qui vanno diversi tipi di test e sperimenti 
 // ad esempio, aggiungi i dati che ti interessano
@@ -38,14 +39,16 @@ public class AppTest {
         
         // puntiEmissioneDAO.save(puntoEmissione1);
         
-        
-        
-        
-        Biglietto biglietto1 = new Biglietto(
-                puntoEmissione1,
-                23.45
-        );
-        
+        // PuntoEmissione puntoEmissione1FromDB = puntiEmissioneDAO.findById(UUID.fromString("ea8feaae-62d2-4f5e-a73f-13838321ec58"));
+        //
+        // System.out.println(puntoEmissione1FromDB);
+        //
+        //
+        // Biglietto biglietto1 = new Biglietto(
+        //         puntoEmissione1FromDB,
+        //         23.45
+        // );
+        //
         // bigliettiDAO.salva(biglietto1);
 
         entityManager.close();
