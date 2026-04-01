@@ -36,17 +36,20 @@ public class PercorrenzeDAO {
 
     //2. findById(UUID id)
     public Percorrenza findPercorrenzaById(UUID percorrenzaId) {
+        if (percorrenzaId == null) throw new PercorrenzaNonTrovataException(percorrenzaId);
         Percorrenza found = em.find(Percorrenza.class, percorrenzaId);
         if (found == null) throw new PercorrenzaNonTrovataException(percorrenzaId);
+        System.out.println("Percorrenza con id: " + percorrenzaId + " trovata con successo");
         return found;
     }
 
     //3. findByMezzo(UUID mezzoId)
-    public List<Percorrenza> findPercorrenzaByMezzo(UUID Id) {
-        if (Id == null) throw new PercorrenzaNonTrovataException(Id);
+    public List<Percorrenza> findPercorrenzaByMezzo(UUID mezzoDiTrasportoId) {
+        if (mezzoDiTrasportoId == null) throw new PercorrenzaNonTrovataException(mezzoDiTrasportoId);
         Query query = em.createQuery("SELECT p FROM Percorrenza p WHERE p.mezzoTrasporto.mezzoDiTrasportoId = :mezzoId", Percorrenza.class);
-        query.setParameter("mezzoId", Id);
+        query.setParameter("mezzoId", mezzoDiTrasportoId);
         List<Percorrenza> percorrenzeMezzi = query.getResultList();
+        System.out.println("Lista percorrenze in base al mezzo: " + percorrenzeMezzi.size() + " trovata con successo");
         return percorrenzeMezzi;
     }
 
@@ -56,6 +59,7 @@ public class PercorrenzeDAO {
         Query query = em.createQuery("SELECT p FROM Percorrenza p WHERE p.tratta.trattaId = :trattaId", Percorrenza.class);
         query.setParameter("trattaId", trattaId);
         List<Percorrenza> percorrenzeTratte = query.getResultList();
+        System.out.println("Lista percorrenze in base alla tratta: " + percorrenzeTratte.size() + " trovata con successo");
         return percorrenzeTratte;
     }
 
@@ -68,15 +72,16 @@ public class PercorrenzeDAO {
 
 
     //6. countByMezzoAndTratta(UUID mezzoId, UUID trattaId) --->  quante volte un mezzo ha percorso una tratta
-    public Long countByMezzoAndTratta(UUID Id, UUID trattaId, LocalDateTime dataInizio, LocalDateTime dataFine) {
+    public Long countByMezzoAndTratta(UUID mezzoDiTrasportoId, UUID trattaId, LocalDateTime dataInizio, LocalDateTime dataFine) {
         if (trattaId == null) throw new PercorrenzaNonTrovataException(trattaId);
-        if (Id == null) throw new PercorrenzaNonTrovataException(Id);
-        Query query = em.createQuery("SELECT COUNT(p) FROM Percorrenza p WHERE p.mezzoTrasportoId.id = :mezzoId AND p.trattaId.trattaId = :trattaId AND p.dataPercorrenza BETWEEN :dataInizio AND :dataFine");
-        query.setParameter("mezzoId", Id);
+        if (mezzoDiTrasportoId == null) throw new PercorrenzaNonTrovataException(mezzoDiTrasportoId);
+        Query query = em.createQuery("SELECT COUNT(p) FROM Percorrenza p WHERE p.mezzoTrasporto.mezzoDiTrasportoId = :mezzoId AND p.tratta.trattaId = :trattaId AND p.dataPercorrenza BETWEEN :dataInizio AND :dataFine");
+        query.setParameter("mezzoId", mezzoDiTrasportoId);
         query.setParameter("trattaId", trattaId);
         query.setParameter("dataInizio", dataInizio);
         query.setParameter("dataFine", dataFine);
         Long volte = (Long) query.getSingleResult();
+        System.out.println("Il numero di volte che un mezzo percorre la tratta è " + volte);
         return volte;
     }
 
@@ -95,8 +100,9 @@ public class PercorrenzeDAO {
 
         double tempoMedio = distanzaKm / velocità;
         long minuti = Math.round(tempoMedio * 60);
-
+        System.out.println("Il tempo medio effettivo è di: " + minuti + " minuti");
         return Duration.ofMinutes(minuti);
+
     }
 
 }

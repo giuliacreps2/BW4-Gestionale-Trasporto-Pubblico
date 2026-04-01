@@ -32,6 +32,7 @@ public class TratteDAO {
         transaction.begin();
         em.merge(tratta);
         transaction.commit();
+        System.out.println("Tratta modificata con successo. Riepilogo info aggiornate: " + tratta);
     }
 
     public void delete(Tratta tratta) {
@@ -39,6 +40,7 @@ public class TratteDAO {
         transaction.begin();
         em.remove(em.contains(tratta) ? tratta : em.merge(tratta));
         transaction.commit();
+        System.out.println("Tratta eliminata con successo!");
     }
 
     //2. findById trova tratta
@@ -46,6 +48,7 @@ public class TratteDAO {
         if (trattaId == null) throw new TrattaNonTrovataException(trattaId);
         Tratta found = em.find(Tratta.class, UUID.fromString(String.valueOf(trattaId)));
         if (found == null) throw new TrattaNonTrovataException(trattaId);
+        System.out.println("Tratta trovata con successo. Ecco tutte le info: " + found);
         return found;
     }
 
@@ -54,6 +57,7 @@ public class TratteDAO {
         Query query = em.createQuery("SELECT t FROM Tratta t WHERE LOWER(t.zonaPartenza) LIKE LOWER(:zona)");
         query.setParameter("zona", "%" + zonaPartenza + "%");
         List<Tratta> zonePartenza = query.getResultList();
+        System.out.println("Ecco la lista delle tratte: " + zonePartenza);
         return zonePartenza;
     }
 
@@ -62,6 +66,7 @@ public class TratteDAO {
     public List<Tratta> findAll() {
         Query query = em.createQuery("SELECT t FROM Tratta t");
         List<Tratta> tutteLeTratte = query.getResultList();
+        System.out.println("Ecco la lista completa delle tratte: " + tutteLeTratte);
         return tutteLeTratte;
     }
 

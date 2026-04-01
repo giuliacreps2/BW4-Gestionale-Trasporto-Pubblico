@@ -12,6 +12,7 @@ import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.Persistence;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 // qui vanno diversi tipi di test e sperimenti 
 // ad esempio, aggiungi i dati che ti interessano
@@ -45,13 +46,29 @@ public class AppTest {
 
         // ****** DAO
 
-        mezzoTrasportoDAO.save(mezzo1);
-        mezzoTrasportoDAO.save(mezzo2);
-        tratteDAO.saveTratta(tratta1);
-        tratteDAO.saveTratta(tratta2);
-        percorrenzeDAO.savePercorrenza(percorrenza1);
-        percorrenzeDAO.savePercorrenza(percorrenza2);
+//        mezzoTrasportoDAO.save(mezzo1);
+//        mezzoTrasportoDAO.save(mezzo2);
+//        tratteDAO.saveTratta(tratta1);
+//        tratteDAO.saveTratta(tratta2);
+//        percorrenzeDAO.savePercorrenza(percorrenza1);
+//        percorrenzeDAO.savePercorrenza(percorrenza2);
+//
+//        percorrenzeDAO.getTempoMedioEffettivo(UUID.fromString("30c1bee1-ceab-4873-85dd-7d88d56e6ebc"), UUID.fromString("389d2efe-1404-4f49-a865-4ef3be8f665f"));
+//        percorrenzeDAO.countByMezzoAndTratta(UUID.fromString("30c1bee1-ceab-4873-85dd-7d88d56e6ebc"), UUID.fromString("389d2efe-1404-4f49-a865-4ef3be8f665f"), LocalDateTime.of(2026, 3, 15, 8, 30), LocalDateTime.of(2026, 3, 15, 15, 30));
+//        percorrenzeDAO.findPercorrenzaById(UUID.fromString("b3020f15-de53-40b2-bc97-c46f6200e5f9"));
+//        percorrenzeDAO.findPercorrenzaByMezzo(UUID.fromString("e4385a13-a720-4090-a747-ff30117a743a"));
+//        percorrenzeDAO.findPercorrenzaByTratta(UUID.fromString("b65152a2-782e-4402-8dcd-71de776baef0"));
 
+        tratteDAO.findTrattaById(UUID.fromString("b65152a2-782e-4402-8dcd-71de776baef0"));
+//        tratteDAO.findByZonaPartenza("Piaz");
+//        tratteDAO.findAll();
+
+//        tratta1.setZonaPartenza("Viale Redi");
+//        tratta1.setTrattaKm(15.0);
+//        tratteDAO.update(tratta1);
+
+        tratteDAO.delete(tratta1);
+        tratteDAO.delete(tratta2);
 
         entityManager.close();
         entityManagerFactory.close();
