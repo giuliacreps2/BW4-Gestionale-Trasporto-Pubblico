@@ -1,5 +1,6 @@
 package giuliacrepaldi.entities;
 
+import giuliacrepaldi.exceptions.miscellanous.PrezzoNonValidoException;
 import giuliacrepaldi.exceptions.miscellanous.QuantitaNonValidaException;
 import giuliacrepaldi.helpers.Validatore;
 import jakarta.persistence.*;
@@ -34,8 +35,8 @@ public abstract class VenditaTrasporto {
     public VenditaTrasporto(PuntoEmissione puntoEmissione, double prezzo) {
         this.puntoEmissione = puntoEmissione;
         // verifica che quantità sia valida
-        if(!Validatore.eQuantitaValida(prezzo)) {
-            throw new QuantitaNonValidaException(prezzo);
+        if(!Validatore.ePrezzoValido(prezzo)) {
+            throw new PrezzoNonValidoException(prezzo);
         }
         this.prezzo = prezzo;
         this.dataVendita = LocalDate.now();

@@ -1,7 +1,11 @@
 package giuliacrepaldi.tests.giuseppe;
 
+import giuliacrepaldi.dao.BigliettiDAO;
+import giuliacrepaldi.dao.PuntiEmissioneDAO;
 import giuliacrepaldi.entities.Biglietto;
+import giuliacrepaldi.entities.PuntoEmissione;
 import giuliacrepaldi.entities.VenditaTrasporto;
+import giuliacrepaldi.enums.TipologiaPuntoEmissione;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.Persistence;
@@ -23,11 +27,22 @@ public class AppTest {
         EntityManager entityManager = entityManagerFactory.createEntityManager();
 
         // ****** DAO
+        PuntiEmissioneDAO puntiEmissioneDAO = new PuntiEmissioneDAO(entityManager);
+        BigliettiDAO bigliettiDAO = new BigliettiDAO(entityManager);
 
-        // Biglietto biglietto1 = new Biglietto();
-
-        System.out.println(LocalDateTime.now());
+        PuntoEmissione puntoEmissione1 = new PuntoEmissione(
+                "Roma",
+                TipologiaPuntoEmissione.RIVENDITORE_AUTORIZZATO,
+                true
+        );
         
+        
+        Biglietto biglietto1 = new Biglietto(
+                puntoEmissione1,
+                23.45
+        );
+        
+            
 
         entityManager.close();
         entityManagerFactory.close();
