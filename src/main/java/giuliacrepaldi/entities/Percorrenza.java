@@ -16,14 +16,16 @@ public class Percorrenza {
     private UUID percorrenzaId;
     @Column(name = "tempo_effettivo_percorrenza", nullable = false)
     private LocalDateTime tempoEffettivoPercorrenza;
+    @Column(name = "data_percorrenza", nullable = true)
+    private LocalDateTime dataPercorrenza;
 
     @ManyToOne
-    @JoinColumn(name = "tratta_id")
-    private Tratta trattaId;
+    @JoinColumn(name = "tratta")
+    private Tratta tratta;
 
     @ManyToOne
     @JoinColumn(name = "mezzo_di_trasporto")
-    private MezzoTrasporto mezzoTrasportoId;
+    private MezzoTrasporto mezzoTrasporto;
 
     //Costruttore
     public Percorrenza() {
@@ -33,6 +35,12 @@ public class Percorrenza {
     public Percorrenza(UUID percorrenzaId, LocalDateTime tempoEffettivoPercorrenza) {
         this.percorrenzaId = percorrenzaId;
         this.tempoEffettivoPercorrenza = tempoEffettivoPercorrenza;
+    }
+
+    public Percorrenza(UUID percorrenzaId, LocalDateTime tempoEffettivoPercorrenza, LocalDateTime dataPercorrenza) {
+        this.percorrenzaId = percorrenzaId;
+        this.tempoEffettivoPercorrenza = tempoEffettivoPercorrenza;
+        this.dataPercorrenza = dataPercorrenza;
     }
 
     //Getter & Setter
@@ -46,5 +54,24 @@ public class Percorrenza {
 
     public void setTempoEffettivoPercorrenza(LocalDateTime tempoEffettivoPercorrenza) {
         this.tempoEffettivoPercorrenza = tempoEffettivoPercorrenza;
+    }
+
+    public LocalDateTime getDataPercorrenza() {
+        return dataPercorrenza;
+    }
+
+    public void setDataPercorrenza(LocalDateTime dataPercorrenza) {
+        this.dataPercorrenza = dataPercorrenza;
+    }
+
+    @Override
+    public String toString() {
+        return "Percorrenza{" +
+                "percorrenzaId=" + percorrenzaId +
+                ", tempoEffettivoPercorrenza=" + tempoEffettivoPercorrenza +
+                ", dataPercorrenza=" + dataPercorrenza +
+                ", tratta=" + tratta +
+                ", mezzoTrasporto=" + mezzoTrasporto +
+                '}';
     }
 }

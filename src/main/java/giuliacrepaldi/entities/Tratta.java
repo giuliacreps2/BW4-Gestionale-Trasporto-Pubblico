@@ -2,7 +2,6 @@ package giuliacrepaldi.entities;
 
 import jakarta.persistence.*;
 
-import java.time.Duration;
 import java.util.UUID;
 
 @Entity
@@ -17,7 +16,7 @@ public class Tratta {
     @Column(name = "tratta_km", nullable = false)
     private double trattaKm;
     @Column(name = "tempo_previsto_tratta", nullable = false)
-    private Duration tempoPrevistoTratta;
+    private Long tempoPrevistoTratta;
     @Column(name = "zona_partenza", nullable = false)
     private String zonaPartenza;
     @Column(name = "zona_arrivo", nullable = false)
@@ -28,7 +27,7 @@ public class Tratta {
 
     }
 
-    public Tratta(UUID trattaId, double trattaKm, Duration tempoPrevistoTratta, String zonaPartenza, String zonaArrivo) {
+    public Tratta(UUID trattaId, double trattaKm, Long tempoPrevistoTratta, String zonaPartenza, String zonaArrivo) {
         this.trattaId = trattaId;
         this.trattaKm = trattaKm;
         this.tempoPrevistoTratta = tempoPrevistoTratta;
@@ -51,11 +50,11 @@ public class Tratta {
         this.trattaKm = trattaKm;
     }
 
-    public Duration getTempoPrevistoTratta() {
+    public Long getTempoPrevistoTratta() {
         return tempoPrevistoTratta;
     }
 
-    public void setTempoPrevistoTratta(Duration tempoPrevistoTratta) {
+    public void setTempoPrevistoTratta(Long tempoPrevistoTratta) {
         this.tempoPrevistoTratta = tempoPrevistoTratta;
     }
 
@@ -73,5 +72,16 @@ public class Tratta {
 
     public void setZonaArrivo(String zonaArrivo) {
         this.zonaArrivo = zonaArrivo;
+    }
+
+    @Override
+    public String toString() {
+        return "Tratta{" +
+                "trattaId=" + trattaId +
+                ", trattaKm=" + trattaKm +
+                ", tempoPrevistoTratta=" + tempoPrevistoTratta +
+                ", zonaPartenza='" + zonaPartenza + '\'' +
+                ", zonaArrivo='" + zonaArrivo + '\'' +
+                '}';
     }
 }
