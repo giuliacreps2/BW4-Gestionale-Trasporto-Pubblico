@@ -4,6 +4,7 @@ import giuliacrepaldi.exceptions.biglietto.BigliettoGiaObliteratoException;
 import jakarta.persistence.*;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Entity
@@ -20,10 +21,10 @@ public class Biglietto extends VenditaTrasporto  {
     //  fatto questo, nel metodo setObliteratoDa, va cambiato 
     //  anche l'assegnamento di inizio e fine obliterazione
     @Column(name = "data_e_ora_inizio_obliterazione")
-    private LocalDate dataEOraInizioObliterazione;
+    private LocalDateTime dataEOraInizioObliterazione;
 
     @Column(name = "data_e_ora_fine_obliterazione")
-    private LocalDate dataEOraFineObliterazione;
+    private LocalDateTime dataEOraFineObliterazione;
     
     protected Biglietto() {}
 
@@ -48,25 +49,25 @@ public class Biglietto extends VenditaTrasporto  {
         
         this.obliteratoDa = obliteratoDa;
         
-        LocalDate dataOggi = LocalDate.now();
+        LocalDateTime adesso = LocalDateTime.now();
         
         // imposta data inizio obliterazione
-        this.dataEOraInizioObliterazione = dataOggi;
-        
-        // imposta data fine obliterazione
-        this.dataEOraFineObliterazione =  calcolaDataEOraFineObliterazioneDa(dataOggi);
+        this.dataEOraInizioObliterazione = adesso;
+        //
+        // // imposta data fine obliterazione
+        this.dataEOraFineObliterazione =  calcolaDataEOraFineObliterazioneDa(adesso);
     }
     
-    private LocalDate calcolaDataEOraFineObliterazioneDa(LocalDate dataInizio) {
-        return dataInizio.plusDays(1);
+    private LocalDateTime calcolaDataEOraFineObliterazioneDa(LocalDateTime momentoInizio) {
+        return momentoInizio.plusHours(1);
     }
 
-    public LocalDate getDataEOraFineObliterazione() {
+    public LocalDateTime getDataEOraFineObliterazione() {
         return dataEOraFineObliterazione;
     }
     
 
-    public LocalDate getDataEOraInizioObliterazione() {
+    public LocalDateTime getDataEOraInizioObliterazione() {
         return dataEOraInizioObliterazione;
     }
 

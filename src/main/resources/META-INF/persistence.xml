@@ -20,7 +20,12 @@
     <persistence-unit name="GESTIONALE-TRASPORTI-PUBBLICI-giuseppe">
         <class>giuliacrepaldi.entities.VenditaTrasporto</class>
         <class>giuliacrepaldi.entities.Biglietto</class>
-<!--        <class>giuliacrepaldi.entities.MezzoTrasporto</class>-->
+        <class>giuliacrepaldi.entities.Abbonamento</class>
+        <class>giuliacrepaldi.entities.PuntoEmissione</class>
+        <class>giuliacrepaldi.entities.MezzoTrasporto</class>
+        <class>giuliacrepaldi.entities.Manutenzione</class>
+        <class>giuliacrepaldi.entities.Tessera</class>
+        <class>giuliacrepaldi.entities.Utente</class>
         <properties>
             <property name="jakarta.persistence.jdbc.url"
                       value="jdbc:postgresql://localhost:5432/GESTIONALE-TRASPORTI-PUBBLICI"/>
