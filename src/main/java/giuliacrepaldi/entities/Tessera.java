@@ -10,27 +10,13 @@ import java.util.UUID;
 
 @Entity
 @Table(name = "tessere")
-public class Tessera {
-
-    @Id
-    @GeneratedValue
-
-    @Column(name = "tessera_id")
-    private UUID id;
-    // @OneToMany(mappedBy = "tessera_id")
-    // private List <Abbonamento> abbonamenti = new ArrayList<>();
-
-    @OneToOne
-    @JoinColumn(name = "vendite_trasporti_id")
-    private VenditaTrasporto venditaTrasporto;
-
+@DiscriminatorValue("tessera")
+public class Tessera extends VenditaTrasporto {
+    
+    // la tessera è di un utente; un utente ha una tessera.
     @OneToOne
     @JoinColumn(name = "utente_id")
     private Utente utente;
-
-    @ManyToOne
-    @JoinColumn(name = "mezzo_di_trasporto_id")
-    private MezzoTrasporto mezzoTrasporto;
 
     @Column(name = "data_inizio_tessera", nullable = false)
     private LocalDate dataInizioTessera;
@@ -40,31 +26,21 @@ public class Tessera {
 
     protected Tessera(){}
 
-    public Tessera(Utente utente, LocalDate dataInizioTessera, LocalDate dataFineTessera) {
-        if (dataInizioTessera.isAfter(dataFineTessera)) {
-            throw new IllegalArgumentException("La data di inizio deve essere precedente alla data di fine");
-        }
+    public Tessera(PuntoEmissione puntoEmissione, double prezzo, Utente utente, LocalDate dataInizioTessera) {
+        // siccome la tessera è una vendita trasporto, 
+        // chiama il costruttore di vendita trasporto
+        super(puntoEmissione, prezzo);
         this.utente = utente;
         this.dataInizioTessera = dataInizioTessera;
-        this.dataFineTessera = dataFineTessera;
+        // la tessera ha validità annuale
+        this.dataFineTessera = dataInizioTessera.plusYears(1);
     }
-
-    // public List<Abbonamento> getAbbonamenti() {
-    //     return abbonamenti;
-    // }
-
-    public VenditaTrasporto getVenditaTrasporto() {
-        return venditaTrasporto;
-    }
+    
 
     public Utente getUtente() {
         return utente;
     }
-
-    public MezzoTrasporto getMezzoTrasporto() {
-        return mezzoTrasporto;
-    }
-
+    
     public LocalDate getDataInizioTessera() {
         return dataInizioTessera;
     }
@@ -76,9 +52,9 @@ public class Tessera {
     @Override
     public String toString() {
         return "Tessera{" +
-                ", utente=" + utente +
-                ", dataInizioTessera=" + dataInizioTessera +
+                "dataInizioTessera=" + dataInizioTessera +
                 ", dataFineTessera=" + dataFineTessera +
+                ", nomeUtente=" + utente.getNome() + " " + utente.getCognome() + 
                 '}';
     }
 }
