@@ -17,8 +17,8 @@ public class Tessera {
 
     @Column(name = "tessera_id")
     private UUID id;
-    @OneToMany(mappedBy = "tessera_id")
-    private List <Abbonamento> abbonamenti = new ArrayList<>();
+    // @OneToMany(mappedBy = "tessera_id")
+    // private List <Abbonamento> abbonamenti = new ArrayList<>();
 
     @OneToOne
     @JoinColumn(name = "vendite_trasporti_id")
@@ -49,9 +49,9 @@ public class Tessera {
         this.dataFineTessera = dataFineTessera;
     }
 
-    public List<Abbonamento> getAbbonamenti() {
-        return abbonamenti;
-    }
+    // public List<Abbonamento> getAbbonamenti() {
+    //     return abbonamenti;
+    // }
 
     public VenditaTrasporto getVenditaTrasporto() {
         return venditaTrasporto;
@@ -76,10 +76,7 @@ public class Tessera {
     @Override
     public String toString() {
         return "Tessera{" +
-                "abbonamenti=" + abbonamenti +
-                ", venditaTrasporto=" + venditaTrasporto +
                 ", utente=" + utente +
-                ", mezzoTrasporto=" + mezzoTrasporto +
                 ", dataInizioTessera=" + dataInizioTessera +
                 ", dataFineTessera=" + dataFineTessera +
                 '}';

@@ -25,9 +25,9 @@ public class PuntoEmissione {
     @Column(nullable = false)
     private boolean attivo;
 
-    @OneToMany(mappedBy = "puntoEmissione", cascade = CascadeType.ALL, orphanRemoval = false)
-    private List<VenditaTrasporto> vendite = new ArrayList<>();
-    public PuntoEmissione() {
+    // @OneToMany(mappedBy = "puntoEmissione", cascade = CascadeType.ALL, orphanRemoval = false)
+    // private List<VenditaTrasporto> vendite = new ArrayList<>();
+    protected PuntoEmissione() {
     }
     public PuntoEmissione(String citta, TipologiaPuntoEmissione tipologiaPuntoEmissione, boolean attivo) {
         this.citta = citta;
@@ -59,12 +59,12 @@ public class PuntoEmissione {
     public void setAttivo(boolean attivo) {
         this.attivo = attivo;
     }
-    public List<VenditaTrasporto> getVendite() {
-        return vendite;
-    }
-    public void setVendite(List<VenditaTrasporto> vendite) {
-        this.vendite = vendite;
-    }
+    // public List<VenditaTrasporto> getVendite() {
+    //     return vendite;
+    // }
+    // public void setVendite(List<VenditaTrasporto> vendite) {
+    //     this.vendite = vendite;
+    // }
 
     @Override
     public String toString() {

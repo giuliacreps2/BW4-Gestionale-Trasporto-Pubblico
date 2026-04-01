@@ -28,12 +28,11 @@ public class Percorrenza {
     private MezzoTrasporto mezzoTrasporto;
 
     //Costruttore
-    public Percorrenza() {
+    protected Percorrenza() {
 
     }
 
-    public Percorrenza(UUID percorrenzaId, LocalDateTime tempoEffettivoPercorrenza) {
-        this.percorrenzaId = percorrenzaId;
+    public Percorrenza(LocalDateTime tempoEffettivoPercorrenza) {
         this.tempoEffettivoPercorrenza = tempoEffettivoPercorrenza;
     }
 
@@ -62,6 +61,12 @@ public class Percorrenza {
 
     public void setDataPercorrenza(LocalDateTime dataPercorrenza) {
         this.dataPercorrenza = dataPercorrenza;
+    public MezzoTrasporto getMezzoTrasporto() {
+        return mezzoTrasporto;
+    }
+
+    public Tratta getTratta() {
+        return tratta;
     }
 
     @Override
@@ -72,6 +77,8 @@ public class Percorrenza {
                 ", dataPercorrenza=" + dataPercorrenza +
                 ", tratta=" + tratta +
                 ", mezzoTrasporto=" + mezzoTrasporto +
+                ", percorrenzaId=" + percorrenzaId +
+                ", tempoEffettivoPercorrenza=" + tempoEffettivoPercorrenza +
                 '}';
     }
 }

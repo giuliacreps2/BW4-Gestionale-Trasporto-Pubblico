@@ -45,32 +45,29 @@ public class BigliettiDAO {
     /**
      * Ottieni il totale dei biglietti vidimati sul mezzo di trasporto in input.
      */
-    // public int contaBigliettiVidimatiSuMezzoTrasporto(MezzoTrasporto mezzoTrasporto) {
-        
+    public int contaBigliettiVidimatiSuMezzoTrasporto(MezzoTrasporto mezzoTrasporto) {
+
         // trova i biglietti il cui mezzo di trasporto
         // su cui sono stati obliterati, è uguale al 
         // mezzo di trasporto in input. conta quanti
         // sono questi biglietti.
+
+        TypedQuery<Integer> query = entityManager.createQuery(
+                "SELECT COUNT(b.venditaTrasportoId) AS totale FROM Biglietto b WHERE b.obliteratoDa = :mezzoTrasporto", 
+                Integer.class
+        );
+
+        query.setParameter("mezzoTrasporto", mezzoTrasporto);
+
+        Integer result = query.getSingleResult();
         
-        // TypedQuery<Biglietto> query = entityManager.createQuery(
-        //         "SELECT COUNT(b.venditaTrasportoId) AS totale FROM Biglietto b WHERE b.obliteratoDa = :mezzoTrasporto", 
-        //         Biglietto.class
-        // );
-        //
-        // query.setParameter("mezzoTrasporto", mezzoTrasporto);
-        // query.setMaxResults(1);
-        //
-        // // execute query
-        // // Biglietto totaleBiglietti = 
-        //        
-        // query.getSingleResult();
-        
-    // }
+        return result;
+    }
 
     /**
      * Ottieni il totale dei biglietti vidimati nel periodo dato. 
      */
-    // public int contaBigliettiVidimatiInPeriodo(LocalDate dataInizio, LocalDate dataFine) {
+    public int contaBigliettiVidimatiInPeriodo(LocalDate dataInizio, LocalDate dataFine) {
         
         // trova i biglietti vidimati la cui data di inizio obliterazione,
         // rientrano nel periodo in input. siccome i biglietti devono essere vidimati,
@@ -79,22 +76,22 @@ public class BigliettiDAO {
         //   DIOB = data inizio obliterazione biglietto
         //   dataInizioInput   <= DIOB <=  dataFineInput
         
-    //     TypedQuery<Biglietto> query = entityManager.createQuery(
-    //             "SELECT COUNT(b.venditaTrasportoId) AS totale " +
-    //                     "FROM Biglietto b " +
-    //                     "WHERE " +
-    //                     "   b.dataEOraInizioObliterazione BETWEEN :dataInizio AND :dataFine" +
-    //                     "   AND b.obliteratoDa IS NULL",
-    //             Biglietto.class
-    //     );
-    //
-    //     query.setParameter("dataInizio", dataInizio);
-    //     query.setParameter("dataFine", dataFine);
-    //     query.setMaxResults(1);
-    //
-    //     // execute query
-    //     query.getSingleResult();
-    //    
-    // }
+        TypedQuery<Integer> query = entityManager.createQuery(
+                "SELECT COUNT(b.venditaTrasportoId) AS totale " +
+                        "FROM Biglietto b " +
+                        "WHERE " +
+                        "   b.dataEOraInizioObliterazione BETWEEN :dataInizio AND :dataFine" +
+                        "   AND b.obliteratoDa IS NULL",
+                Integer.class
+        );
+
+        query.setParameter("dataInizio", dataInizio);
+        query.setParameter("dataFine", dataFine);
+
+        // execute query
+        Integer result = query.getSingleResult();
+
+        return result;
+    }
     
 }

@@ -23,12 +23,11 @@ public class Tratta {
     private String zonaArrivo;
 
     //Costruttore
-    public Tratta() {
+    protected Tratta() {
 
     }
 
-    public Tratta(UUID trattaId, double trattaKm, Long tempoPrevistoTratta, String zonaPartenza, String zonaArrivo) {
-        this.trattaId = trattaId;
+    public Tratta(double trattaKm, LocalDateTime tempoPrevistoTratta, String zonaPartenza, String zonaArrivo) {
         this.trattaKm = trattaKm;
         this.tempoPrevistoTratta = tempoPrevistoTratta;
         this.zonaPartenza = zonaPartenza;
