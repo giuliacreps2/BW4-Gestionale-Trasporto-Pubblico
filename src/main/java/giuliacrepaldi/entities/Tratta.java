@@ -27,7 +27,7 @@ public class Tratta {
 
     }
 
-    public Tratta(double trattaKm, LocalDateTime tempoPrevistoTratta, String zonaPartenza, String zonaArrivo) {
+    public Tratta(double trattaKm, Long tempoPrevistoTratta, String zonaPartenza, String zonaArrivo) {
         this.trattaKm = trattaKm;
         this.tempoPrevistoTratta = tempoPrevistoTratta;
         this.zonaPartenza = zonaPartenza;
