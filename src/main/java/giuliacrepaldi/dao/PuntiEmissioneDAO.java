@@ -23,7 +23,7 @@ public class PuntiEmissioneDAO {
     /**
      * Salva/aggiorna un punto emissione.
      */
-    public void save(PuntoEmissione puntoEmissione) {
+    public void save(PuntoEmissione puntoEmissione) throws PuntoEmissioneSalvataggioException {
         EntityTransaction transaction = entityManager.getTransaction();
         
         try {
@@ -79,7 +79,7 @@ public class PuntiEmissioneDAO {
     /**
      * Trova un punto emissione per ID e rimuovilo. 
      */
-    public void findByIdAndDelete(UUID id) {
+    public void findByIdAndDelete(UUID id) throws PuntoEmissioneNonTrovatoException, PuntoEmissioneRimozioneException {
         PuntoEmissione puntoEmissioneTrovato = this.findById(id);
 
         if (puntoEmissioneTrovato == null) {
@@ -100,7 +100,7 @@ public class PuntiEmissioneDAO {
     /**
      * Trova un punto di emissione per ID e aggiorna la sua citta e stato.
      */
-    public void findByIdAndUpdate(UUID id, String nuovaCitta, boolean nuovoStato) {
+    public void findByIdAndUpdate(UUID id, String nuovaCitta, boolean nuovoStato) throws PuntoEmissioneNonTrovatoException, PuntoEmissioneSalvataggioException {
         PuntoEmissione puntoEmissioneTrovato = this.findById(id);
 
         if (puntoEmissioneTrovato == null) {

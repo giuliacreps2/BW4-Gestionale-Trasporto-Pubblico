@@ -4,6 +4,7 @@ import giuliacrepaldi.dao.*;
 import giuliacrepaldi.entities.*;
 import giuliacrepaldi.enums.TipologiaPuntoEmissione;
 import giuliacrepaldi.exceptions.tessera.TesseraSalvataggioException;
+import giuliacrepaldi.interfaces.exceptions.TesseraGenericException;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.Persistence;
@@ -46,12 +47,12 @@ public class AppTest {
         );
         // puntiEmissioneDAO.save(puntoEmissione1);
         
-        // Utente utente1 = new Utente(
-        //         "Giuseppe",
-        //         "Tavella",
-        //         29,
-        //         "xyz@gmail.com"
-        // );
+        Utente utente1 = new Utente(
+                "Giuseppe",
+                "Tavella",
+                29,
+                "xyz@gmail.com"
+        );
         //
         // MezzoTrasporto mezzoTrasporto1 = new MezzoTrasporto();
         
@@ -60,14 +61,17 @@ public class AppTest {
         // puntiEmissioneDAO.save(puntoEmissione1);
         // utentiDAO.save(utente1);
         
-        // Utente utente1FromDB = utentiDAO.trovaPerId("f216c1c9-d335-4859-9315-ca82984bd8dc");
-        PuntoEmissione puntoEmissione1FromDB = puntiEmissioneDAO.findById("924d0962-c252-46d9-91");
+        Utente utente1FromDB = utentiDAO.trovaPerId("f26ea746-96e8-45a6-9361-7ec19bf33558");
+        PuntoEmissione puntoEmissione1FromDB = puntiEmissioneDAO.findById("924d0962-c252-46d9-91d1-33f3a6c60a77");
         // PuntoEmissione puntoEmissione1FromDB = puntiEmissioneDAO.findById(UUID.fromString("ea8feaae-62d2-4f5e-a73f-13838321ec58"));
-        // Biglietto biglietto1FromDB = bigliettiDAO.trovaPerId("98628bf8-88a8-4968-9621-99bf2c0b0bd2");
+        Biglietto biglietto1FromDB = bigliettiDAO.trovaPerId("1e62a537-a823-452c-9f95-d94a947646b1");
+        // boolean utente1HaTessera = utentiDAO.utenteHaTessera(utente1);
+
+        // System.out.println(utente1HaTessera);
 
         // biglietto1FromDB.setObliteratoDa();
-        System.out.println(puntoEmissione1FromDB);
-        
+        // System.out.println(puntoEmissione1FromDB);
+        // System.out.println(biglietto1FromDB);
                 
         //
         // System.out.println(puntoEmissione1FromDB);
@@ -78,22 +82,24 @@ public class AppTest {
         // System.out.println(puntoEmissione1FromDB);
 
         // // Tessera
-        // Tessera tessera1 = new Tessera(
-        //         puntoEmissione1FromDB,
-        //     45.231,
-        //     utente1FromDB, 
-        //         LocalDate.now()
-        // );
+        Tessera tessera1 = new Tessera(
+                puntoEmissione1FromDB,
+            45.231,
+            utente1FromDB, 
+                LocalDate.now()
+        );
 
         // System.out.println(tessera1);
         
-        // try {
-        //     tessereDAO.save(tessera1);
-        // } catch (RuntimeException ex) {
-        //     if(ex instanceof TesseraSalvataggioException) {
-        //         System.out.println(ex.getMessage());
-        //     }
-        // }
+        try {
+
+            tessereDAO.save(tessera1);
+
+        } catch (RuntimeException ex) {
+            if(ex instanceof TesseraGenericException) {
+                System.out.println(ex.getMessage());
+            }
+        }
         //
         //
         //
@@ -105,8 +111,10 @@ public class AppTest {
         // Abbonamento abbonamento1 = new Abbonamento(
         //        puntoEmissione1FromDB,
         //         43.23,
-        //        
+        //
         // );
+        
+        
         
         //
         // bigliettiDAO.salva(biglietto1);
