@@ -50,7 +50,7 @@ public class TessereDAO {
     public Tessera trovaPerId(String targetId) throws TesseraNonTrovataException, StringaUUIDNonValidaException {
 
         TypedQuery<Tessera> query = entityManager.createQuery(
-                "SELECT t FROM Tessera t WHERE t.tesseraId = :targetId",
+                "SELECT t FROM Tessera t WHERE t.venditaTrasportoId = :targetId",
                 Tessera.class
         );
 
