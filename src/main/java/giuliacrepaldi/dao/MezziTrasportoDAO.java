@@ -4,6 +4,7 @@ import giuliacrepaldi.entities.Manutenzione;
 import giuliacrepaldi.entities.MezzoTrasporto;
 import giuliacrepaldi.exceptions.mezzo_trasporto.MezzoTrasportoNonTrovatoException;
 import giuliacrepaldi.exceptions.mezzo_trasporto.MezzoTrasportoSalvataggioException;
+import giuliacrepaldi.exceptions.miscellanous.StringaUUIDNonValidaException;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
 import jakarta.persistence.NoResultException;
@@ -30,7 +31,6 @@ public class MezziTrasportoDAO {
             em.persist(newMezzoTrasporto);
 
             transaction.commit();
-            System.out.println("Il mezzo di trasporto è stato salvato con successo");
         } catch (Exception e) {
             if (transaction.isActive()) {
                 transaction.rollback();
@@ -78,13 +78,23 @@ public class MezziTrasportoDAO {
     }
 
     //4. findById
-    public MezzoTrasporto findByiD(UUID mezzoDiTrasportoId) {
+    public MezzoTrasporto findById(String targetId) throws MezzoTrasportoNonTrovatoException, StringaUUIDNonValidaException {
         try {
-            MezzoTrasporto found = em.find(MezzoTrasporto.class, mezzoDiTrasportoId);
-            System.out.println("Mezzo di trasporto con id: " + mezzoDiTrasportoId + " , è stato trovato con successo!");
-            return found;
-        } catch (NoResultException e) {
-            throw new MezzoTrasportoNonTrovatoException(mezzoDiTrasportoId);
+            return findById(UUID.fromString(targetId));
+        } catch (IllegalArgumentException ex) {
+            throw new StringaUUIDNonValidaException(targetId);
         }
     }
+    
+    public MezzoTrasporto findById(UUID mezzoDiTrasportoId) throws MezzoTrasportoNonTrovatoException {
+        MezzoTrasporto found = em.find(MezzoTrasporto.class, mezzoDiTrasportoId);
+        
+        if (found == null) {
+            throw new MezzoTrasportoNonTrovatoException(mezzoDiTrasportoId);    
+        }
+        
+        return found;
+    }
+    
+    
 }

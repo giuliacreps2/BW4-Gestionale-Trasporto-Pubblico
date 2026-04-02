@@ -32,7 +32,7 @@ public class MezzoTrasporto {
     // private List <Percorrenza> percorrenze = new ArrayList<>();
 
     //Costruttore
-    public MezzoTrasporto() {
+    protected MezzoTrasporto() {
     }
 
     public MezzoTrasporto(TipoMezzo tipoMezzo) {

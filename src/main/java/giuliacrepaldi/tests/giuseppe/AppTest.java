@@ -3,6 +3,7 @@ package giuliacrepaldi.tests.giuseppe;
 import giuliacrepaldi.dao.*;
 import giuliacrepaldi.entities.*;
 import giuliacrepaldi.enums.TipoAbbonamento;
+import giuliacrepaldi.enums.TipoMezzo;
 import giuliacrepaldi.enums.TipologiaPuntoEmissione;
 import giuliacrepaldi.exceptions.tessera.TesseraSalvataggioException;
 import giuliacrepaldi.interfaces.exceptions.TesseraGenericException;
@@ -54,13 +55,14 @@ public class AppTest {
                 29,
                 "xyz@gmail.com"
         );
-        //
-        // MezzoTrasporto mezzoTrasporto1 = new MezzoTrasporto();
+
+        MezzoTrasporto mezzoTrasporto1 = new MezzoTrasporto(TipoMezzo.AUTOBUS);
         
         
         // mezziTrasportoDAO.save(mezzoTrasporto1);
         // puntiEmissioneDAO.save(puntoEmissione1);
         // utentiDAO.save(utente1);
+        // mezziTrasportoDAO.save(mezzoTrasporto1);
         
         Utente utente1FromDB = utentiDAO.trovaPerId("f26ea746-96e8-45a6-9361-7ec19bf33558");
         Tessera tessera1FromDB = tessereDAO.trovaPerId("416eb551-7374-4115-b59d-f621ec869c2d");
@@ -68,6 +70,7 @@ public class AppTest {
         Abbonamento abbonamento1FromDB = abbonamentiDAO.findAbbonamentoById("5d3869f9-18db-4f88-9bfe-1bf874af3aa6");
         // PuntoEmissione puntoEmissione1FromDB = puntiEmissioneDAO.findById(UUID.fromString("ea8feaae-62d2-4f5e-a73f-13838321ec58"));
         Biglietto biglietto1FromDB = bigliettiDAO.trovaPerId("1e62a537-a823-452c-9f95-d94a947646b1");
+        MezzoTrasporto mezzoTrasporto1FromDB = mezziTrasportoDAO.findById("c4729d6b-6e27-4613-8d16-739a1b360c43");
         // boolean utente1HaTessera = utentiDAO.utenteHaTessera(utente1);
 
         // System.out.println(tessera1FromDB);
@@ -128,8 +131,11 @@ public class AppTest {
         // bigliettiDAO.salva(biglietto1);
         
         
-        
 
+        // System.out.println(mezzoTrasporto1);
+
+        
+        
         entityManager.close();
         entityManagerFactory.close();
     }

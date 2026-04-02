@@ -47,7 +47,7 @@ public class AppTest {
         Percorrenza percorrenza1 = new Percorrenza(38L, LocalDateTime.of(2026, 3, 15, 8, 30), tratta1, mezzo1);
         Percorrenza percorrenza2 = new Percorrenza(27L, LocalDateTime.of(2026, 3, 15, 9, 0), tratta2, mezzo2);
 
-        MezzoTrasporto mezzoT1 = mezzoTrasportoDAO.findByiD(UUID.fromString("104c146f-24b0-45f5-b5c2-422e606b1ed5"));
+        MezzoTrasporto mezzoT1 = mezzoTrasportoDAO.findById(UUID.fromString("104c146f-24b0-45f5-b5c2-422e606b1ed5"));
         Manutenzione manutenzione1 = new Manutenzione(mezzoT1, LocalDate.of(2026, 1, 15), LocalDate.of(2026, 2, 18), 30);
         //Manutenzione manutenzione2 = new Manutenzione(mezzo2, LocalDate.of(2025, 12, 15), LocalDate.of(2026, 1, 18), 230);
         // ****** DAO
