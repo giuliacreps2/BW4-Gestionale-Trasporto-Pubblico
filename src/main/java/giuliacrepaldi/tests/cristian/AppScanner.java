@@ -42,6 +42,7 @@ public class AppScanner {
         BigliettiDAO bigliettiDAO = new BigliettiDAO(em);
         PuntiEmissioneDAO puntiDAO = new PuntiEmissioneDAO(em);
 
+
         try {
             // 1. Mostra punti disponibili
             System.out.println(" PUNTI EMISSIONE DISPONIBILI ");
