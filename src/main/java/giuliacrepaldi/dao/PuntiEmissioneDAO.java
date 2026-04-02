@@ -1,15 +1,14 @@
 package giuliacrepaldi.dao;
 
 import giuliacrepaldi.entities.PuntoEmissione;
+import giuliacrepaldi.entities.Tratta;
 import giuliacrepaldi.exceptions.miscellanous.StringaUUIDNonValidaException;
 import giuliacrepaldi.exceptions.punto_emissione.PuntoEmissioneNonTrovatoException;
 import giuliacrepaldi.exceptions.punto_emissione.PuntoEmissioneRimozioneException;
 import giuliacrepaldi.exceptions.punto_emissione.PuntoEmissioneSalvataggioException;
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.EntityTransaction;
-import jakarta.persistence.NoResultException;
-import jakarta.persistence.TypedQuery;
+import jakarta.persistence.*;
 
+import java.util.List;
 import java.util.UUID;
 
 public class PuntiEmissioneDAO {
@@ -124,6 +123,9 @@ public class PuntiEmissioneDAO {
         
     }
 
-    
-    
+    public List<PuntoEmissione> findAll() {
+        Query query = entityManager.createQuery("SELECT p FROM PuntoEmissione p");
+        List<PuntoEmissione> tuttiIPuntiDiEmissione = query.getResultList();
+        return tuttiIPuntiDiEmissione;
+    }
 }
