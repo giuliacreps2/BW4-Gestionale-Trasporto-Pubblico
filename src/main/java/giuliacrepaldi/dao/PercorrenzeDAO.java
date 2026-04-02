@@ -43,8 +43,19 @@ public class PercorrenzeDAO {
 
     //2. findById(UUID id)
     public Percorrenza trovaPerId(String targetId) throws PercorrenzaNonTrovataException, StringaUUIDNonValidaException {
-        Percorrenza found = em.find(Percorrenza.class, targetId);
+        Percorrenza found; 
+        
+        try {
+        
+            found = em.find(Percorrenza.class, UUID.fromString(targetId));
+        
+        } catch (IllegalArgumentException ex) {
+            throw new StringaUUIDNonValidaException(targetId);
+        }
+        
+        // no percorrenza found
         if (found == null) throw new PercorrenzaNonTrovataException(targetId, "ID");
+        
         return found;
     }
 

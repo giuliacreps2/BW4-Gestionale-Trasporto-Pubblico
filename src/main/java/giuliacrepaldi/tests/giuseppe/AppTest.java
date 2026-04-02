@@ -73,7 +73,7 @@ public class AppTest {
         MezzoTrasporto mezzoTrasporto1FromDB = mezziTrasportoDAO.trovaPerId("c4729d6b-6e27-4613-8d16-739a1b360c43");
         Manutenzione manutenzione1FromDB = manutenzioniDAO.trovaPerId("30cf0185-be3f-4a3c-94e6-d3d841c92954");
         Tratta tratta1FromDB = tratteDAO.trovaPerId("832e1f39-4966-4fe6-bbd6-45d0aaa8e27d");
-        // Percorrenza percorrenza1FromDB = 
+        Percorrenza percorrenza1FromDB = percorrenzeDAO.trovaPerId("20d53217-fd31-4e27-9bfa-fd4b660f7400");
         // boolean utente1HaTessera = utentiDAO.utenteHaTessera(utente1);
 
         // System.out.println(tessera1FromDB);
@@ -82,6 +82,7 @@ public class AppTest {
         // System.out.println(biglietto1FromDB);
         // System.out.println(manutenzione1FromDB);
         // System.out.println(tratta1FromDB);
+        // System.out.println(percorrenza1FromDB);
 
         // biglietto1FromDB.setObliteratoDa();
         // System.out.println(puntoEmissione1FromDB);
@@ -161,6 +162,7 @@ public class AppTest {
         
         // System.out.println(mezzoTrasporto1);
 
+        // NEXT TASK: PERCORRENZA TROVA PER ID
         
         
         entityManager.close();
