@@ -5,7 +5,12 @@ import giuliacrepaldi.interfaces.exceptions.TrattaGenericException;
 import java.util.UUID;
 
 public class TrattaNonTrovataException extends RuntimeException implements TrattaGenericException {
-    public TrattaNonTrovataException(UUID trattaId) {
-        super("La tratta con id: " + trattaId + ", non è stata trovata");
+    public TrattaNonTrovataException(String targetIdentifier, String identifierType) {
+        super("La tratta con tipo identificatore " + identifierType + " con valore " + targetIdentifier + " non è stato trovata.");
     }
+    
+    public TrattaNonTrovataException(UUID trattaId) {
+        this(trattaId.toString(), "UUID");
+    }
+    
 }

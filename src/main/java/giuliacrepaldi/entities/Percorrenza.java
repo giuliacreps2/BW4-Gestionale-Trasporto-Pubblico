@@ -7,36 +7,33 @@ import java.util.UUID;
 
 @Entity
 @Table(name = "percorrenze")
-
 public class Percorrenza {
+    
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-
     @Column(name = "percorrenza_id", nullable = false)
     private UUID percorrenzaId;
+    
     @Column(name = "tempo_effettivo_percorrenza", nullable = false)
     private Long tempoEffettivoPercorrenza;
-    @Column(name = "data_percorrenza")
+    
+    @Column(name = "data_percorrenza", nullable = false)
     private LocalDateTime dataPercorrenza;
 
     @ManyToOne
-    @JoinColumn(name = "tratta")
+    @JoinColumn(name = "tratta_id", nullable = false)
     private Tratta tratta;
 
     @ManyToOne
-    @JoinColumn(name = "mezzo_di_trasporto")
+    @JoinColumn(name = "mezzo_di_trasporto_id", nullable = false)
     private MezzoTrasporto mezzoTrasporto;
 
     //Costruttore
     protected Percorrenza() {
 
     }
-
-    public Percorrenza(Long tempoEffettivoPercorrenza) {
-        this.tempoEffettivoPercorrenza = tempoEffettivoPercorrenza;
-    }
-
-    public Percorrenza(Long tempoEffettivoPercorrenza, LocalDateTime dataPercorrenza, Tratta tratta, MezzoTrasporto mezzoTrasporto) {
+    
+    public Percorrenza(long tempoEffettivoPercorrenza, LocalDateTime dataPercorrenza, Tratta tratta, MezzoTrasporto mezzoTrasporto) {
         this.tempoEffettivoPercorrenza = tempoEffettivoPercorrenza;
         this.dataPercorrenza = dataPercorrenza;
         this.tratta = tratta;

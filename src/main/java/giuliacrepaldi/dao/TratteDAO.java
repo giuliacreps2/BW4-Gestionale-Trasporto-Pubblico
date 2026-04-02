@@ -1,11 +1,12 @@
 package giuliacrepaldi.dao;
 
 import giuliacrepaldi.entities.Tratta;
+import giuliacrepaldi.entities.Utente;
+import giuliacrepaldi.exceptions.miscellanous.StringaUUIDNonValidaException;
 import giuliacrepaldi.exceptions.tratta.TrattaNonTrovataException;
 import giuliacrepaldi.exceptions.tratta.TrattaSalvataggioException;
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.EntityTransaction;
-import jakarta.persistence.Query;
+import giuliacrepaldi.exceptions.utente.UtenteNonTrovatoException;
+import jakarta.persistence.*;
 
 import java.util.List;
 import java.util.UUID;
@@ -20,27 +21,21 @@ public class TratteDAO {
 
     //Metodi
     //1. save tratta
-    public void saveTratta(Tratta tratta) {
+    public void salva(Tratta tratta) throws TrattaSalvataggioException {
         EntityTransaction transaction = em.getTransaction();
+        
         try {
+            
             transaction.begin();
             em.persist(tratta);
-            em.flush();
             transaction.commit();
-            System.out.println("Tratta salvata con successo!");
-        } catch (Exception e) {
+            
+        } catch (RuntimeException e) {
             transaction.rollback();
+            throw new TrattaSalvataggioException(tratta);
         }
-        throw new TrattaSalvataggioException(tratta);
     }
-
-    public void update(Tratta tratta) {
-        EntityTransaction transaction = em.getTransaction();
-        transaction.begin();
-        em.merge(tratta);
-        transaction.commit();
-        System.out.println("Tratta modificata con successo. Riepilogo info aggiornate: " + tratta);
-    }
+    
 
     //Per cancellare la tratta è necessario cancellare prima la percorrenza collegata attraverso
     //il metodo deleteById apposito
@@ -55,12 +50,31 @@ public class TratteDAO {
 //    }
 
     //2. findById trova tratta
-    public Tratta findTrattaById(UUID trattaId) {
-        if (trattaId == null) throw new TrattaNonTrovataException(trattaId);
-        Tratta found = em.find(Tratta.class, UUID.fromString(String.valueOf(trattaId)));
-        if (found == null) throw new TrattaNonTrovataException(trattaId);
-        System.out.println("Tratta trovata con successo. Ecco tutte le info: " + found);
-        return found;
+    public Tratta trovaPerId(String targetId) throws TrattaNonTrovataException, StringaUUIDNonValidaException {
+        
+        TypedQuery<Tratta> query = em.createQuery(
+                "SELECT t FROM Tratta t WHERE t.trattaId = :targetId",
+                Tratta.class
+        );
+        // pass query params
+        try {
+
+            query.setParameter("targetId", UUID.fromString(targetId));
+
+        } catch(IllegalArgumentException ex) {
+            throw new StringaUUIDNonValidaException(targetId);
+        }
+
+        // execute query
+        try {
+
+            return query.getSingleResult();
+
+        } catch (NoResultException ex) {
+            throw new TrattaNonTrovataException(targetId, "ID");
+        }
+        
+        
     }
 
     //3. findByZonaPartenza per cercare le tratte
@@ -68,7 +82,6 @@ public class TratteDAO {
         Query query = em.createQuery("SELECT t FROM Tratta t WHERE LOWER(t.zonaPartenza) LIKE LOWER(:zona)");
         query.setParameter("zona", "%" + zonaPartenza + "%");
         List<Tratta> zonePartenza = query.getResultList();
-        System.out.println("Ecco la lista delle tratte: " + zonePartenza);
         return zonePartenza;
     }
 
@@ -77,7 +90,6 @@ public class TratteDAO {
     public List<Tratta> findAll() {
         Query query = em.createQuery("SELECT t FROM Tratta t");
         List<Tratta> tutteLeTratte = query.getResultList();
-        System.out.println("Ecco la lista completa delle tratte: " + tutteLeTratte);
         return tutteLeTratte;
     }
 

@@ -2,8 +2,12 @@ package giuliacrepaldi.dao;
 
 import giuliacrepaldi.entities.Manutenzione;
 import giuliacrepaldi.entities.MezzoTrasporto;
+import giuliacrepaldi.entities.Tessera;
 import giuliacrepaldi.exceptions.manutenzione.ManutenzioneDiMezzoNonEsisteException;
+import giuliacrepaldi.exceptions.manutenzione.ManutenzioneNonTrovataException;
 import giuliacrepaldi.exceptions.manutenzione.ManutenzioneSalvataggioException;
+import giuliacrepaldi.exceptions.miscellanous.StringaUUIDNonValidaException;
+import giuliacrepaldi.exceptions.tessera.TesseraNonTrovataException;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
 import jakarta.persistence.NoResultException;
@@ -22,7 +26,7 @@ public class ManutenzioniDAO {
     }
 
     //1. save Manutenzione
-    public void save(Manutenzione newManutenzione) throws ManutenzioneSalvataggioException {
+    public void salva(Manutenzione newManutenzione) throws ManutenzioneSalvataggioException {
         EntityTransaction transaction = em.getTransaction();
 
         try {
@@ -31,11 +35,42 @@ public class ManutenzioniDAO {
             em.persist(newManutenzione);
 
             transaction.commit();
-            System.out.println("Manutenzione salvataggio effettuato!");
         } catch (Exception e) {
             throw new ManutenzioneSalvataggioException(newManutenzione);
         }
     }
+
+
+    /**
+     * Trova una manutenzione per il suo ID.
+     */
+    public Manutenzione trovaPerId(String targetId) throws ManutenzioneNonTrovataException, StringaUUIDNonValidaException {
+
+        TypedQuery<Manutenzione> query = em.createQuery(
+                "SELECT m FROM Manutenzione m WHERE m.manutenzioneId = :targetId",
+                Manutenzione.class
+        );
+
+        // pass query params
+        try {
+
+            query.setParameter("targetId", UUID.fromString(targetId));
+
+        } catch(IllegalArgumentException ex) {
+            throw new StringaUUIDNonValidaException(targetId);
+        }
+
+        // execute query
+        try {
+
+            return query.getSingleResult();
+
+        } catch (NoResultException ex) {
+            throw new ManutenzioneNonTrovataException(targetId, "ID");
+        }
+
+    }
+    
 
     //2.findAll con BETWEEN — manutenzioni in un periodo
     public List<Manutenzione> findAll(String mezzoID, LocalDate dataInizio, LocalDate dataFine) {

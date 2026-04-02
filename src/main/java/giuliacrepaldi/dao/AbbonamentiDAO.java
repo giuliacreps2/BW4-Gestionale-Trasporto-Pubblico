@@ -18,7 +18,7 @@ public class AbbonamentiDAO {
         this.em = em;
     }
 
-    public void save(Abbonamento newAbbonamento) throws AbbonamentoSalvataggioException{
+    public void salva(Abbonamento newAbbonamento) throws AbbonamentoSalvataggioException{
         EntityTransaction transaction = em.getTransaction();
 
         try {
@@ -33,7 +33,7 @@ public class AbbonamentiDAO {
         }
     }
 
-    public Abbonamento findAbbonamentoById(String abbonamentoId) throws AbbonamentoNonTrovatoException, StringaUUIDNonValidaException{
+    public Abbonamento trovaPerId(String abbonamentoId) throws AbbonamentoNonTrovatoException, StringaUUIDNonValidaException{
         Abbonamento found;
 
         try {
@@ -48,7 +48,7 @@ public class AbbonamentiDAO {
     }
 
     public boolean abbonamentoValido(String abbonamentoId) throws AbbonamentoNonTrovatoException, StringaUUIDNonValidaException{
-        Abbonamento abbonamento = findAbbonamentoById(abbonamentoId);
+        Abbonamento abbonamento = trovaPerId(abbonamentoId);
 
         String jpql = "SELECT a FROM Abbonamento a " +
                 "WHERE a.venditaTrasportoId = :venditaTrasportoId " +

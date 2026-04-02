@@ -25,7 +25,7 @@ public class TessereDAO {
     /**
      * Aggiungi/aggiorna una tessera. 
      */
-    public void save(Tessera newTessera) throws TesseraSalvataggioException, TesseraGiaEsistenteException {
+    public void salva(Tessera newTessera) throws TesseraSalvataggioException, TesseraGiaEsistenteException {
         
         // la tessera di questo utente esiste già 
         if(utenteHaTessera(newTessera.getUtente())) {
@@ -50,7 +50,7 @@ public class TessereDAO {
     public Tessera trovaPerId(String targetId) throws TesseraNonTrovataException, StringaUUIDNonValidaException {
 
         TypedQuery<Tessera> query = entityManager.createQuery(
-                "SELECT t FROM Tessera t WHERE t.tesseraId = :targetId",
+                "SELECT t FROM Tessera t WHERE t.venditaTrasportoId = :targetId",
                 Tessera.class
         );
 
