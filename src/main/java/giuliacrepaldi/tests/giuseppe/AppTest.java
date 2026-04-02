@@ -161,7 +161,8 @@ public class AppTest {
         // percorrenzeDAO.salva(percorrenza1);
         
         // System.out.println(mezzoTrasporto1);
-        
+
+        // NEXT TASK: PERCORRENZA TROVA PER ID
         
         
         entityManager.close();
