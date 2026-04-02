@@ -1,7 +1,9 @@
 package giuliacrepaldi.dao;
 
+import giuliacrepaldi.entities.Tessera;
 import giuliacrepaldi.entities.Utente;
 import giuliacrepaldi.exceptions.miscellanous.StringaUUIDNonValidaException;
+import giuliacrepaldi.exceptions.tessera.TesseraNonTrovataException;
 import giuliacrepaldi.exceptions.utente.UtenteNonTrovatoException;
 import giuliacrepaldi.exceptions.utente.UtenteSalvataggioException;
 import jakarta.persistence.EntityManager;
@@ -19,6 +21,9 @@ public class UtentiDAO {
         this.entityManager = entityManager;
     }
 
+    /**
+     * Aggiungi/aggiorna un utente.
+     */
     public void save(Utente newUtente) throws UtenteSalvataggioException{
         EntityTransaction transaction = entityManager.getTransaction();
 
@@ -61,6 +66,27 @@ public class UtentiDAO {
             throw new UtenteNonTrovatoException(targetId, "ID");
         }
         
+    }
+
+    /**
+     * Verifica se la tessera di quest'utente esiste già o no.
+     */
+    public boolean utenteHaTessera(Utente utente)  {
+        
+        TypedQuery<Boolean> query = entityManager.createQuery(
+                "SELECT " +
+                        "(COUNT(t) > 0) " +
+                        "   AS esiste_tessera " + 
+                        "FROM Tessera t " +
+                        "WHERE t.utente = :utente",
+                Boolean.class
+        );
+
+        // pass query params
+        query.setParameter("utente", utente);
+
+        // execute query
+        return query.getSingleResult();
     }
     
 }

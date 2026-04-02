@@ -21,8 +21,12 @@ public class TessereDAO {
         this.entityManager = entityManager;
     }
 
+    /**
+     * Aggiungi/aggiorna una tessera. 
+     */
     public void save(Tessera newTessera) throws TesseraSalvataggioException {
         EntityTransaction transaction = entityManager.getTransaction();
+        
         try {
             transaction.begin();
 
