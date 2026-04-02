@@ -1,7 +1,6 @@
 package giuliacrepaldi.tests.cristian;
 
 
-
 import giuliacrepaldi.dao.BigliettiDAO;
 import giuliacrepaldi.dao.PuntiEmissioneDAO;
 import giuliacrepaldi.entities.Biglietto;
@@ -16,8 +15,8 @@ import java.util.UUID;
 
 public class AppScanner {
 
-    static Scanner scanner = new Scanner(System.in);
     private static final EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("GESTIONALE-TRASPORTI-PUBBLICI-francesco");
+    static Scanner scanner = new Scanner(System.in);
 
     public static void main(String[] args) {
         EntityManager em = entityManagerFactory.createEntityManager();
@@ -29,9 +28,9 @@ public class AppScanner {
         System.out.println("2 Amministratore");
 
         int sceltaRuolo = Integer.parseInt(scanner.nextLine());
-        if (sceltaRuolo==1){
+        if (sceltaRuolo == 1) {
             menuUtente();
-        } else if (sceltaRuolo==2) {
+        } else if (sceltaRuolo == 2) {
             menuAmministratore();
         } else {
             System.out.println("Scelta non valida");
@@ -59,11 +58,13 @@ public class AppScanner {
 
             try {
                 punto = puntiDAO.trovaPerId(idPunto);
-            } catch (PuntoEmissioneNonTrovatoException e){
+            } catch (PuntoEmissioneNonTrovatoException e) {
                 System.out.println("Punto emissione non trovato!");
                 return;
             }
 
+            //Per questioni di usabilità proporrei:
+            // System.out.print("Vuoi una corsa da 2,50 o il giornaliero da 5,60? ");
             System.out.print("Inserisci prezzo: ");
             double prezzo = Double.parseDouble(scanner.nextLine());
 
@@ -79,7 +80,7 @@ public class AppScanner {
         }
     }
 
-    public static void menuUtente(){
+    public static void menuUtente() {
         int scelta;
         do {
             System.out.println("MENU UTENTE");
@@ -97,10 +98,10 @@ public class AppScanner {
                     creaBiglietto(em, scanner);
                     break;
             }
-        }while (scelta != 0);
+        } while (scelta != 0);
     }
 
-    public static void menuAmministratore(){
+    public static void menuAmministratore() {
         int scelta;
         do {
             System.out.println("Menu Amministratore");
@@ -119,10 +120,10 @@ public class AppScanner {
             System.out.println("13. Trova i mezzi dell'azienda");
             System.out.println("0. Esci");
             scelta = Integer.parseInt(scanner.nextLine());
-            switch (scelta){
+            switch (scelta) {
 
             }
-        }while (scelta != 0);
+        } while (scelta != 0);
     }
 }
 
