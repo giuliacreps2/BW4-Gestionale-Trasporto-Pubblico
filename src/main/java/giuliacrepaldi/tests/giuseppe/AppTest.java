@@ -4,6 +4,7 @@ import giuliacrepaldi.dao.*;
 import giuliacrepaldi.entities.*;
 import giuliacrepaldi.enums.TipologiaPuntoEmissione;
 import giuliacrepaldi.exceptions.tessera.TesseraSalvataggioException;
+import giuliacrepaldi.interfaces.exceptions.TesseraGenericException;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.Persistence;
@@ -58,7 +59,7 @@ public class AppTest {
         
         // mezziTrasportoDAO.save(mezzoTrasporto1);
         // puntiEmissioneDAO.save(puntoEmissione1);
-        utentiDAO.save(utente1);
+        // utentiDAO.save(utente1);
         
         Utente utente1FromDB = utentiDAO.trovaPerId("f26ea746-96e8-45a6-9361-7ec19bf33558");
         PuntoEmissione puntoEmissione1FromDB = puntiEmissioneDAO.findById("924d0962-c252-46d9-91d1-33f3a6c60a77");
@@ -90,15 +91,15 @@ public class AppTest {
 
         // System.out.println(tessera1);
         
-        // try {
-        //
-        //     // tessereDAO.save(tessera1);
-        //
-        // } catch (RuntimeException ex) {
-        //     if(ex instanceof TesseraSalvataggioException) {
-        //         System.out.println(ex.getMessage());
-        //     }
-        // }
+        try {
+
+            tessereDAO.save(tessera1);
+
+        } catch (RuntimeException ex) {
+            if(ex instanceof TesseraGenericException) {
+                System.out.println(ex.getMessage());
+            }
+        }
         //
         //
         //
