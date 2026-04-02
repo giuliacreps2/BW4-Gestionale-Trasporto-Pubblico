@@ -1,11 +1,12 @@
 package giuliacrepaldi.dao;
 
 import giuliacrepaldi.entities.Tratta;
+import giuliacrepaldi.entities.Utente;
+import giuliacrepaldi.exceptions.miscellanous.StringaUUIDNonValidaException;
 import giuliacrepaldi.exceptions.tratta.TrattaNonTrovataException;
 import giuliacrepaldi.exceptions.tratta.TrattaSalvataggioException;
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.EntityTransaction;
-import jakarta.persistence.Query;
+import giuliacrepaldi.exceptions.utente.UtenteNonTrovatoException;
+import jakarta.persistence.*;
 
 import java.util.List;
 import java.util.UUID;
@@ -20,7 +21,7 @@ public class TratteDAO {
 
     //Metodi
     //1. save tratta
-    public void salva(Tratta tratta) {
+    public void salva(Tratta tratta) throws TrattaSalvataggioException {
         EntityTransaction transaction = em.getTransaction();
         
         try {
@@ -49,11 +50,31 @@ public class TratteDAO {
 //    }
 
     //2. findById trova tratta
-    public Tratta findTrattaById(UUID trattaId) {
-        if (trattaId == null) throw new TrattaNonTrovataException(trattaId);
-        Tratta found = em.find(Tratta.class, UUID.fromString(String.valueOf(trattaId)));
-        if (found == null) throw new TrattaNonTrovataException(trattaId);
-        return found;
+    public Tratta trovaPerId(String targetId) throws TrattaNonTrovataException, StringaUUIDNonValidaException {
+        
+        TypedQuery<Tratta> query = em.createQuery(
+                "SELECT t FROM Tratta t WHERE t.trattaId = :targetId",
+                Tratta.class
+        );
+        // pass query params
+        try {
+
+            query.setParameter("targetId", UUID.fromString(targetId));
+
+        } catch(IllegalArgumentException ex) {
+            throw new StringaUUIDNonValidaException(targetId);
+        }
+
+        // execute query
+        try {
+
+            return query.getSingleResult();
+
+        } catch (NoResultException ex) {
+            throw new TrattaNonTrovataException(targetId, "ID");
+        }
+        
+        
     }
 
     //3. findByZonaPartenza per cercare le tratte
