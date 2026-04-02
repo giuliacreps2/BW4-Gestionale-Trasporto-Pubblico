@@ -1,7 +1,9 @@
 package giuliacrepaldi.dao;
 
+import giuliacrepaldi.entities.Tessera;
 import giuliacrepaldi.entities.Utente;
 import giuliacrepaldi.exceptions.miscellanous.StringaUUIDNonValidaException;
+import giuliacrepaldi.exceptions.tessera.TesseraNonTrovataException;
 import giuliacrepaldi.exceptions.utente.UtenteNonTrovatoException;
 import giuliacrepaldi.exceptions.utente.UtenteSalvataggioException;
 import jakarta.persistence.EntityManager;
@@ -19,6 +21,9 @@ public class UtentiDAO {
         this.entityManager = entityManager;
     }
 
+    /**
+     * Aggiungi/aggiorna un utente.
+     */
     public void save(Utente newUtente) throws UtenteSalvataggioException{
         EntityTransaction transaction = entityManager.getTransaction();
 
@@ -62,5 +67,6 @@ public class UtentiDAO {
         }
         
     }
+
     
 }
