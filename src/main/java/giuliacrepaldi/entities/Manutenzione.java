@@ -14,7 +14,7 @@ public class Manutenzione {
     @Id
     @GeneratedValue
     @Column(name = "manutenzione_id")
-    private UUID id;
+    private UUID manutenzioneId;
 
     @ManyToOne
     @JoinColumn(name = "mezzo_di_trasporto_id", nullable = false)
@@ -46,8 +46,8 @@ public class Manutenzione {
         this.costoManutenzione = costoManutenzione;
     }
 
-    public UUID getId() {
-        return id;
+    public UUID getManutenzioneId() {
+        return manutenzioneId;
     }
 
     public MezzoTrasporto getMezzoTrasporto() {
@@ -69,7 +69,7 @@ public class Manutenzione {
     @Override
     public String toString() {
         return "Manutenzione{" +
-                "id=" + id +
+                "manutenzioneId=" + manutenzioneId +
                 ", dataInizioManutenzione=" + dataInizioManutenzione +
                 ", dataFineManutenzione=" + dataFineManutenzione +
                 ", costoManutenzione=" + costoManutenzione +

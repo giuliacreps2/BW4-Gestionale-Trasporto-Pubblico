@@ -71,12 +71,14 @@ public class AppTest {
         // PuntoEmissione puntoEmissione1FromDB = puntiEmissioneDAO.findById(UUID.fromString("ea8feaae-62d2-4f5e-a73f-13838321ec58"));
         Biglietto biglietto1FromDB = bigliettiDAO.trovaPerId("1e62a537-a823-452c-9f95-d94a947646b1");
         MezzoTrasporto mezzoTrasporto1FromDB = mezziTrasportoDAO.findById("c4729d6b-6e27-4613-8d16-739a1b360c43");
+        Manutenzione manutenzione1FromDB = manutenzioniDAO.trovaPerId("30cf0185-be3f-4a3c-94e6-d3d841c92954");
         // boolean utente1HaTessera = utentiDAO.utenteHaTessera(utente1);
 
         // System.out.println(tessera1FromDB);
         // System.out.println(utente1HaTessera);
         // System.out.println(abbonamento1FromDB);
         // System.out.println(biglietto1FromDB);
+        // System.out.println(manutenzione1FromDB);
 
         // biglietto1FromDB.setObliteratoDa();
         // System.out.println(puntoEmissione1FromDB);
@@ -136,7 +138,6 @@ public class AppTest {
         // abbonamentiDAO.save(abbonamento1);
         // bigliettiDAO.salva(biglietto1);
         // manutenzioniDAO.save(manutenzione1);
-        
 
         // System.out.println(mezzoTrasporto1);
 
