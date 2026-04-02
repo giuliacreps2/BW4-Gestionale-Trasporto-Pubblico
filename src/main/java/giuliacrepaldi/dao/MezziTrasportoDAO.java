@@ -10,6 +10,7 @@ import jakarta.persistence.Query;
 import jakarta.persistence.TypedQuery;
 
 import java.lang.reflect.Type;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
 
@@ -47,5 +48,27 @@ public class MezziTrasportoDAO {
         query.setParameter("mezzoTrasporto", mezzoTrasporto);
         List<Manutenzione> manutenzioni = query.getResultList();
         return manutenzioni;
+    }
+
+    /**
+     * dato un mezzo ritorna se il mezzo è in manutenzione oppure no
+     */
+    public boolean eInManutenzione(MezzoTrasporto mezzoTrasporto){
+        // TODO: verificare che il mezzo esista
+        LocalDate today = LocalDate.now();
+
+        TypedQuery<Integer> query = em.createQuery("SELECT COUNT(m) FROM Manutenzione m " +
+                "WHERE m.mezzoTrasporto = :mezzoTrasporto " +
+                "AND :today BETWEEN m.dataInizioManutenzione AND m.dataFineManutenzione", Integer.class);
+
+        query.setParameter("mezzoTrasporto", mezzoTrasporto);
+        query.setParameter("today", today);
+        Integer quanteManutenzioni = query.getSingleResult();
+
+        return quanteManutenzioni > 0;
+    }
+
+    public boolean inServizio(MezzoTrasporto mezzoTrasporto) {
+        return !eInManutenzione(mezzoTrasporto);
     }
 }

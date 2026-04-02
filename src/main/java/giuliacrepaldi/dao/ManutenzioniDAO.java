@@ -71,29 +71,8 @@ public class ManutenzioniDAO {
         }
     }
 
-    public boolean eInManutenzione(String mezzoId){
-
-        try {
-            UUID uuid = UUID.fromString(mezzoId);
-            LocalDate today = LocalDate.now();
-
-            int count = em.createQuery("SELECT COUNT(m) FROM Manutenzione m " +
-                    "WHERE m.mezzoTrasporto.mezzoDiTrasportoId = :mezzoId " +
-                    "AND :today BETWEEN m.dataInizioManutenzione AND m.dataFineManutenzione", int.class)
-                    .setParameter("mezzoId", uuid)
-                    .setParameter("today", today)
-                    .getSingleResult();
-
-                    return count > 0;
-
-        } catch (IllegalArgumentException e){
-            throw new IllegalArgumentException("UUID non valido: " + mezzoId);
-        }
-    }
-
-    public boolean inServizio(String mezzoId) {
-        return !eInManutenzione(mezzoId);
-    }
+    // un mezzo è in manutenzione se il conteggio delle sue manutenzioni in corso è > 0
+    // un mezzo è in servizio se non è in manutenzione
 
         //Metodi
         //1.findByMezzo
