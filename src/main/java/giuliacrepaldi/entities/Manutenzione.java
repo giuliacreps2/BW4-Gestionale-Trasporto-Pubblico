@@ -1,6 +1,7 @@
 package giuliacrepaldi.entities;
 
 
+import giuliacrepaldi.exceptions.miscellanous.DataManutenzioneNonValidaException;
 import jakarta.persistence.*;
 
 import java.time.LocalDate;
@@ -12,7 +13,6 @@ public class Manutenzione {
 
     @Id
     @GeneratedValue
-
     @Column(name = "manutenzione_id")
     private UUID id;
 
@@ -27,19 +27,23 @@ public class Manutenzione {
     private LocalDate dataFineManutenzione;
 
     @Column(name = "costo_manutenzione", nullable = false)
-    private int manutenzione;
+    private double costoManutenzione;
 
     protected Manutenzione (){}
 
-    public Manutenzione(MezzoTrasporto mezzoTrasporto, LocalDate dataInizioManutenzione, LocalDate dataFineManutenzione,
-                        int manutenzione) {
+    public Manutenzione(MezzoTrasporto mezzoTrasporto, 
+                        LocalDate dataInizioManutenzione, 
+                        LocalDate dataFineManutenzione,
+                        double costoManutenzione) throws DataManutenzioneNonValidaException
+    {
         if (dataInizioManutenzione.isAfter(dataFineManutenzione)) {
-            throw new IllegalArgumentException("La data di inizio deve essere precedente alla data di fine");
+            throw new DataManutenzioneNonValidaException("La data di inizio deve essere precedente alla data di fine");
         }
+        
         this.mezzoTrasporto = mezzoTrasporto;
         this.dataInizioManutenzione = dataInizioManutenzione;
         this.dataFineManutenzione = dataFineManutenzione;
-        this.manutenzione = manutenzione;
+        this.costoManutenzione = costoManutenzione;
     }
 
     public UUID getId() {
@@ -58,18 +62,17 @@ public class Manutenzione {
         return dataFineManutenzione;
     }
 
-    public int getManutenzione() {
-        return manutenzione;
+    public double getCostoManutenzione() {
+        return costoManutenzione;
     }
 
     @Override
     public String toString() {
         return "Manutenzione{" +
                 "id=" + id +
-                ", mezzoTrasporto=" + mezzoTrasporto +
                 ", dataInizioManutenzione=" + dataInizioManutenzione +
                 ", dataFineManutenzione=" + dataFineManutenzione +
-                ", manutenzione=" + manutenzione +
+                ", costoManutenzione=" + costoManutenzione +
                 '}';
     }
 }

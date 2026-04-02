@@ -125,11 +125,17 @@ public class AppTest {
         //         TipoAbbonamento.SETTIMANALE
         // );
         
+        Manutenzione manutenzione1 = new Manutenzione(
+                mezzoTrasporto1FromDB,
+                LocalDate.now(),
+                LocalDate.now().plusMonths(1),
+                45.23
+        );
+        
+        
         // abbonamentiDAO.save(abbonamento1);
-        
-        //
         // bigliettiDAO.salva(biglietto1);
-        
+        // manutenzioniDAO.save(manutenzione1);
         
 
         // System.out.println(mezzoTrasporto1);

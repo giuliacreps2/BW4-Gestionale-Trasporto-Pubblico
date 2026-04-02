@@ -31,7 +31,6 @@ public class ManutenzioniDAO {
             em.persist(newManutenzione);
 
             transaction.commit();
-            System.out.println("Manutenzione salvataggio effettuato!");
         } catch (Exception e) {
             throw new ManutenzioneSalvataggioException(newManutenzione);
         }
