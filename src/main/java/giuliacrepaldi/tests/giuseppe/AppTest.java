@@ -47,7 +47,7 @@ public class AppTest {
                 TipologiaPuntoEmissione.RIVENDITORE_AUTORIZZATO,
                 true
         );
-        // puntiEmissioneDAO.save(puntoEmissione1);
+        // puntiEmissioneDAO.salva(puntoEmissione1);
         
         Utente utente1 = new Utente(
                 "Giuseppe",
@@ -59,10 +59,10 @@ public class AppTest {
         MezzoTrasporto mezzoTrasporto1 = new MezzoTrasporto(TipoMezzo.AUTOBUS);
         
         
-        // mezziTrasportoDAO.save(mezzoTrasporto1);
-        // puntiEmissioneDAO.save(puntoEmissione1);
-        // utentiDAO.save(utente1);
-        // mezziTrasportoDAO.save(mezzoTrasporto1);
+        // mezziTrasportoDAO.salva(mezzoTrasporto1);
+        // puntiEmissioneDAO.salva(puntoEmissione1);
+        // utentiDAO.salva(utente1);
+        // mezziTrasportoDAO.salva(mezzoTrasporto1);
         
         Utente utente1FromDB = utentiDAO.trovaPerId("f26ea746-96e8-45a6-9361-7ec19bf33558");
         Tessera tessera1FromDB = tessereDAO.trovaPerId("416eb551-7374-4115-b59d-f621ec869c2d");
@@ -106,7 +106,7 @@ public class AppTest {
         
         // try {
         //
-        //     tessereDAO.save(tessera1);
+        //     tessereDAO.salva(tessera1);
         //
         // } catch (RuntimeException ex) {
         //     if(ex instanceof TesseraGenericException) {
@@ -145,9 +145,9 @@ public class AppTest {
 
         // System.out.println(tratta1);
         
-        // abbonamentiDAO.save(abbonamento1);
+        // abbonamentiDAO.salva(abbonamento1);
         // bigliettiDAO.salva(biglietto1);
-        // manutenzioniDAO.save(manutenzione1);
+        // manutenzioniDAO.salva(manutenzione1);
         // tratteDAO.salva(tratta1);
         
         // System.out.println(mezzoTrasporto1);
