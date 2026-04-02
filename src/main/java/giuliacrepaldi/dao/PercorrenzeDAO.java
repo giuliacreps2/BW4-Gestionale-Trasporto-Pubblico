@@ -27,7 +27,7 @@ public class PercorrenzeDAO {
     //Metodi
 
     //1. save(Percorrenza p)
-    public void salva(Percorrenza percorrenza) {
+    public void salva(Percorrenza percorrenza) throws PercorrenzaSalvataggioException {
 
         EntityTransaction transaction = em.getTransaction();
         try {
@@ -35,10 +35,8 @@ public class PercorrenzeDAO {
             em.persist(percorrenza);
             transaction.commit();
             // System.out.println("Percorrenza salvata con successo");
-        } catch (Exception e) {
-            if (transaction.isActive()) {
-                transaction.rollback();
-            }
+        } catch (RuntimeException e) {
+            transaction.rollback();
             throw new PercorrenzaSalvataggioException(percorrenza);
         }
     }

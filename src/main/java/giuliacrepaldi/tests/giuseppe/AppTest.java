@@ -73,6 +73,7 @@ public class AppTest {
         MezzoTrasporto mezzoTrasporto1FromDB = mezziTrasportoDAO.trovaPerId("c4729d6b-6e27-4613-8d16-739a1b360c43");
         Manutenzione manutenzione1FromDB = manutenzioniDAO.trovaPerId("30cf0185-be3f-4a3c-94e6-d3d841c92954");
         Tratta tratta1FromDB = tratteDAO.trovaPerId("832e1f39-4966-4fe6-bbd6-45d0aaa8e27d");
+        // Percorrenza percorrenza1FromDB = 
         // boolean utente1HaTessera = utentiDAO.utenteHaTessera(utente1);
 
         // System.out.println(tessera1FromDB);
@@ -156,6 +157,7 @@ public class AppTest {
         // bigliettiDAO.salva(biglietto1);
         // manutenzioniDAO.salva(manutenzione1);
         // tratteDAO.salva(tratta1);
+        // percorrenzeDAO.salva(percorrenza1);
         
         // System.out.println(mezzoTrasporto1);
 
