@@ -1,8 +1,10 @@
 package giuliacrepaldi.tests.giulia;
 
+import giuliacrepaldi.dao.ManutenzioniDAO;
 import giuliacrepaldi.dao.MezziTrasportoDAO;
 import giuliacrepaldi.dao.PercorrenzeDAO;
 import giuliacrepaldi.dao.TratteDAO;
+import giuliacrepaldi.entities.Manutenzione;
 import giuliacrepaldi.entities.MezzoTrasporto;
 import giuliacrepaldi.entities.Percorrenza;
 import giuliacrepaldi.entities.Tratta;
@@ -11,7 +13,9 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.Persistence;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 // qui vanno diversi tipi di test e sperimenti 
 // ad esempio, aggiungi i dati che ti interessano
@@ -29,6 +33,7 @@ public class AppTest {
         MezziTrasportoDAO mezzoTrasportoDAO = new MezziTrasportoDAO(entityManager);
         TratteDAO tratteDAO = new TratteDAO(entityManager);
         PercorrenzeDAO percorrenzeDAO = new PercorrenzeDAO(entityManager);
+        ManutenzioniDAO manutenzioniDAO = new ManutenzioniDAO(entityManager);
 
         //Mezzi
         MezzoTrasporto mezzo1 = new MezzoTrasporto(TipoMezzo.TRAM);
@@ -42,7 +47,9 @@ public class AppTest {
         Percorrenza percorrenza1 = new Percorrenza(38L, LocalDateTime.of(2026, 3, 15, 8, 30), tratta1, mezzo1);
         Percorrenza percorrenza2 = new Percorrenza(27L, LocalDateTime.of(2026, 3, 15, 9, 0), tratta2, mezzo2);
 
-
+        MezzoTrasporto mezzoT1 = mezzoTrasportoDAO.findByiD(UUID.fromString("104c146f-24b0-45f5-b5c2-422e606b1ed5"));
+        Manutenzione manutenzione1 = new Manutenzione(mezzoT1, LocalDate.of(2026, 1, 15), LocalDate.of(2026, 2, 18), 30);
+        //Manutenzione manutenzione2 = new Manutenzione(mezzo2, LocalDate.of(2025, 12, 15), LocalDate.of(2026, 1, 18), 230);
         // ****** DAO
 
 //        mezzoTrasportoDAO.save(mezzo1);
@@ -66,6 +73,9 @@ public class AppTest {
 //        tratta1.setTrattaKm(15.0);
 //        tratteDAO.update(tratta1);
 
+
+        manutenzioniDAO.save(manutenzione1);
+        //manutenzioniDAO.save(manutenzione2);
 
         //System.out.println("UUID tratta1: " + tratta1.getTrattaId());
         //tratteDAO.deleteById(UUID.fromString("35ff4907-0f3b-44b1-b254-931efb755929"));

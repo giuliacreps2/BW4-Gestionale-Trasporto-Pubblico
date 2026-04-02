@@ -1,12 +1,9 @@
 package giuliacrepaldi.dao;
 
-import giuliacrepaldi.entities.Abbonamento;
 import giuliacrepaldi.entities.Manutenzione;
 import giuliacrepaldi.entities.MezzoTrasporto;
-import giuliacrepaldi.exceptions.abbonamento.AbbonamentoNonTrovatoException;
 import giuliacrepaldi.exceptions.manutenzione.ManutenzioneDiMezzoNonEsisteException;
 import giuliacrepaldi.exceptions.manutenzione.ManutenzioneSalvataggioException;
-import giuliacrepaldi.exceptions.miscellanous.StringaUUIDNonValidaException;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
 import jakarta.persistence.NoResultException;
@@ -24,6 +21,7 @@ public class ManutenzioniDAO {
         this.em = em;
     }
 
+    //1. save Manutenzione
     public void save(Manutenzione newManutenzione) throws ManutenzioneSalvataggioException {
         EntityTransaction transaction = em.getTransaction();
 
@@ -33,11 +31,13 @@ public class ManutenzioniDAO {
             em.persist(newManutenzione);
 
             transaction.commit();
+            System.out.println("Manutenzione salvataggio effettuato!");
         } catch (Exception e) {
             throw new ManutenzioneSalvataggioException(newManutenzione);
         }
     }
 
+    //2.findAll con BETWEEN — manutenzioni in un periodo
     public List<Manutenzione> findAll(String mezzoID, LocalDate dataInizio, LocalDate dataFine) {
         try {
             UUID uuid = UUID.fromString(mezzoID);
@@ -53,12 +53,14 @@ public class ManutenzioniDAO {
         }
     }
 
-    public List<Manutenzione> findManutenzioniInCorso(MezzoTrasporto mezzoTrasporto) throws ManutenzioneDiMezzoNonEsisteException{
+
+    //3.findManutenzioniInCorso(UUID mezzoId) ---> con data di riferimento oggi
+    public List<Manutenzione> findManutenzioniInCorso(MezzoTrasporto mezzoTrasporto) throws ManutenzioneDiMezzoNonEsisteException {
         LocalDate today = LocalDate.now();
 
         TypedQuery<Manutenzione> query = em.createQuery("SELECT m FROM Manutenzione m " +
-                "WHERE m.mezzoTrasporto = :mezzoTrasporto " +
-                "AND :today BETWEEN m.dataInizioManutenzione AND m.dataFineManutenzione",
+                        "WHERE m.mezzoTrasporto = :mezzoTrasporto " +
+                        "AND :today BETWEEN m.dataInizioManutenzione AND m.dataFineManutenzione",
                 Manutenzione.class);
 
         query.setParameter("mezzoTrasporto", mezzoTrasporto);
@@ -66,18 +68,14 @@ public class ManutenzioniDAO {
 
         try {
             return query.getResultList();
-        } catch (NoResultException e){
+        } catch (NoResultException e) {
             throw new ManutenzioneDiMezzoNonEsisteException(mezzoTrasporto);
         }
+
+        //4.findByMezzo
+
+
     }
 
-    // un mezzo è in manutenzione se il conteggio delle sue manutenzioni in corso è > 0
-    // un mezzo è in servizio se non è in manutenzione
 
-        //Metodi
-        //1.findByMezzo
-        //2.findAll con BETWEEN — manutenzioni in un periodo
-        //3.findManutenzioniInCorso(UUID mezzoId) ---> con data di riferimento oggi
-        //4.boolean eInManutenzione(UUID mezzoId), dove somma manutenzioni in corso == 0
-        //5.boolean inServizio(UUID mezzoId)---> non in eInManutenzione()
 }

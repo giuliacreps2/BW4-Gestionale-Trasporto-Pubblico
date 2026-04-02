@@ -5,6 +5,7 @@ import giuliacrepaldi.entities.Percorrenza;
 import giuliacrepaldi.entities.Tratta;
 import giuliacrepaldi.exceptions.mezzo_trasporto.MezzoTrasportoNonTrovatoException;
 import giuliacrepaldi.exceptions.percorrenza.PercorrenzaNonTrovataException;
+import giuliacrepaldi.exceptions.percorrenza.PercorrenzaSalvataggioException;
 import giuliacrepaldi.exceptions.tratta.TrattaNonTrovataException;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
@@ -28,10 +29,17 @@ public class PercorrenzeDAO {
     public void savePercorrenza(Percorrenza percorrenza) {
 
         EntityTransaction transaction = em.getTransaction();
-        transaction.begin();
-        em.persist(percorrenza);
-        transaction.commit();
-        System.out.println("Percorrenza salvata con successo");
+        try {
+            transaction.begin();
+            em.persist(percorrenza);
+            transaction.commit();
+            System.out.println("Percorrenza salvata con successo");
+        } catch (Exception e) {
+            if (transaction.isActive()) {
+                transaction.rollback();
+            }
+            throw new PercorrenzaSalvataggioException(percorrenza);
+        }
     }
 
     //2. findById(UUID id)
