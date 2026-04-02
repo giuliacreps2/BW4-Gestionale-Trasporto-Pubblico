@@ -1,6 +1,9 @@
 package giuliacrepaldi.dao;
 
 import giuliacrepaldi.entities.PuntoEmissione;
+import giuliacrepaldi.exceptions.punto_emissione.PuntoEmissioneNonTrovatoException;
+import giuliacrepaldi.exceptions.punto_emissione.PuntoEmissioneRimozioneException;
+import giuliacrepaldi.exceptions.punto_emissione.PuntoEmissioneSalvataggioException;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
 
@@ -8,35 +11,45 @@ import java.util.UUID;
 
 public class PuntiEmissioneDAO {
 
-    private EntityManager entityManager;
+    private final EntityManager entityManager;
 
     public PuntiEmissioneDAO(EntityManager entityManager) {
         this.entityManager = entityManager;
     }
 
+    /**
+     * Salva/aggiorna un punto emissione.
+     */
     public void save(PuntoEmissione puntoEmissione) {
         EntityTransaction transaction = entityManager.getTransaction();
+        
         try {
             transaction.begin();
             entityManager.persist(puntoEmissione);
             transaction.commit();
-            System.out.println("Punto di emissione salvato correttamente.");
-        } catch (Exception e) {
-            if (transaction.isActive()) transaction.rollback();
-            System.err.println("Errore durante il salvataggio: " + e.getMessage());
+        } catch (RuntimeException e) {
+            transaction.rollback();
+            throw new PuntoEmissioneSalvataggioException(puntoEmissione);
         }
+        
     }
 
-    public PuntoEmissione findById(UUID id) {
-        return entityManager.find(PuntoEmissione.class, id);
+    /**
+     * Trova un punto emissione per ID.
+     */
+    public PuntoEmissione findById(UUID targetId) {
+        return entityManager.find(PuntoEmissione.class, targetId);
     }
 
+    
+    /**
+     * Trova un punto emissione per ID e rimuovilo. 
+     */
     public void findByIdAndDelete(UUID id) {
         PuntoEmissione puntoEmissioneTrovato = this.findById(id);
 
         if (puntoEmissioneTrovato == null) {
-            System.out.println("Punto di emissione non trovato.");
-            return;
+            throw new PuntoEmissioneNonTrovatoException(id);
         }
 
         EntityTransaction transaction = entityManager.getTransaction();
@@ -44,32 +57,37 @@ public class PuntiEmissioneDAO {
             transaction.begin();
             entityManager.remove(puntoEmissioneTrovato);
             transaction.commit();
-            System.out.println("Punto di emissione eliminato correttamente.");
-        } catch (Exception e) {
-            if (transaction.isActive()) transaction.rollback();
-            System.err.println("Errore durante l'eliminazione: " + e.getMessage());
+        } catch (RuntimeException e) {
+            transaction.rollback();
+            throw new PuntoEmissioneRimozioneException(id);
         }
     }
 
+    /**
+     * Trova un punto di emissione per ID e aggiorna la sua citta e stato.
+     */
     public void findByIdAndUpdate(UUID id, String nuovaCitta, boolean nuovoStato) {
         PuntoEmissione puntoEmissioneTrovato = this.findById(id);
 
         if (puntoEmissioneTrovato == null) {
-            System.out.println("Punto di emissione non trovato.");
-            return;
+            throw new PuntoEmissioneNonTrovatoException(id);
         }
 
         EntityTransaction transaction = entityManager.getTransaction();
+        
         try {
             transaction.begin();
             puntoEmissioneTrovato.setCitta(nuovaCitta);
             puntoEmissioneTrovato.setAttivo(nuovoStato);
-            entityManager.merge(puntoEmissioneTrovato);
+            entityManager.persist(puntoEmissioneTrovato);
             transaction.commit();
-            System.out.println("Punto di emissione aggiornato correttamente.");
-        } catch (Exception e) {
-            if (transaction.isActive()) transaction.rollback();
-            System.err.println("Errore durante l'aggiornamento: " + e.getMessage());
+        } catch (RuntimeException e) {
+            transaction.rollback();
+            throw new PuntoEmissioneSalvataggioException(puntoEmissioneTrovato);
         }
+        
     }
+
+    
+    
 }
