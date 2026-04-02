@@ -4,6 +4,7 @@ import giuliacrepaldi.entities.MezzoTrasporto;
 import giuliacrepaldi.entities.Percorrenza;
 import giuliacrepaldi.entities.Tratta;
 import giuliacrepaldi.exceptions.mezzo_trasporto.MezzoTrasportoNonTrovatoException;
+import giuliacrepaldi.exceptions.miscellanous.StringaUUIDNonValidaException;
 import giuliacrepaldi.exceptions.percorrenza.PercorrenzaNonTrovataException;
 import giuliacrepaldi.exceptions.percorrenza.PercorrenzaSalvataggioException;
 import giuliacrepaldi.exceptions.tratta.TrattaNonTrovataException;
@@ -33,7 +34,7 @@ public class PercorrenzeDAO {
             transaction.begin();
             em.persist(percorrenza);
             transaction.commit();
-            System.out.println("Percorrenza salvata con successo");
+            // System.out.println("Percorrenza salvata con successo");
         } catch (Exception e) {
             if (transaction.isActive()) {
                 transaction.rollback();
@@ -43,12 +44,14 @@ public class PercorrenzeDAO {
     }
 
     //2. findById(UUID id)
-    public Percorrenza trovaPerId(UUID percorrenzaId) {
-        if (percorrenzaId == null) throw new PercorrenzaNonTrovataException(percorrenzaId);
-        Percorrenza found = em.find(Percorrenza.class, percorrenzaId);
-        if (found == null) throw new PercorrenzaNonTrovataException(percorrenzaId);
-        System.out.println("Percorrenza con id: " + percorrenzaId + " trovata con successo");
+    public Percorrenza trovaPerId(String targetId) throws PercorrenzaNonTrovataException, StringaUUIDNonValidaException {
+        Percorrenza found = em.find(Percorrenza.class, targetId);
+        if (found == null) throw new PercorrenzaNonTrovataException(targetId, "ID");
         return found;
+    }
+
+    public Percorrenza trovaPerId(UUID percorrenzaId) throws PercorrenzaNonTrovataException {
+        return trovaPerId(percorrenzaId.toString());
     }
 
     //3. findByMezzo(UUID mezzoId)
@@ -57,7 +60,7 @@ public class PercorrenzeDAO {
         Query query = em.createQuery("SELECT p FROM Percorrenza p WHERE p.mezzoTrasporto.mezzoDiTrasportoId = :mezzoId", Percorrenza.class);
         query.setParameter("mezzoId", mezzoDiTrasportoId);
         List<Percorrenza> percorrenzeMezzi = query.getResultList();
-        System.out.println("Lista percorrenze in base al mezzo: " + percorrenzeMezzi.size() + " trovata con successo");
+        // System.out.println("Lista percorrenze in base al mezzo: " + percorrenzeMezzi.size() + " trovata con successo");
         return percorrenzeMezzi;
     }
 
@@ -67,7 +70,7 @@ public class PercorrenzeDAO {
         Query query = em.createQuery("SELECT p FROM Percorrenza p WHERE p.tratta.trattaId = :trattaId", Percorrenza.class);
         query.setParameter("trattaId", trattaId);
         List<Percorrenza> percorrenzeTratte = query.getResultList();
-        System.out.println("Lista percorrenze in base alla tratta: " + percorrenzeTratte.size() + " trovata con successo");
+        // System.out.println("Lista percorrenze in base alla tratta: " + percorrenzeTratte.size() + " trovata con successo");
         return percorrenzeTratte;
     }
 
@@ -89,7 +92,7 @@ public class PercorrenzeDAO {
         query.setParameter("dataInizio", dataInizio);
         query.setParameter("dataFine", dataFine);
         Long volte = (Long) query.getSingleResult();
-        System.out.println("Il numero di volte che un mezzo percorre la tratta è " + volte);
+        // System.out.println("Il numero di volte che un mezzo percorre la tratta è " + volte);
         return volte;
     }
 
@@ -108,7 +111,7 @@ public class PercorrenzeDAO {
 
         double tempoMedio = distanzaKm / velocità;
         long minuti = Math.round(tempoMedio * 60);
-        System.out.println("Il tempo medio effettivo è di: " + minuti + " minuti");
+        // System.out.println("Il tempo medio effettivo è di: " + minuti + " minuti");
         return Duration.ofMinutes(minuti);
 
     }

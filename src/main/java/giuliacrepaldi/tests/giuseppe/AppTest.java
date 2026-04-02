@@ -136,12 +136,16 @@ public class AppTest {
         //         45.23
         // );
         
-        Tratta tratta1 = new Tratta(
-                234,
-                44,
-                "roma",
-                "milano"
-        );
+        // Tratta tratta1 = new Tratta(
+        //         234,
+        //         44,
+        //         "roma",
+        //         "milano"
+        // );
+        
+        // Percorrenza percorrenza1 = new Percorrenza(
+        //        
+        // );
 
         // System.out.println(tratta1);
         

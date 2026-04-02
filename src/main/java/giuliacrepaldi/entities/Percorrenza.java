@@ -17,27 +17,23 @@ public class Percorrenza {
     @Column(name = "tempo_effettivo_percorrenza", nullable = false)
     private Long tempoEffettivoPercorrenza;
     
-    @Column(name = "data_percorrenza")
+    @Column(name = "data_percorrenza", nullable = false)
     private LocalDateTime dataPercorrenza;
 
     @ManyToOne
-    @JoinColumn(name = "tratta_id")
+    @JoinColumn(name = "tratta_id", nullable = false)
     private Tratta tratta;
 
     @ManyToOne
-    @JoinColumn(name = "mezzo_di_trasporto_id")
+    @JoinColumn(name = "mezzo_di_trasporto_id", nullable = false)
     private MezzoTrasporto mezzoTrasporto;
 
     //Costruttore
     protected Percorrenza() {
 
     }
-
-    public Percorrenza(long tempoEffettivoPercorrenza) {
-        this.tempoEffettivoPercorrenza = tempoEffettivoPercorrenza;
-    }
-
-    public Percorrenza(Long tempoEffettivoPercorrenza, LocalDateTime dataPercorrenza, Tratta tratta, MezzoTrasporto mezzoTrasporto) {
+    
+    public Percorrenza(long tempoEffettivoPercorrenza, LocalDateTime dataPercorrenza, Tratta tratta, MezzoTrasporto mezzoTrasporto) {
         this.tempoEffettivoPercorrenza = tempoEffettivoPercorrenza;
         this.dataPercorrenza = dataPercorrenza;
         this.tratta = tratta;
