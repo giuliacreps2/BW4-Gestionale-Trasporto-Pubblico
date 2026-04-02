@@ -7,18 +7,20 @@ import giuliacrepaldi.exceptions.miscellanous.StringaUUIDNonValidaException;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
 import jakarta.persistence.NoResultException;
+import jakarta.persistence.Query;
 
+import java.util.List;
 import java.util.UUID;
 
 public class AbbonamentiDAO {
 
     private final EntityManager em;
 
-    public AbbonamentiDAO(EntityManager em){
+    public AbbonamentiDAO(EntityManager em) {
         this.em = em;
     }
 
-    public void salva(Abbonamento newAbbonamento) throws AbbonamentoSalvataggioException{
+    public void salva(Abbonamento newAbbonamento) throws AbbonamentoSalvataggioException {
         EntityTransaction transaction = em.getTransaction();
 
         try {
@@ -28,26 +30,26 @@ public class AbbonamentiDAO {
 
             transaction.commit();
 
-        } catch (Exception e){
+        } catch (Exception e) {
             throw new AbbonamentoSalvataggioException(newAbbonamento);
         }
     }
 
-    public Abbonamento trovaPerId(String abbonamentoId) throws AbbonamentoNonTrovatoException, StringaUUIDNonValidaException{
+    public Abbonamento trovaPerId(String abbonamentoId) throws AbbonamentoNonTrovatoException, StringaUUIDNonValidaException {
         Abbonamento found;
 
         try {
             found = em.find(Abbonamento.class, UUID.fromString(abbonamentoId));
-        } catch (IllegalArgumentException e){
-             throw new StringaUUIDNonValidaException(abbonamentoId);
+        } catch (IllegalArgumentException e) {
+            throw new StringaUUIDNonValidaException(abbonamentoId);
         }
-        if (found == null){
+        if (found == null) {
             throw new AbbonamentoNonTrovatoException(abbonamentoId, "id");
         }
         return found;
     }
 
-    public boolean abbonamentoValido(String abbonamentoId) throws AbbonamentoNonTrovatoException, StringaUUIDNonValidaException{
+    public boolean abbonamentoValido(String abbonamentoId) throws AbbonamentoNonTrovatoException, StringaUUIDNonValidaException {
         Abbonamento abbonamento = trovaPerId(abbonamentoId);
 
         String jpql = "SELECT a FROM Abbonamento a " +
@@ -62,5 +64,11 @@ public class AbbonamentiDAO {
         } catch (NoResultException e) {
             return false;
         }
+    }
+
+    public List<Abbonamento> findAll() {
+        Query query = em.createQuery("SELECT a FROM Abbonamento a");
+        List<Abbonamento> tuttiGliAbbonamenti = query.getResultList();
+        return tuttiGliAbbonamenti;
     }
 }

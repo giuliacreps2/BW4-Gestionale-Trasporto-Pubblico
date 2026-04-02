@@ -1,7 +1,6 @@
 package giuliacrepaldi.entities;
 
 import giuliacrepaldi.exceptions.miscellanous.PrezzoNonValidoException;
-import giuliacrepaldi.exceptions.miscellanous.QuantitaNonValidaException;
 import giuliacrepaldi.helpers.Validatore;
 import jakarta.persistence.*;
 
@@ -19,43 +18,47 @@ public abstract class VenditaTrasporto {
     @GeneratedValue
     @Column(name = "vendita_trasporto_id")
     private UUID venditaTrasportoId;
-    
+
     @ManyToOne
     @JoinColumn(name = "punto_emissione_id", nullable = false)
     private PuntoEmissione puntoEmissione;
-    
+
     @Column(nullable = false)
     private double prezzo;
-    
+
     @Column(name = "data_vendita", nullable = false)
     private LocalDate dataVendita;
-    
-    protected VenditaTrasporto() {}
+
+    protected VenditaTrasporto() {
+    }
 
     public VenditaTrasporto(PuntoEmissione puntoEmissione, double prezzo) {
         this.puntoEmissione = puntoEmissione;
         // verifica che quantità sia valida
-        if(!Validatore.ePrezzoValido(prezzo)) {
+        if (!Validatore.ePrezzoValido(prezzo)) {
             throw new PrezzoNonValidoException(prezzo);
         }
         this.prezzo = prezzo;
         this.dataVendita = LocalDate.now();
     }
 
+    public VenditaTrasporto(PuntoEmissione puntoEmissione) {
+    }
+
     public LocalDate getDataVendita() {
         return dataVendita;
     }
-    
+
 
     public double getPrezzo() {
         return prezzo;
     }
-    
+
 
     public UUID getVenditaTrasportoId() {
         return venditaTrasportoId;
     }
-    
+
 
     public PuntoEmissione getPuntoEmissione() {
         return puntoEmissione;
