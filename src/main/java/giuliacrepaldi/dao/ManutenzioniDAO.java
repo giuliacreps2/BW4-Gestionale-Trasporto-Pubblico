@@ -26,7 +26,7 @@ public class ManutenzioniDAO {
     }
 
     //1. save Manutenzione
-    public void save(Manutenzione newManutenzione) throws ManutenzioneSalvataggioException {
+    public void salva(Manutenzione newManutenzione) throws ManutenzioneSalvataggioException {
         EntityTransaction transaction = em.getTransaction();
 
         try {

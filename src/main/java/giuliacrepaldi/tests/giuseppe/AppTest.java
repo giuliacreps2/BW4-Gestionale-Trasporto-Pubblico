@@ -66,11 +66,11 @@ public class AppTest {
         
         Utente utente1FromDB = utentiDAO.trovaPerId("f26ea746-96e8-45a6-9361-7ec19bf33558");
         Tessera tessera1FromDB = tessereDAO.trovaPerId("416eb551-7374-4115-b59d-f621ec869c2d");
-        PuntoEmissione puntoEmissione1FromDB = puntiEmissioneDAO.findById("924d0962-c252-46d9-91d1-33f3a6c60a77");
-        Abbonamento abbonamento1FromDB = abbonamentiDAO.findAbbonamentoById("5d3869f9-18db-4f88-9bfe-1bf874af3aa6");
+        PuntoEmissione puntoEmissione1FromDB = puntiEmissioneDAO.trovaPerId("924d0962-c252-46d9-91d1-33f3a6c60a77");
+        Abbonamento abbonamento1FromDB = abbonamentiDAO.trovaPerId("5d3869f9-18db-4f88-9bfe-1bf874af3aa6");
         // PuntoEmissione puntoEmissione1FromDB = puntiEmissioneDAO.findById(UUID.fromString("ea8feaae-62d2-4f5e-a73f-13838321ec58"));
         Biglietto biglietto1FromDB = bigliettiDAO.trovaPerId("1e62a537-a823-452c-9f95-d94a947646b1");
-        MezzoTrasporto mezzoTrasporto1FromDB = mezziTrasportoDAO.findById("c4729d6b-6e27-4613-8d16-739a1b360c43");
+        MezzoTrasporto mezzoTrasporto1FromDB = mezziTrasportoDAO.trovaPerId("c4729d6b-6e27-4613-8d16-739a1b360c43");
         Manutenzione manutenzione1FromDB = manutenzioniDAO.trovaPerId("30cf0185-be3f-4a3c-94e6-d3d841c92954");
         Tratta tratta1FromDB = tratteDAO.trovaPerId("832e1f39-4966-4fe6-bbd6-45d0aaa8e27d");
         // boolean utente1HaTessera = utentiDAO.utenteHaTessera(utente1);

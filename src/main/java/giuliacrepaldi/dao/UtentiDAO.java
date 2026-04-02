@@ -24,7 +24,7 @@ public class UtentiDAO {
     /**
      * Aggiungi/aggiorna un utente.
      */
-    public void save(Utente newUtente) throws UtenteSalvataggioException{
+    public void salva(Utente newUtente) throws UtenteSalvataggioException{
         EntityTransaction transaction = entityManager.getTransaction();
 
         try {

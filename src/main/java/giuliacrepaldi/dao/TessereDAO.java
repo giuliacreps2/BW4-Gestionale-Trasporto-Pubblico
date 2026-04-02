@@ -25,7 +25,7 @@ public class TessereDAO {
     /**
      * Aggiungi/aggiorna una tessera. 
      */
-    public void save(Tessera newTessera) throws TesseraSalvataggioException, TesseraGiaEsistenteException {
+    public void salva(Tessera newTessera) throws TesseraSalvataggioException, TesseraGiaEsistenteException {
         
         // la tessera di questo utente esiste già 
         if(utenteHaTessera(newTessera.getUtente())) {

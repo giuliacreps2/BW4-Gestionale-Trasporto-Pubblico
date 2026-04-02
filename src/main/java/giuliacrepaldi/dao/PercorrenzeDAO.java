@@ -26,7 +26,7 @@ public class PercorrenzeDAO {
     //Metodi
 
     //1. save(Percorrenza p)
-    public void savePercorrenza(Percorrenza percorrenza) {
+    public void salva(Percorrenza percorrenza) {
 
         EntityTransaction transaction = em.getTransaction();
         try {
@@ -43,7 +43,7 @@ public class PercorrenzeDAO {
     }
 
     //2. findById(UUID id)
-    public Percorrenza findPercorrenzaById(UUID percorrenzaId) {
+    public Percorrenza trovaPerId(UUID percorrenzaId) {
         if (percorrenzaId == null) throw new PercorrenzaNonTrovataException(percorrenzaId);
         Percorrenza found = em.find(Percorrenza.class, percorrenzaId);
         if (found == null) throw new PercorrenzaNonTrovataException(percorrenzaId);

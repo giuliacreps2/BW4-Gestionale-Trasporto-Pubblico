@@ -22,7 +22,7 @@ public class MezziTrasportoDAO {
         this.em = em;
     }
 
-    public void save(MezzoTrasporto newMezzoTrasporto) throws MezzoTrasportoSalvataggioException {
+    public void salva(MezzoTrasporto newMezzoTrasporto) throws MezzoTrasportoSalvataggioException {
         EntityTransaction transaction = em.getTransaction();
 
         try {
@@ -78,15 +78,15 @@ public class MezziTrasportoDAO {
     }
 
     //4. findById
-    public MezzoTrasporto findById(String targetId) throws MezzoTrasportoNonTrovatoException, StringaUUIDNonValidaException {
+    public MezzoTrasporto trovaPerId(String targetId) throws MezzoTrasportoNonTrovatoException, StringaUUIDNonValidaException {
         try {
-            return findById(UUID.fromString(targetId));
+            return trovaPerId(UUID.fromString(targetId));
         } catch (IllegalArgumentException ex) {
             throw new StringaUUIDNonValidaException(targetId);
         }
     }
     
-    public MezzoTrasporto findById(UUID mezzoDiTrasportoId) throws MezzoTrasportoNonTrovatoException {
+    public MezzoTrasporto trovaPerId(UUID mezzoDiTrasportoId) throws MezzoTrasportoNonTrovatoException {
         MezzoTrasporto found = em.find(MezzoTrasporto.class, mezzoDiTrasportoId);
         
         if (found == null) {

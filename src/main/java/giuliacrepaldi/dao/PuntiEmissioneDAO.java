@@ -23,7 +23,7 @@ public class PuntiEmissioneDAO {
     /**
      * Salva/aggiorna un punto emissione.
      */
-    public void save(PuntoEmissione puntoEmissione) throws PuntoEmissioneSalvataggioException {
+    public void salva(PuntoEmissione puntoEmissione) throws PuntoEmissioneSalvataggioException {
         EntityTransaction transaction = entityManager.getTransaction();
         
         try {
@@ -40,15 +40,15 @@ public class PuntiEmissioneDAO {
     /**
      * Trova un punto emissione per ID.
      */
-    public PuntoEmissione findById(UUID targetId) throws PuntoEmissioneNonTrovatoException {
-        return findById(targetId.toString());
+    public PuntoEmissione trovaPerId(UUID targetId) throws PuntoEmissioneNonTrovatoException {
+        return trovaPerId(targetId.toString());
     }
 
     
     /**
      * Trova un punto emissione per ID.
      */
-    public PuntoEmissione findById(String targetId) throws PuntoEmissioneNonTrovatoException, StringaUUIDNonValidaException {
+    public PuntoEmissione trovaPerId(String targetId) throws PuntoEmissioneNonTrovatoException, StringaUUIDNonValidaException {
 
         TypedQuery<PuntoEmissione> query = entityManager.createQuery(
                 "SELECT p FROM PuntoEmissione p WHERE p.puntoEmissioneId = :targetId",
@@ -80,7 +80,7 @@ public class PuntiEmissioneDAO {
      * Trova un punto emissione per ID e rimuovilo. 
      */
     public void findByIdAndDelete(UUID id) throws PuntoEmissioneNonTrovatoException, PuntoEmissioneRimozioneException {
-        PuntoEmissione puntoEmissioneTrovato = this.findById(id);
+        PuntoEmissione puntoEmissioneTrovato = this.trovaPerId(id);
 
         if (puntoEmissioneTrovato == null) {
             throw new PuntoEmissioneNonTrovatoException(id);
@@ -101,7 +101,7 @@ public class PuntiEmissioneDAO {
      * Trova un punto di emissione per ID e aggiorna la sua citta e stato.
      */
     public void findByIdAndUpdate(UUID id, String nuovaCitta, boolean nuovoStato) throws PuntoEmissioneNonTrovatoException, PuntoEmissioneSalvataggioException {
-        PuntoEmissione puntoEmissioneTrovato = this.findById(id);
+        PuntoEmissione puntoEmissioneTrovato = this.trovaPerId(id);
 
         if (puntoEmissioneTrovato == null) {
             throw new PuntoEmissioneNonTrovatoException(id);
