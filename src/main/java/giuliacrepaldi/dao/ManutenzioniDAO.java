@@ -4,10 +4,13 @@ import giuliacrepaldi.entities.Abbonamento;
 import giuliacrepaldi.entities.Manutenzione;
 import giuliacrepaldi.entities.MezzoTrasporto;
 import giuliacrepaldi.exceptions.abbonamento.AbbonamentoNonTrovatoException;
+import giuliacrepaldi.exceptions.manutenzione.ManutenzioneDiMezzoNonEsisteException;
 import giuliacrepaldi.exceptions.manutenzione.ManutenzioneSalvataggioException;
 import giuliacrepaldi.exceptions.miscellanous.StringaUUIDNonValidaException;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
+import jakarta.persistence.NoResultException;
+import jakarta.persistence.TypedQuery;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -33,30 +36,9 @@ public class ManutenzioniDAO {
         } catch (Exception e) {
             throw new ManutenzioneSalvataggioException(newManutenzione);
         }
-
-
     }
-public Manutenzione findByMezzo(String manutenzioneID) {
- Manutenzione found;
 
-    try {
-
-        found = em.find(Manutenzione.class, UUID.fromString(manutenzioneID));
-    } catch (IllegalArgumentException e){
-        throw new IllegalArgumentException("UUID non valido " + manutenzioneID);
-    }
-    if (found == null){
-        throw new IllegalArgumentException("Manutenzione non trovata con id: " + manutenzioneID);
-    }
-    return found;
-}
-
-public MezzoTrasporto findMezzoByManutenzioneID(String manutenzioneID){
-        Manutenzione manutenzione= findByMezzo(manutenzioneID);
-        return manutenzione.getMezzoTrasporto();
-}
-
-public List<Manutenzione> findAll(String mezzoID, LocalDate dataInizio, LocalDate dataFine){
+    public List<Manutenzione> findAll(String mezzoID, LocalDate dataInizio, LocalDate dataFine) {
         try {
             UUID uuid = UUID.fromString(mezzoID);
             return em.createQuery("SELECT m FROM Manutenzione m " +
@@ -66,15 +48,57 @@ public List<Manutenzione> findAll(String mezzoID, LocalDate dataInizio, LocalDat
                     .setParameter("dataInizio", dataInizio)
                     .setParameter("dataFine", dataFine)
                     .getResultList();
-        }catch (IllegalArgumentException e){
+        } catch (IllegalArgumentException e) {
             throw new IllegalArgumentException("UUID non valido " + mezzoID);
-}
+        }
+    }
 
+    public List<Manutenzione> findManutenzioniInCorso(MezzoTrasporto mezzoTrasporto) throws ManutenzioneDiMezzoNonEsisteException{
+        LocalDate today = LocalDate.now();
 
-    //Metodi
-    //1.findByMezzo
-    //2.findAll con BETWEEN — manutenzioni in un periodo
-    //3.findManutenzioniInCorso(UUID mezzoId) ---> con data di riferimento oggi
-    //4.boolean eInManutenzione(UUID mezzoId), dove somma manutenzioni in corso == 0
-    //5.boolean inServizio(UUID mezzoId)---> non in eInManutenzione()
+        TypedQuery<Manutenzione> query = em.createQuery("SELECT m FROM Manutenzione m " +
+                "WHERE m.mezzoTrasporto = :mezzoTrasporto " +
+                "AND :today BETWEEN m.dataInizioManutenzione AND m.dataFineManutenzione",
+                Manutenzione.class);
+
+        query.setParameter("mezzoTrasporto", mezzoTrasporto);
+        query.setParameter("today", today);
+
+        try {
+            return query.getResultList();
+        } catch (NoResultException e){
+            throw new ManutenzioneDiMezzoNonEsisteException(mezzoTrasporto);
+        }
+    }
+
+    public boolean eInManutenzione(String mezzoId){
+
+        try {
+            UUID uuid = UUID.fromString(mezzoId);
+            LocalDate today = LocalDate.now();
+
+            int count = em.createQuery("SELECT COUNT(m) FROM Manutenzione m " +
+                    "WHERE m.mezzoTrasporto.mezzoDiTrasportoId = :mezzoId " +
+                    "AND :today BETWEEN m.dataInizioManutenzione AND m.dataFineManutenzione", int.class)
+                    .setParameter("mezzoId", uuid)
+                    .setParameter("today", today)
+                    .getSingleResult();
+
+                    return count > 0;
+
+        } catch (IllegalArgumentException e){
+            throw new IllegalArgumentException("UUID non valido: " + mezzoId);
+        }
+    }
+
+    public boolean inServizio(String mezzoId) {
+        return !eInManutenzione(mezzoId);
+    }
+
+        //Metodi
+        //1.findByMezzo
+        //2.findAll con BETWEEN — manutenzioni in un periodo
+        //3.findManutenzioniInCorso(UUID mezzoId) ---> con data di riferimento oggi
+        //4.boolean eInManutenzione(UUID mezzoId), dove somma manutenzioni in corso == 0
+        //5.boolean inServizio(UUID mezzoId)---> non in eInManutenzione()
 }

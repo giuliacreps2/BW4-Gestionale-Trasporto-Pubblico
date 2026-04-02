@@ -1,9 +1,17 @@
 package giuliacrepaldi.dao;
 
+import giuliacrepaldi.entities.Manutenzione;
 import giuliacrepaldi.entities.MezzoTrasporto;
 import giuliacrepaldi.exceptions.mezzo_trasporto.MezzoTrasportoSalvataggioException;
+import giuliacrepaldi.exceptions.miscellanous.StringaUUIDNonValidaException;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
+import jakarta.persistence.Query;
+import jakarta.persistence.TypedQuery;
+
+import java.lang.reflect.Type;
+import java.util.List;
+import java.util.UUID;
 
 public class MezziTrasportoDAO {
 
@@ -29,5 +37,15 @@ public class MezziTrasportoDAO {
             }
             throw new MezzoTrasportoSalvataggioException(newMezzoTrasporto);
         }
+    }
+
+    public List<Manutenzione> findAllManutenzioneDiMezzo(MezzoTrasporto mezzoTrasporto) {
+
+        TypedQuery<Manutenzione> query = em.createQuery("SELECT man FROM Manutenzione man " +
+                    "WHERE man.mezzoTrasporto = :mezzoTrasporto", Manutenzione.class);
+
+        query.setParameter("mezzoTrasporto", mezzoTrasporto);
+        List<Manutenzione> manutenzioni = query.getResultList();
+        return manutenzioni;
     }
 }
