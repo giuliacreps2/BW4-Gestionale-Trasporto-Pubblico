@@ -2,6 +2,7 @@ package giuliacrepaldi.dao;
 
 import giuliacrepaldi.entities.Tratta;
 import giuliacrepaldi.exceptions.tratta.TrattaNonTrovataException;
+import giuliacrepaldi.exceptions.tratta.TrattaSalvataggioException;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
 import jakarta.persistence.Query;
@@ -21,11 +22,16 @@ public class TratteDAO {
     //1. save tratta
     public void saveTratta(Tratta tratta) {
         EntityTransaction transaction = em.getTransaction();
-        transaction.begin();
-        em.persist(tratta);
-        em.flush();
-        transaction.commit();
-        System.out.println("Tratta salvata con successo!");
+        try {
+            transaction.begin();
+            em.persist(tratta);
+            em.flush();
+            transaction.commit();
+            System.out.println("Tratta salvata con successo!");
+        } catch (Exception e) {
+            transaction.rollback();
+        }
+        throw new TrattaSalvataggioException(tratta);
     }
 
     public void update(Tratta tratta) {
