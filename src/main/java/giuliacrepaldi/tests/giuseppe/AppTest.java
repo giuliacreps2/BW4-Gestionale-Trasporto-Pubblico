@@ -61,7 +61,7 @@ public class AppTest {
         // utentiDAO.save(utente1);
         
         // Utente utente1FromDB = utentiDAO.trovaPerId("f216c1c9-d335-4859-9315-ca82984bd8dc");
-        PuntoEmissione puntoEmissione1FromDB = puntiEmissioneDAO.findById(UUID.fromString("924d0962-c252-46d9-91d1-33f3a6c60a77"));
+        PuntoEmissione puntoEmissione1FromDB = puntiEmissioneDAO.findById("924d0962-c252-46d9-91");
         // PuntoEmissione puntoEmissione1FromDB = puntiEmissioneDAO.findById(UUID.fromString("ea8feaae-62d2-4f5e-a73f-13838321ec58"));
         // Biglietto biglietto1FromDB = bigliettiDAO.trovaPerId("98628bf8-88a8-4968-9621-99bf2c0b0bd2");
 
