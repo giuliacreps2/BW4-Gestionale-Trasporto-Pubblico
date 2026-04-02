@@ -127,18 +127,27 @@ public class AppTest {
         //         TipoAbbonamento.SETTIMANALE
         // );
         
-        Manutenzione manutenzione1 = new Manutenzione(
-                mezzoTrasporto1FromDB,
-                LocalDate.now(),
-                LocalDate.now().plusMonths(1),
-                45.23
-        );
+        // Manutenzione manutenzione1 = new Manutenzione(
+        //         mezzoTrasporto1FromDB,
+        //         LocalDate.now(),
+        //         LocalDate.now().plusMonths(1),
+        //         45.23
+        // );
         
+        Tratta tratta1 = new Tratta(
+                234,
+                44,
+                "roma",
+                "milano"
+        );
+
+        // System.out.println(tratta1);
         
         // abbonamentiDAO.save(abbonamento1);
         // bigliettiDAO.salva(biglietto1);
         // manutenzioniDAO.save(manutenzione1);
-
+        // tratteDAO.salva(tratta1);
+        
         // System.out.println(mezzoTrasporto1);
 
         

@@ -20,27 +20,21 @@ public class TratteDAO {
 
     //Metodi
     //1. save tratta
-    public void saveTratta(Tratta tratta) {
+    public void salva(Tratta tratta) {
         EntityTransaction transaction = em.getTransaction();
+        
         try {
+            
             transaction.begin();
             em.persist(tratta);
-            em.flush();
             transaction.commit();
-            System.out.println("Tratta salvata con successo!");
-        } catch (Exception e) {
+            
+        } catch (RuntimeException e) {
             transaction.rollback();
+            throw new TrattaSalvataggioException(tratta);
         }
-        throw new TrattaSalvataggioException(tratta);
     }
-
-    public void update(Tratta tratta) {
-        EntityTransaction transaction = em.getTransaction();
-        transaction.begin();
-        em.merge(tratta);
-        transaction.commit();
-        System.out.println("Tratta modificata con successo. Riepilogo info aggiornate: " + tratta);
-    }
+    
 
     //Per cancellare la tratta è necessario cancellare prima la percorrenza collegata attraverso
     //il metodo deleteById apposito
@@ -59,7 +53,6 @@ public class TratteDAO {
         if (trattaId == null) throw new TrattaNonTrovataException(trattaId);
         Tratta found = em.find(Tratta.class, UUID.fromString(String.valueOf(trattaId)));
         if (found == null) throw new TrattaNonTrovataException(trattaId);
-        System.out.println("Tratta trovata con successo. Ecco tutte le info: " + found);
         return found;
     }
 
@@ -68,7 +61,6 @@ public class TratteDAO {
         Query query = em.createQuery("SELECT t FROM Tratta t WHERE LOWER(t.zonaPartenza) LIKE LOWER(:zona)");
         query.setParameter("zona", "%" + zonaPartenza + "%");
         List<Tratta> zonePartenza = query.getResultList();
-        System.out.println("Ecco la lista delle tratte: " + zonePartenza);
         return zonePartenza;
     }
 
@@ -77,7 +69,6 @@ public class TratteDAO {
     public List<Tratta> findAll() {
         Query query = em.createQuery("SELECT t FROM Tratta t");
         List<Tratta> tutteLeTratte = query.getResultList();
-        System.out.println("Ecco la lista completa delle tratte: " + tutteLeTratte);
         return tutteLeTratte;
     }
 
