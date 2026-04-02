@@ -40,6 +40,45 @@ public class AppTest {
             System.out.println("Scelta non valida");
         }
     }
+
+     public static void creaBiglietto(EntityManager em, Scanner scanner) {
+
+     BigliettiDAO bigliettiDAO = new BigliettiDAO(em);
+     PuntiEmissioneDAO puntiDAO = new PuntiEmissioneDAO(em);
+
+     try {
+         //     // 1. Mostra punti disponibili
+         //     System.out.println("=== PUNTI EMISSIONE DISPONIBILI ===");
+         //     puntiDAO.findAll().forEach(p ->
+         //             System.out.println(p.getId() + " - " + p.getTipologia())
+         //     );
+
+         // 2. Input ID
+         System.out.print("Inserisci ID punto emissione: ");
+         UUID idPunto = UUID.fromString(scanner.nextLine());
+
+         // 3. Recupero dal DB
+         PuntoEmissione punto = puntiDAO.findById(idPunto);
+
+         if (punto == null) {
+             System.out.println("Punto emissione non trovato!");
+             return;
+         }
+
+         System.out.print("Inserisci prezzo: ");
+         double prezzo = Double.parseDouble(scanner.nextLine());
+
+         Biglietto biglietto = new Biglietto(punto, prezzo);
+
+         bigliettiDAO.salva(biglietto);
+
+         System.out.println("Biglietto creato!");
+         System.out.println(biglietto);
+
+     } catch (Exception e) {
+         System.out.println("Errore: " + e.getMessage());
+     }
+}
     public static void menuUtente(){
         int scelta;
         do {
@@ -54,7 +93,9 @@ public class AppTest {
             scelta = Integer.parseInt(scanner.nextLine());
              switch (scelta) {
                  case 1:
-
+                     EntityManager em = entityManagerFactory.createEntityManager();
+                     creaBiglietto(em, scanner);
+                     break;
              }
         }while (scelta != 0);
     }

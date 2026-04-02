@@ -65,6 +65,19 @@
         //      gestire abbonamento = update, cambiare attributi, delete
         //      statistiche mezzo = dato un mezzo, calcola il tempo medio effettivo di percorrenza
         //      trova i mezzi dell'azienda = trova tutti i mezzi dell'azienda (quali, non quanti, quindi una lista)
+        
+        // NON DERIVANO
+        // utenti
+        // punti_di_emissione
+        // mezzi_di_trasporto
+        // tratte
+        
+        // DERIVANO
+        // biglietti -> punti_di_emissione
+        // abbonamenti -> punti_di_emissione & tessere
+        // tessere -> utenti & punti_di_emissione
+        // manutenzioni -> mezzi_di_trasporto
+        // percorrenze -> tratte & mezzi_di_trasporto
                         
         
 ```
