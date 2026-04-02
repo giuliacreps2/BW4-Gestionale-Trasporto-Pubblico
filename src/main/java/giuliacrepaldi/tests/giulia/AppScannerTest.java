@@ -1,15 +1,17 @@
 package giuliacrepaldi.tests.giulia;
 
-import giuliacrepaldi.dao.BigliettiDAO;
-import giuliacrepaldi.dao.PuntiEmissioneDAO;
-import giuliacrepaldi.entities.Biglietto;
-import giuliacrepaldi.entities.PuntoEmissione;
+import giuliacrepaldi.dao.*;
+import giuliacrepaldi.entities.*;
+import giuliacrepaldi.enums.TipoAbbonamento;
 import giuliacrepaldi.enums.TipologiaPuntoEmissione;
+import giuliacrepaldi.exceptions.punto_emissione.PuntoEmissioneNonTrovatoException;
 import giuliacrepaldi.helpers.ConvertitoreUUID;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.Persistence;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeParseException;
 import java.util.Map;
 import java.util.Scanner;
 import java.util.UUID;
@@ -120,175 +122,214 @@ public class AppScannerTest {
         }
     }
 
-//    public static void creaAbbonamento(EntityManager em, Scanner scanner) {
-//        AbbonamentiDAO abbonamentiDAO = new AbbonamentiDAO(em);
-//        PuntiEmissioneDAO puntiDAO = new PuntiEmissioneDAO(em);
-//        UtentiDAO utenteDAO = new UtentiDAO(em);
-//        TessereDAO tessereDAO = new TessereDAO(em);
-//
-//            //1.Inserisci i dati per l'abbonamento
-//            System.out.print("Per l'abbonamento devi avere la tessera: 1. crea una nuova tessera, 2. cerca la mia tessera. 0 per uscire");
-//            int scelta = Integer.parseInt(scanner.nextLine());
-//            switch (scelta) {
-//                case 1:
-//                    System.out.println("Inserisci il tuo nome");
-//                    String nome = scanner.nextLine();
-//                    System.out.println("Inserisci il tuo cognome");
-//                    String cognome = scanner.nextLine();
-//                    //inserire un comando per capire se è maggiorenne o è minorenne
-//                    System.out.println("Inserisci la tua età");
-//                    int eta = Integer.parseInt(scanner.nextLine());
-//                    System.out.println("Inserisci la tua email");
-//
-//                    //catch errore per capire se la mail è valida
-//                    String email = scanner.nextLine();
-//                    do {
-//                        System.out.println("Inserisci la tua email");
-//                        email = scanner.nextLine();
-//                        if (!email.contains("@") || !email.contains(".")) {
-//                            System.out.println("Email non valida, riprova");
-//                        }
-//                    } while (!email.contains("@") || !email.contains("."));
-//
-//                    Utente utente = new Utente(nome, cognome, eta, email);
-//
-//                    utenteDAO.salva(utente);
-//
-//                    System.out.println("Ti mancano solo altri 2 passaggi per creare la tua tessera");
-//                    System.out.println("Inserisci la data di oggi: il formato da inserire è ANNO-MM-GG");
-//
-//                    //catch eventuali errori nel formato data
-//                    LocalDate dataInzioTessera =  LocalDate.parse(scanner.nextLine());
-//                    while (dataInzioTessera == null) {
-//                        System.out.println("Inserisci la data (formato: AAAA-MM-GG, esempio: 2026-04-02): ");
-//                        try {
-//                            dataInzioTessera = LocalDate.parse(scanner.nextLine());
-//                        } catch (DateTimeParseException e) {
-//                            System.out.println("Formato data non valido, riprova");
-//                        }
-//                    }
-//
-//                    try {
-//                        //1. Mostra punti disponibili
-//                        System.out.println(" PUNTI EMISSIONE DISPONIBILI ");
-//                        puntiDAO.findAll().forEach(p ->
-//                                System.out.println(p.getPuntoEmissioneId() + " - " + p.getTipologiaPuntoEmissione())
-//                        );
-//
-//                        //2. Input ID
-//                        System.out.print("Inserisci ID punto emissione: ");
-//                        UUID idPunto = UUID.fromString(scanner.nextLine());
-//
-//                        //3. Recupero dal DB
-//                        PuntoEmissione punto;
-//
-//                        try{
-//                            punto = puntiDAO.trovaPerId(idPunto);
-//                        } catch (PuntoEmissioneNonTrovatoException e) {
-//                            System.out.println("Punto emissione non trovato!");
-//                            return;
-//                        }
-//
-//                        Tessera tessera = new Tessera(punto, utente, dataInzioTessera);
-//                        tessereDAO.salva(tessera);
-//
-//                        System.out.println("La tua tessera è stata creata correttamente, ora puoi procedere con la scelta dell'abbonamento");
-//
-//                        //scelta enum TipoAbbonamento
-//                        System.out.println("Che tipo di abbonamento vuoi acqustare?");
-//                        TipoAbbonamento[] tipi = TipoAbbonamento.values();
-//                        for (int i = 0; i < tipi.length; i++){
-//                            System.out.println((i+1) + ". " + tipi[i].toString());
-//                        }
-//                        int sceltaTipo = 0;
-//                        while (sceltaTipo < 1 || sceltaTipo > tipi.length){
-//                            try {
-//                                sceltaTipo = Integer.parseInt(scanner.nextLine());
-//                                if (sceltaTipo < 1 || sceltaTipo > tipi.length){
-//                                    System.out.println("Scelta non valida, riprova");
-//                                }
-//                            } catch (NumberFormatException e) {
-//                                System.out.println("Inserisci un numero valido, riprova");
-//                            }
-//                        }
-//                        TipoAbbonamento tipoScelto = tipi[sceltaTipo-1];
-//
-//                        switch (tipoScelto) {
-//                            case 1:
-//                                System.out.println("Scegli tra: 25.90 o ...");
-//                                double prezzo = Integer.parseInt(scanner.nextLine());
-//                                System.out.println("Da che data vuoi che inizi il tuo abbonamento? 1. Oggi, 2. Inserisci la data personalizzata");
-//                                int scelta3 = Integer.parseInt(scanner.nextLine());
-//                                switch (scelta3) {
-//                                    case 1:
-//                                        LocalDate dataInizioTessera = LocalDate.now();
-//                                        System.out.println("La tua data è stata inserita correttamente: " + dataInizioTessera);
-//                                        break;
-//                                    case 2:
-//
-//                                        System.out.println("Il formato della data deve essere: AA-MM-GG");
-//                                        LocalDate dataInizioTessera2 = LocalDate.parse(scanner.nextLine());
-//
-//                                        //catch eventuali errori nel formato data
-//                                        while (dataInizioTessera2 == null) {
-//                                            System.out.println("Inserisci la data (formato: AAAA-MM-GG, esempio: 2026-04-02): ");
-//                                            try {
-//                                                dataInizioTessera2 = LocalDate.parse(scanner.nextLine());
-//                                            } catch (DateTimeParseException e) {
-//                                                System.out.println("Formato data non valido, riprova");
-//                                            }
-//                                        }
-//                                        break;
-//                                }
-//
-//                                Abbonamento abbonamento1 = new Abbonamento(punto, prezzo, tessera, tipoAbbonamento  );
-//                                abbonamentiDAO.salva(abbonamento1);
-//
-//                                System.out.println("Il tuo abbonamento è stato creato con successo. Ecco il riepilogo dei tuoi dati: " + abbonamento1);
-//                        }
-//
-//                    break;
-/// ///                    case 2:
-/// ///                        //Fare in modo che se sbagliato lo UUID si
-/// ///                        System.out.println("Inserisci il tuo numero di tessera: (suggerimento: fjiefgjdfjgndjfn");
-/// ///                        UUID idTessera = UUID.fromString(scanner.nextLine());
-/// ///
-/// ///                        //Recupero dal DB
-/// ///
-/// ///                        try{
-/// ///                            idTessera = tessereDAO.tr
-/// ///                        }
-/// ///
-/// ///                        Tessera tessera;
-/// /
-/// /
-/// /
-/// /
-/// /
-/// /
-/// /            }
-//
+    public static void creaAbbonamento(EntityManager em, Scanner scanner) {
+        AbbonamentiDAO abbonamentiDAO = new AbbonamentiDAO(em);
+        PuntiEmissioneDAO puntiDAO = new PuntiEmissioneDAO(em);
+        UtentiDAO utenteDAO = new UtentiDAO(em);
+        TessereDAO tessereDAO = new TessereDAO(em);
+        ConvertitoreUUID convertitore = new ConvertitoreUUID(em);
 
-    /// /        }
-//    }
+        //1.Inserisci i dati per l'abbonamento
+        System.out.println("Per l'abbonamento devi avere la tessera:");
+        System.out.println("1. Crea una nuova tessera");
+        System.out.println("2. Cerca la mia tessera");
+        System.out.println("0. Esci");
+
+        int scelta = Integer.parseInt(scanner.nextLine());
+//        while (scelta < 0 || scelta > 2) {
+//            try {
+//                scelta = Integer.parseInt(scanner.nextLine());
+//                if (scelta < 0 || scelta > 2)
+//                    System.out.println("Inserisci una scelta valida");
+//            } catch (NumberFormatException e) {
+//                System.out.println("Inserisci un numero valido");
+//            }
+//        }
 //
+//        if (scelta == 0) return;
+//        Tessera tessera = null;
+
+
+        //Crea nuova tessera
+        Tessera tessera = null;
+        switch (scelta) {
+            case 0:
+                return;
+            case 1:
+
+                System.out.println("Inserisci il tuo nome");
+                String nome = scanner.nextLine();
+
+                System.out.println("Inserisci il tuo cognome");
+                String cognome = scanner.nextLine();
+
+                System.out.println("Inserisci la tua età");
+                int eta = 0;
+                while (eta == 0) {
+                    try {
+                        eta = Integer.parseInt(scanner.nextLine());
+                        if (eta <= 0) System.out.println("Età non valida, riprova");
+                    } catch (NumberFormatException e) {
+                        System.out.println("Inserisci un numero valido");
+                    }
+                }
+
+
+                String email = null;
+                while (email == null || !email.contains("@") || !email.contains(".")) {
+                    System.out.println("Inserisci la tua email");
+                    email = scanner.nextLine();
+                    if (!email.contains("@") || !email.contains(".")) {
+                        System.out.println("Email non valida, riprova");
+                    }
+                }
+
+                Utente utente = new Utente(nome, cognome, eta, email);
+                utenteDAO.salva(utente);
+
+//Data inzio tessera
+                System.out.println("Ti mancano solo altri 2 passaggi per creare la tua tessera");
+                LocalDate dataInzioTessera = null;
+                while (dataInzioTessera == null) {
+                    System.out.println("Inserisci la data di oggi (formato: AAAA-MM-GG, esempio: 2026-04-02): ");
+                    try {
+                        dataInzioTessera = LocalDate.parse(scanner.nextLine());
+                    } catch (DateTimeParseException e) {
+                        System.out.println("Formato data non valido, riprova");
+                    }
+                }
+
+                //Scelta punto di emissione
+                System.out.println("PUNTI EMISSIONE DISPONIBILI");
+                Map<Integer, UUID> mappaPunti = convertitore.mapPuntiEmissione();
+
+                int sceltaPunto = 0;
+                while (!mappaPunti.containsKey(sceltaPunto)) {
+                    System.out.print("Inserisci il numero del punto emissione: ");
+                    try {
+                        sceltaPunto = Integer.parseInt(scanner.nextLine());
+                        if (!mappaPunti.containsKey(sceltaPunto)) System.out.println("Scelta non valida, riprova");
+                    } catch (NumberFormatException e) {
+                        System.out.println("Inserisci un numero valido");
+                    }
+                }
+
+                PuntoEmissione punto = null;
+                try {
+                    punto = puntiDAO.trovaPerId(mappaPunti.get(sceltaPunto));
+                } catch (PuntoEmissioneNonTrovatoException e) {
+                    System.out.println("Punto emissione non trovato!");
+                    return;
+                }
+
+                tessera = new Tessera(punto, utente, dataInzioTessera);
+                tessereDAO.salva(tessera);
+
+                System.out.println("La tua tessera è stata creata correttamente, ora puoi procedere con la scelta dell'abbonamento");
+                break;
+
+            case 2:
+                break;
+
+        }
+        //Scelta tipologia abbonamento comune a crea la tessera e trova la tessera
+        System.out.println("Che tipo di abbonamento vuoi acquistare?");
+        TipoAbbonamento[] tipi = TipoAbbonamento.values();
+        for (int i = 0; i < tipi.length; i++) {
+            System.out.println((i + 1) + ". " + tipi[i]);
+        }
+
+        int sceltaTipo = 0;
+        while (sceltaTipo < 1 || sceltaTipo > tipi.length) {
+            try {
+                sceltaTipo = Integer.parseInt(scanner.nextLine());
+                if (sceltaTipo < 1 || sceltaTipo > tipi.length) System.out.println("Scelta non valida, riprova");
+            } catch (NumberFormatException e) {
+                System.out.println("Inserisci un numero valido");
+            }
+        }
+        TipoAbbonamento tipoScelto = tipi[sceltaTipo - 1];
+
+        // scelta prezzo
+        System.out.println("Scegli il prezzo:");
+        System.out.println("1. 25.90");
+        System.out.println("2. 40.00");
+        System.out.println("3. 55.50");
+
+        double prezzo = 0;
+        while (prezzo == 0) {
+            try {
+                int sceltaPrezzo = Integer.parseInt(scanner.nextLine());
+                switch (sceltaPrezzo) {
+                    case 1:
+                        prezzo = 25.90;
+                        break;
+                    case 2:
+                        prezzo = 40.00;
+                        break;
+                    case 3:
+                        prezzo = 55.50;
+                        break;
+                    default:
+                        System.out.println("Scelta non valida, riprova");
+                }
+            } catch (NumberFormatException e) {
+                System.out.println("Inserisci un numero valido");
+            }
+        }
+
+        // punto emissione per l'abbonamento
+        System.out.println("PUNTI EMISSIONE DISPONIBILI");
+        Map<Integer, UUID> mappaPuntiAbbonamento = convertitore.mapPuntiEmissione();
+
+        int sceltaPuntoAbb = 0;
+        while (!mappaPuntiAbbonamento.containsKey(sceltaPuntoAbb)) {
+            System.out.print("Inserisci il numero del punto emissione: ");
+            try {
+                sceltaPuntoAbb = Integer.parseInt(scanner.nextLine());
+                if (!mappaPuntiAbbonamento.containsKey(sceltaPuntoAbb))
+                    System.out.println("Scelta non valida, riprova");
+            } catch (NumberFormatException e) {
+                System.out.println("Inserisci un numero valido");
+            }
+        }
+
+        PuntoEmissione puntoAbbonamento = null;
+        try {
+            puntoAbbonamento = puntiDAO.trovaPerId(mappaPuntiAbbonamento.get(sceltaPuntoAbb));
+        } catch (PuntoEmissioneNonTrovatoException e) {
+            System.out.println("Punto emissione non trovato!");
+            return;
+        }
+
+        Abbonamento abbonamento = new Abbonamento(puntoAbbonamento, prezzo, tessera, tipoScelto);
+        abbonamentiDAO.salva(abbonamento);
+
+        System.out.println("Abbonamento creato con successo!");
+        System.out.println(abbonamento);
+    }
+
     public static void menuUtente() {
         int scelta;
         do {
             System.out.println("MENU UTENTE");
             System.out.println("Scelta: ");
             System.out.println("1. Crea biglietto");
-            System.out.println("6. Oblitera il biglietto");
             System.out.println("2. Crea abbonamento");
             System.out.println("3. Ottieni zona partenza/arrivo");
             System.out.println("4. Verifica se un mezzo è in servizio");
             System.out.println("5. Verifica se un distributore è in servizio");
+            System.out.println("6. Oblitera il biglietto");
             System.out.println("0. Esci");
             scelta = Integer.parseInt(scanner.nextLine());
             switch (scelta) {
                 case 1:
                     EntityManager em = entityManagerFactory.createEntityManager();
                     creaBiglietto(em, scanner);
+                    break;
+                case 2:
+                    EntityManager em2 = entityManagerFactory.createEntityManager();
+                    creaAbbonamento(em2, scanner);
                     break;
             }
         } while (scelta != 0);
