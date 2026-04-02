@@ -143,9 +143,12 @@ public class AppTest {
         //         "milano"
         // );
         
-        // Percorrenza percorrenza1 = new Percorrenza(
-        //        
-        // );
+        Percorrenza percorrenza1 = new Percorrenza(
+                354,
+                LocalDateTime.now(),
+                tratta1FromDB,
+                mezzoTrasporto1FromDB
+        );
 
         // System.out.println(tratta1);
         

@@ -17,8 +17,8 @@ public class Percorrenza {
     @Column(name = "tempo_effettivo_percorrenza", nullable = false)
     private Long tempoEffettivoPercorrenza;
     
-    @Column(name = "data_percorrenza", nullable = false)
-    private LocalDateTime dataPercorrenza;
+    @Column(name = "data_e_ora_percorrenza", nullable = false)
+    private LocalDateTime dataEOraPercorrenza;
 
     @ManyToOne
     @JoinColumn(name = "tratta_id", nullable = false)
@@ -33,9 +33,9 @@ public class Percorrenza {
 
     }
     
-    public Percorrenza(long tempoEffettivoPercorrenza, LocalDateTime dataPercorrenza, Tratta tratta, MezzoTrasporto mezzoTrasporto) {
+    public Percorrenza(long tempoEffettivoPercorrenza, LocalDateTime dataEOraPercorrenza, Tratta tratta, MezzoTrasporto mezzoTrasporto) {
         this.tempoEffettivoPercorrenza = tempoEffettivoPercorrenza;
-        this.dataPercorrenza = dataPercorrenza;
+        this.dataEOraPercorrenza = dataEOraPercorrenza;
         this.tratta = tratta;
         this.mezzoTrasporto = mezzoTrasporto;
     }
@@ -53,12 +53,12 @@ public class Percorrenza {
         this.tempoEffettivoPercorrenza = tempoEffettivoPercorrenza;
     }
 
-    public LocalDateTime getDataPercorrenza() {
-        return dataPercorrenza;
+    public LocalDateTime getDataEOraPercorrenza() {
+        return dataEOraPercorrenza;
     }
 
-    public void setDataPercorrenza(LocalDateTime dataPercorrenza) {
-        this.dataPercorrenza = dataPercorrenza;
+    public void setDataEOraPercorrenza(LocalDateTime dataEOraPercorrenza) {
+        this.dataEOraPercorrenza = dataEOraPercorrenza;
     }
 
     public MezzoTrasporto getMezzoTrasporto() {
@@ -74,7 +74,7 @@ public class Percorrenza {
         return "Percorrenza{" +
                 "percorrenzaId=" + percorrenzaId +
                 ", tempoEffettivoPercorrenza=" + tempoEffettivoPercorrenza +
-                ", dataPercorrenza=" + dataPercorrenza +
+                ", dataEOraPercorrenza=" + dataEOraPercorrenza +
                 '}';
     }
 }
