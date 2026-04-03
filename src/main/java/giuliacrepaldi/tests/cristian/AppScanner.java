@@ -111,7 +111,6 @@ public class AppScanner {
             System.out.println("Inserisci ID biglietto da eliminare:");
             String idBiglietto = scanner.nextLine();
 
-            // chiama direttamente il metodo rimuoviPerId
             bigliettiDAO.rimuoviPerId(idBiglietto);
 
             System.out.println("Biglietto eliminato!");
@@ -248,6 +247,56 @@ public class AppScanner {
         }
     }
 
+    public static void statistichePuntoEmissione(EntityManager em, Scanner scanner) {
+        try {
+            PuntiEmissioneDAO puntiDAO = new PuntiEmissioneDAO(em);
+
+            System.out.println("Inserisci ID del Punto Emissione:");
+            String idPunto = scanner.nextLine();
+
+            PuntoEmissione punto = puntiDAO.trovaPerId(idPunto);
+
+            System.out.println("Statistiche Punto Emissione:");
+            System.out.println("Città: " + punto.getCitta());
+            System.out.println("Tipologia: " + punto.getTipologiaPuntoEmissione());
+            System.out.println("Stato: " + (punto.isAttivo() ? "Attivo" : "Disattivo"));
+
+        } catch (Exception e) {
+            System.out.println("Errore: " + e.getMessage());
+        }
+    }
+
+    public static void statisticheMezzoTrasporto(EntityManager em, Scanner scanner) {
+        try {
+            MezziTrasportoDAO mezziDAO = new MezziTrasportoDAO(em);
+
+            System.out.println("Inserisci ID del Mezzo di Trasporto:");
+            String idMezzo = scanner.nextLine();
+
+            MezzoTrasporto mezzo = mezziDAO.trovaPerId(idMezzo);
+
+            boolean inManutenzione = mezziDAO.eInManutenzione(mezzo);
+            boolean inServizio = mezziDAO.inServizio(mezzo);
+
+            List<Manutenzione> manutenzioni = mezziDAO.findAllManutenzioneDiMezzo(mezzo);
+
+            System.out.println("Statistiche Mezzo Trasporto:");
+            System.out.println("Tipo Mezzo: " + mezzo.getTipoMezzo());
+            System.out.println("Stato: " + (inServizio ? "In Servizio" : "In Manutenzione"));
+            System.out.println("Manutenzioni:");
+            if (manutenzioni.isEmpty()) {
+                System.out.println("  Nessuna manutenzione registrata");
+            } else {
+                for (Manutenzione m : manutenzioni) {
+                    System.out.println("  - Da " + m.getDataInizioManutenzione() + " a " + m.getDataFineManutenzione());
+                }
+            }
+
+        } catch (Exception e) {
+            System.out.println("Errore: " + e.getMessage());
+        }
+    }
+
     public static void menuAmministratore() {
         int scelta;
         do {
@@ -316,9 +365,27 @@ public class AppScanner {
                 case 6:
                     EntityManager em6 = entityManagerFactory.createEntityManager();
                     try {
-                        statisticheBiglietti(em6);
+                        statisticheAbbonamento(em6, scanner);
                     } finally {
                         em6.close();
+                    }
+                    break;
+
+                case 7:
+                    EntityManager em7 = entityManagerFactory.createEntityManager();
+                    try {
+                        statistichePuntoEmissione(em7, scanner);
+                    } finally {
+                        em7.close();
+                    }
+                    break;
+
+                case 8:
+                    EntityManager em8 = entityManagerFactory.createEntityManager();
+                    try {
+                        statisticheMezzoTrasporto(em8, scanner);
+                    } finally {
+                        em8.close();
                     }
                     break;
             }
