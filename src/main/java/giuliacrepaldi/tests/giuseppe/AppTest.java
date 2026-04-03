@@ -31,6 +31,8 @@ public class AppTest {
         EntityManager entityManager = entityManagerFactory.createEntityManager();
 
         // ****** DAO
+        GestoreAziendaDAO gestoreAziendaDAO = new GestoreAziendaDAO(entityManager);
+        
         AbbonamentiDAO abbonamentiDAO = new AbbonamentiDAO(entityManager);
         BigliettiDAO bigliettiDAO = new BigliettiDAO(entityManager);
         ManutenzioniDAO manutenzioniDAO = new ManutenzioniDAO(entityManager);

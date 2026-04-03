@@ -98,5 +98,8 @@ public class TessereDAO {
         List<Tessera> tutteLeTessere = query.getResultList();
         return tutteLeTessere;
     }
+    
+    
+    // public void rinnovaTessera
 
 }

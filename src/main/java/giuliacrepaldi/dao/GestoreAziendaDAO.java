@@ -1,5 +1,12 @@
 package giuliacrepaldi.dao;
 
+import giuliacrepaldi.entities.Abbonamento;
+import giuliacrepaldi.entities.Biglietto;
+import giuliacrepaldi.entities.Tessera;
+import giuliacrepaldi.exceptions.abbonamento.AbbonamentoSalvataggioException;
+import giuliacrepaldi.exceptions.tessera.TesseraGiaEsistenteException;
+import giuliacrepaldi.exceptions.tessera.TesseraSalvataggioException;
+import giuliacrepaldi.exceptions.vendita_trasporto.VenditaTrasportoSalvataggioException;
 import jakarta.persistence.EntityManager;
 
 public class GestoreAziendaDAO {
@@ -30,19 +37,31 @@ public class GestoreAziendaDAO {
         this.utentiDAO = new UtentiDAO(entityManager);
         this.venditeTrasportiDAO = new VenditeTrasportiDAO(entityManager);
     }
-    
-    // public emettiBiglietto() {
-    //    
-    // }
-    
-    // public emettiAbbonamentoSoloSeUtenteHaTessera() {
-    //    
-    // }
-    //
-    // public associaTesseraAUtente() {}
-    //
+
+    /**
+     * Aggiungi/aggiorna un biglietto.
+     */
+    public void creaBiglietto(Biglietto biglietto) throws VenditaTrasportoSalvataggioException {
+        bigliettiDAO.salva(biglietto);
+    }
+
+    /**
+     * Aggiungi/aggiorna un abbonamento.
+     */
+    public void creaAbbonamento(Abbonamento abbonamento) throws AbbonamentoSalvataggioException {
+        abbonamentiDAO.salva(abbonamento);
+    }
+
+
+    /**
+     * Aggiungi/aggiorna una tessera.
+     */
+    public void creaTessera(Tessera tessera) throws TesseraSalvataggioException, TesseraGiaEsistenteException {
+        tessereDAO.salva(tessera);
+    }
+
     // public rinnovaTessera() {
-    //    
+    //
     // }
     //
     // public calcolaQuanteVenditeTrasportoInPeriodo() {}
