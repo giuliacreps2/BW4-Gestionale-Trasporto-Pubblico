@@ -129,7 +129,7 @@ public static void statisticheMezzo(EntityManager em, Scanner scanner) {
 
     try {
         System.out.print("Inserisci ID mezzo: ");
-        UUID idMezzo = leggiUUID(scanner); // Utilizzo del metodo helper
+        UUID idMezzo = leggiUUID(scanner);
 
         MezzoTrasporto mezzo;
         try {
