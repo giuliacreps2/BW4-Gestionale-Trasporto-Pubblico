@@ -6,6 +6,9 @@ import giuliacrepaldi.entities.MezzoTrasporto;
 import giuliacrepaldi.entities.Percorrenza;
 import giuliacrepaldi.entities.PuntoEmissione;
 import giuliacrepaldi.entities.Tratta;
+import giuliacrepaldi.entities.*;
+import giuliacrepaldi.enums.TipoMezzo;
+import giuliacrepaldi.enums.TipologiaPuntoEmissione;
 import giuliacrepaldi.exceptions.mezzo_trasporto.MezzoTrasportoNonTrovatoException;
 import giuliacrepaldi.exceptions.punto_emissione.PuntoEmissioneNonTrovatoException;
 import giuliacrepaldi.exceptions.tratta.TrattaNonTrovataException;
@@ -14,6 +17,8 @@ import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.Persistence;
 
 import java.time.Duration;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Scanner;
 import java.util.UUID;
@@ -31,6 +36,28 @@ public class AppTest {
     public static void main(String[] args) {
         EntityManager em = entityManagerFactory.createEntityManager();
         BigliettiDAO bd = new BigliettiDAO(em);
+
+        MezziTrasportoDAO mezziDAO = new MezziTrasportoDAO(em);
+        MezzoTrasporto mezzo = new MezzoTrasporto(TipoMezzo.AUTOBUS);
+       // mezziDAO.salva(mezzo);
+        MezzoTrasporto mezzoDB = mezziDAO.trovaPerId("4c2b25ce-70ec-4499-a1cf-28cbb97407b4");
+
+        TratteDAO tratteDAO = new TratteDAO(em);
+        Tratta tratta1 = new Tratta(10,2,"Napoli","Roma");
+        //tratteDAO.salva(tratta1);
+        Tratta tratta1DB = tratteDAO.trovaPerId("b86a981e-4e71-4dbe-a076-03c67b8c7383");
+
+        PercorrenzeDAO percorrenzeDAO = new PercorrenzeDAO(em);
+        Percorrenza percorrenza1 = new Percorrenza(3, LocalDateTime.now(), tratta1DB, mezzoDB);
+        //percorrenzeDAO.salva(percorrenza1);
+
+        PuntiEmissioneDAO puntiEmissioneDAO = new PuntiEmissioneDAO(em);
+        PuntoEmissione puntoemissione1 = new PuntoEmissione("Napoli", TipologiaPuntoEmissione.DISTRIBUTORE_AUTOMATICO, true );
+        //puntiEmissioneDAO.salva(puntoemissione1);
+
+        ManutenzioniDAO manutenzioniDAO = new ManutenzioniDAO(em);
+        Manutenzione manutenzione1 = new Manutenzione(mezzoDB, LocalDate.now(), LocalDate.of(2026,4,10),1000 );
+        //manutenzioniDAO.salva(manutenzione1);
 
         System.out.println("GESTIONALE-TRASPORTI-PUBBLICI");
         System.out.println("Seleziona ruolo: ");
