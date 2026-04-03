@@ -4,6 +4,9 @@ import giuliacrepaldi.entities.Abbonamento;
 import giuliacrepaldi.entities.Biglietto;
 import giuliacrepaldi.entities.Tessera;
 import giuliacrepaldi.exceptions.abbonamento.AbbonamentoSalvataggioException;
+import giuliacrepaldi.exceptions.biglietto.BigliettoGiaObliteratoException;
+import giuliacrepaldi.exceptions.biglietto.BigliettoNonTrovatoException;
+import giuliacrepaldi.exceptions.mezzo_trasporto.MezzoTrasportoNonTrovatoException;
 import giuliacrepaldi.exceptions.miscellanous.StringaUUIDNonValidaException;
 import giuliacrepaldi.exceptions.punto_emissione.PuntoEmissioneNonTrovatoException;
 import giuliacrepaldi.exceptions.tessera.TesseraGiaEsistenteException;
@@ -14,6 +17,7 @@ import giuliacrepaldi.exceptions.vendita_trasporto.VenditaTrasportoSalvataggioEx
 import jakarta.persistence.EntityManager;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 public class GestoreAziendaDAO {
 
@@ -86,6 +90,7 @@ public class GestoreAziendaDAO {
         return venditeTrasportiDAO.ottieniQuantiBigliettiEAbbonamentiEmessiInPeriodo(dataInizio, dataFine);
     }
 
+    
     /**
      * Ottieni quanti biglietti e abbonamenti 
      * sono stati emessi in un punto emissione.
@@ -93,6 +98,15 @@ public class GestoreAziendaDAO {
     public long ottieniQuantiBigliettiEAbbonamentiEmessiInPuntoEmissione(String puntoEmissioneId)  throws PuntoEmissioneNonTrovatoException, StringaUUIDNonValidaException {
         return venditeTrasportiDAO.ottieniQuantiBigliettiEAbbonamentiEmessiInPuntoEmissione(puntoEmissioneId);
     }
+    
+    
+    /**
+     * Oblitera un biglietto su un mezzo di trasporto.
+     */
+    public void obliteraBiglietto(String bigliettoId, String mezzoTrasportoId)  throws BigliettoNonTrovatoException, MezzoTrasportoNonTrovatoException, BigliettoGiaObliteratoException, VenditaTrasportoSalvataggioException, StringaUUIDNonValidaException {
+        bigliettiDAO.obliteraBiglietto(bigliettoId, mezzoTrasportoId);
+    }
+
 
     /**
      * Ottieni quanti biglietti sono stati vidimati
@@ -101,9 +115,16 @@ public class GestoreAziendaDAO {
     public long ottieniQuantiBigliettiVidimatiSuMezzo(String mezzoTrasportoId) {
         return bigliettiDAO.contaBigliettiVidimatiSuMezzoTrasporto(mezzoTrasportoId);
     }
+
     
+    /**
+     * Ottieni quanti biglietti sono stati vidimati
+     * in un dato periodo.
+     */
+    public long ottieniQuantiBigliettiVidimatiInPeriodo(LocalDateTime dataEOraInizio, LocalDateTime dataEOraFine) {
+        return bigliettiDAO.contaBigliettiVidimatiInPeriodo(dataEOraInizio, dataEOraFine);
+    }
     
-    // public calcolaQuantiBigliettiVidimatiInPeriodo() {}
 
     // public mettiFuoriServizioDistributoreAutomatico() {}
     //
@@ -119,7 +140,6 @@ public class GestoreAziendaDAO {
     //
     // public ottieniTuttiPeriodiServizioDiMezzo() {}
     //
-    // public obliteraBiglietto() {}
     //
 
     
