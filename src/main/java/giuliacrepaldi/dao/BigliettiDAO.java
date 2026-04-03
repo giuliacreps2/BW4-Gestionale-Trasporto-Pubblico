@@ -78,7 +78,7 @@ public class BigliettiDAO {
     /**
      * Oblitera un biglietto su un mezzo di trasporto.
      */
-    public void obliteraBiglietto(String bigliettoId, String mezzoTrasportoId) throws BigliettoNonTrovatoException, MezzoTrasportoNonTrovatoException, BigliettoGiaObliteratoException, VenditaTrasportoSalvataggioException {
+    public void obliteraBiglietto(String bigliettoId, String mezzoTrasportoId) throws BigliettoNonTrovatoException, MezzoTrasportoNonTrovatoException, BigliettoGiaObliteratoException, VenditaTrasportoSalvataggioException, StringaUUIDNonValidaException {
         
         Biglietto biglietto = trovaPerId(bigliettoId);
         MezzoTrasporto mezzoTrasporto = new MezziTrasportoDAO(entityManager).trovaPerId(mezzoTrasportoId);

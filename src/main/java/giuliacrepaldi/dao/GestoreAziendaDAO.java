@@ -4,6 +4,9 @@ import giuliacrepaldi.entities.Abbonamento;
 import giuliacrepaldi.entities.Biglietto;
 import giuliacrepaldi.entities.Tessera;
 import giuliacrepaldi.exceptions.abbonamento.AbbonamentoSalvataggioException;
+import giuliacrepaldi.exceptions.biglietto.BigliettoGiaObliteratoException;
+import giuliacrepaldi.exceptions.biglietto.BigliettoNonTrovatoException;
+import giuliacrepaldi.exceptions.mezzo_trasporto.MezzoTrasportoNonTrovatoException;
 import giuliacrepaldi.exceptions.miscellanous.StringaUUIDNonValidaException;
 import giuliacrepaldi.exceptions.punto_emissione.PuntoEmissioneNonTrovatoException;
 import giuliacrepaldi.exceptions.tessera.TesseraGiaEsistenteException;
@@ -86,6 +89,7 @@ public class GestoreAziendaDAO {
         return venditeTrasportiDAO.ottieniQuantiBigliettiEAbbonamentiEmessiInPeriodo(dataInizio, dataFine);
     }
 
+    
     /**
      * Ottieni quanti biglietti e abbonamenti 
      * sono stati emessi in un punto emissione.
@@ -94,6 +98,7 @@ public class GestoreAziendaDAO {
         return venditeTrasportiDAO.ottieniQuantiBigliettiEAbbonamentiEmessiInPuntoEmissione(puntoEmissioneId);
     }
 
+    
     /**
      * Ottieni quanti biglietti sono stati vidimati
      * sul dato mezzo.
@@ -102,10 +107,13 @@ public class GestoreAziendaDAO {
         return bigliettiDAO.contaBigliettiVidimatiSuMezzoTrasporto(mezzoTrasportoId);
     }
 
+    
     /**
-     * 
+     * Oblitera un biglietto su un mezzo di trasporto.
      */
-    // public obliteraBiglietto() {}
+    public void obliteraBiglietto(String bigliettoId, String mezzoTrasportoId)  throws BigliettoNonTrovatoException, MezzoTrasportoNonTrovatoException, BigliettoGiaObliteratoException, VenditaTrasportoSalvataggioException, StringaUUIDNonValidaException {
+        bigliettiDAO.obliteraBiglietto(bigliettoId, mezzoTrasportoId);
+    }
     
     
     // public calcolaQuantiBigliettiVidimatiInPeriodo() {}
