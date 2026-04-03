@@ -196,10 +196,8 @@ public class AppTest {
 
         //10
         public static void ottieniZonaPartenzaArrivo(EntityManager em, Scanner scanner) {
-
-            TratteDAO tratteDAO = new TratteDAO(em);
-
-            try {
+        TratteDAO tratteDAO = new TratteDAO(em);
+        try {
                 System.out.print("Inserisci ID tratta: ");
                 UUID idTratta = UUID.fromString(scanner.nextLine());
                 Tratta tratta;
@@ -247,6 +245,49 @@ public class AppTest {
         }
     }
     //12
+    public static void verificaDistributoreInServizio(EntityManager em, Scanner scanner) {
+        PuntiEmissioneDAO puntiDAO = new PuntiEmissioneDAO(em);
+        try {
+            System.out.print("Inserisci ID punto emissione: ");
+            UUID idPunto = UUID.fromString(scanner.nextLine());
+            PuntoEmissione punto;
+            try {
+                punto = puntiDAO.trovaPerId(idPunto);
+            } catch (PuntoEmissioneNonTrovatoException e) {
+                System.out.println("Punto di emissione non trovato!");
+                return;
+            }
+            System.out.println("STATO DISTRIBUTORE");
+            System.out.println("Punto: " + punto);
+            if (punto.isAttivo()) {
+                System.out.println("Il distributore è IN SERVIZIO");
+            } else {
+                System.out.println("Il distributore NON è in servizio");
+            }
+
+        } catch (IllegalArgumentException e) {
+            System.out.println("UUID non valido!");
+        } catch (RuntimeException e) {
+            System.out.println("Errore: " + e.getMessage());
+        }
+    }
+    //13
+    public static void trovaMezziAzienda(EntityManager em) {
+        MezziTrasportoDAO mezziDAO = new MezziTrasportoDAO(em);
+        try {
+            List<MezzoTrasporto> mezzi = mezziDAO.findAll();
+            if (mezzi.isEmpty()) {
+                System.out.println("Nessun mezzo trovato!");
+                return;
+            }
+            System.out.println("MEZZI DELL'AZIENDA");
+            for (MezzoTrasporto mezzo : mezzi) {
+                System.out.println(mezzo);
+            }
+        } catch (RuntimeException e) {
+            System.out.println("Errore: " + e.getMessage());
+        }
+    }
 
 
     public static void menuAmministratore(){
@@ -301,7 +342,22 @@ public class AppTest {
                         em11.close();
                     }
                     break;
-
+                case 12:
+                    EntityManager em12 = entityManagerFactory.createEntityManager();
+                    try {
+                        verificaDistributoreInServizio(em12, scanner);
+                    } finally {
+                        em12.close();
+                    }
+                    break;
+                case 13:
+                    EntityManager em13 = entityManagerFactory.createEntityManager();
+                    try {
+                        trovaMezziAzienda(em13);
+                    } finally {
+                        em13.close();
+                    }
+                    break;
 
             }
         }while (scelta != 0);
