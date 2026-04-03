@@ -4,6 +4,9 @@ import giuliacrepaldi.dao.*;
 import giuliacrepaldi.entities.*;
 import giuliacrepaldi.enums.TipoAbbonamento;
 import giuliacrepaldi.enums.TipologiaPuntoEmissione;
+import giuliacrepaldi.exceptions.biglietto.BigliettoGiaObliteratoException;
+import giuliacrepaldi.exceptions.biglietto.BigliettoNonTrovatoException;
+import giuliacrepaldi.exceptions.mezzo_trasporto.MezzoTrasportoNonTrovatoException;
 import giuliacrepaldi.exceptions.punto_emissione.PuntoEmissioneNonTrovatoException;
 import giuliacrepaldi.helpers.ConvertitoreUUID;
 import jakarta.persistence.EntityManager;
@@ -11,7 +14,6 @@ import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.Persistence;
 
 import java.time.LocalDate;
-import java.time.format.DateTimeParseException;
 import java.util.Map;
 import java.util.Scanner;
 import java.util.UUID;
@@ -20,6 +22,64 @@ public class AppScannerTest {
 
     private static final EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("GESTIONALE-TRASPORTI-PUBBLICI-francesco");
     static Scanner scanner = new Scanner(System.in);
+
+    public static void obliteraBiglietto(EntityManager em, Scanner scanner) {
+        System.out.println("Prima di accedere alle corse, oblitera il biglietto");
+
+        UUID bigliettoId = null;
+        while (bigliettoId == null) {
+            System.out.println("Inserisci l'ID del biglietto (es: 19c7039d-6f4d-46c7-90aa-c488b2ab437c ) ");
+            try {
+                bigliettoId = UUID.fromString(scanner.nextLine());
+            } catch (IllegalArgumentException e) {
+                System.out.println("ID non valido, riprova");
+            }
+        }
+
+        //Cerco il biglietto nel DB
+        BigliettiDAO bigliettiDAO = new BigliettiDAO(em);
+        Biglietto biglietto;
+        try {
+            biglietto = bigliettiDAO.trovaPerId(String.valueOf(bigliettoId));
+        } catch (BigliettoNonTrovatoException e) {
+            throw new RuntimeException(e);
+        }
+
+        //Chiedo il mezzo sul quale oblitera
+        System.out.println("MEZZI DISPONIBILI");
+        MezziTrasportoDAO mezziTrasportoDAO = new MezziTrasportoDAO(em);
+        ConvertitoreUUID convertitore = new ConvertitoreUUID(em);
+        Map<Integer, UUID> mapMezziTrasporto = convertitore.mapMezziTrasporto();
+
+        int sceltaMezzo = 0;
+        while (!mapMezziTrasporto.containsKey(sceltaMezzo)) {
+            System.out.println("Inserisci il numero del mezzo: ");
+            try {
+                sceltaMezzo = Integer.parseInt(scanner.nextLine());
+                if (!mapMezziTrasporto.containsKey(sceltaMezzo)) System.out.println("Scelta non valida");
+            } catch (NumberFormatException e) {
+                System.out.println("Inserisci un numero valido");
+            }
+        }
+
+        MezzoTrasporto mezzoTrasporto;
+        try {
+            mezzoTrasporto = mezziTrasportoDAO.trovaPerId(mapMezziTrasporto.get(sceltaMezzo));
+        } catch (MezzoTrasportoNonTrovatoException e) {
+            throw new RuntimeException(e);
+        }
+
+        //Obliterazione
+        try {
+            biglietto.setObliteratoDa(mezzoTrasporto);
+            bigliettiDAO.salva(biglietto);
+            System.out.println("Biglietto obliterato con successo");
+            //convertire in orario umano
+            System.out.println("Valido fino alle: " + biglietto.getDataEOraFineObliterazione());
+        } catch (BigliettoGiaObliteratoException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
     public static void main(String[] args) {
         EntityManager em = entityManagerFactory.createEntityManager();
@@ -188,16 +248,17 @@ public class AppScannerTest {
                 utenteDAO.salva(utente);
 
 //Data inzio tessera
-                System.out.println("Ti mancano solo altri 2 passaggi per creare la tua tessera");
-                LocalDate dataInzioTessera = null;
-                while (dataInzioTessera == null) {
-                    System.out.println("Inserisci la data di oggi (formato: AAAA-MM-GG, esempio: 2026-04-02): ");
-                    try {
-                        dataInzioTessera = LocalDate.parse(scanner.nextLine());
-                    } catch (DateTimeParseException e) {
-                        System.out.println("Formato data non valido, riprova");
-                    }
-                }
+
+                System.out.println("Ti mancano solo un altro passaggio per creare la tua tessera");
+                LocalDate dataInzioTessera = LocalDate.now();
+//                while (dataInzioTessera == null) {
+//                    System.out.println("Inserisci la data di oggi (formato: AAAA-MM-GG, esempio: 2026-04-02): ");
+//                    try {
+//                        dataInzioTessera = LocalDate.parse(scanner.nextLine());
+//                    } catch (DateTimeParseException e) {
+//                        System.out.println("Formato data non valido, riprova");
+//                    }
+//                }
 
                 //Scelta punto di emissione
                 System.out.println("PUNTI EMISSIONE DISPONIBILI");
@@ -214,7 +275,7 @@ public class AppScannerTest {
                     }
                 }
 
-                PuntoEmissione punto = null;
+                PuntoEmissione punto;
                 try {
                     punto = puntiDAO.trovaPerId(mappaPunti.get(sceltaPunto));
                 } catch (PuntoEmissioneNonTrovatoException e) {
@@ -223,9 +284,11 @@ public class AppScannerTest {
                 }
 
                 tessera = new Tessera(punto, utente, dataInzioTessera);
+//                tessera.setDataVendita(LocalDate.now());
                 tessereDAO.salva(tessera);
 
-                System.out.println("La tua tessera è stata creata correttamente, ora puoi procedere con la scelta dell'abbonamento");
+                System.out.println("La tua tessera è stata creata correttamente:" + tessera);
+                System.out.println("Ora puoi procedere con la scelta dell'abbonamento");
                 break;
 
             case 2:
@@ -252,9 +315,9 @@ public class AppScannerTest {
 
         // scelta prezzo
         System.out.println("Scegli il prezzo:");
-        System.out.println("1. 25.90");
-        System.out.println("2. 40.00");
-        System.out.println("3. 55.50");
+        System.out.println("1. Abbonamento base - 25.90");
+        System.out.println("2. Abbonamento extra-urbano - 40.00");
+        System.out.println("3. Abbonamento porta un amico - 55.50");
 
         double prezzo = 0;
         while (prezzo == 0) {
@@ -314,13 +377,13 @@ public class AppScannerTest {
         do {
             System.out.println("MENU UTENTE");
             System.out.println("Scelta: ");
-            System.out.println("1. Crea biglietto");
+            // System.out.println("1. Crea biglietto");
             System.out.println("2. Crea abbonamento");
-            System.out.println("3. Ottieni zona partenza/arrivo");
-            System.out.println("4. Verifica se un mezzo è in servizio");
-            System.out.println("5. Verifica se un distributore è in servizio");
-            System.out.println("6. Oblitera il biglietto");
-            System.out.println("0. Esci");
+            // System.out.println("3. Oblitera il biglietto");
+            System.out.println("4. Ottieni zona partenza/arrivo");
+            System.out.println("5. Verifica se un mezzo è in servizio");
+            System.out.println("6. Verifica se un distributore è in servizio");
+            //System.out.println("0. Esci");
             scelta = Integer.parseInt(scanner.nextLine());
             switch (scelta) {
                 case 1:
@@ -331,6 +394,18 @@ public class AppScannerTest {
                     EntityManager em2 = entityManagerFactory.createEntityManager();
                     creaAbbonamento(em2, scanner);
                     break;
+                case 3:
+                    EntityManager em3 = entityManagerFactory.createEntityManager();
+                    obliteraBiglietto(em3, scanner);
+                    break;
+                case 4:
+                    EntityManager em4 = entityManagerFactory.createEntityManager();
+                    trovaZonaPartenzaArrivo(em4, scanner);
+                    break;
+                case 0:
+                    System.out.println("Alla prossima!");
+                    break;
+
             }
         } while (scelta != 0);
     }

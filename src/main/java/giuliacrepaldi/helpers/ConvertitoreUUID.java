@@ -1,13 +1,7 @@
 package giuliacrepaldi.helpers;
 
-import giuliacrepaldi.dao.AbbonamentiDAO;
-import giuliacrepaldi.dao.BigliettiDAO;
-import giuliacrepaldi.dao.PuntiEmissioneDAO;
-import giuliacrepaldi.dao.TessereDAO;
-import giuliacrepaldi.entities.Abbonamento;
-import giuliacrepaldi.entities.Biglietto;
-import giuliacrepaldi.entities.PuntoEmissione;
-import giuliacrepaldi.entities.Tessera;
+import giuliacrepaldi.dao.*;
+import giuliacrepaldi.entities.*;
 import jakarta.persistence.EntityManager;
 
 import java.util.HashMap;
@@ -22,6 +16,7 @@ public class ConvertitoreUUID {
     BigliettiDAO bigliettiDAO;
     AbbonamentiDAO abbonamentiDAO;
     PuntiEmissioneDAO puntiEmissioneDAO;
+    MezziTrasportoDAO mezziTrasportoDAO;
 
     public ConvertitoreUUID(EntityManager em) {
         this.em = em;
@@ -29,6 +24,7 @@ public class ConvertitoreUUID {
         this.bigliettiDAO = new BigliettiDAO(em);
         this.abbonamentiDAO = new AbbonamentiDAO(em);
         this.puntiEmissioneDAO = new PuntiEmissioneDAO(em);
+        this.mezziTrasportoDAO = new MezziTrasportoDAO(em);
     }
 
     public static <T> Map<Integer, UUID> costruisciMappa(List<T> lista, Function<T, UUID> estraiId, Function<T, String> estraiLabel) {
@@ -70,6 +66,15 @@ public class ConvertitoreUUID {
 
     //3. Per le manutenzioni
     //4. Per i mezzi di trasporto
+    public Map<Integer, UUID> mapMezziTrasporto() {
+        List<MezzoTrasporto> mezziTrasporto = mezziTrasportoDAO.findAll();
+        return costruisciMappa(
+                mezziTrasporto,
+                MezzoTrasporto::getMezzoDiTrasportoId,
+                mezzoTrasporto -> String.valueOf(mezzoTrasporto.getTipoMezzo()));
+    }
+
+
     //5. Per le percorrenze
     //6. Per i punti d'emissione
     public Map<Integer, UUID> mapPuntiEmissione() {
