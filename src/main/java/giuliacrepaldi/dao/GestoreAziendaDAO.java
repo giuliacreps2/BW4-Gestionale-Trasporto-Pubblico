@@ -94,6 +94,16 @@ public class GestoreAziendaDAO {
         return venditeTrasportiDAO.ottieniQuantiBigliettiEAbbonamentiEmessiInPuntoEmissione(puntoEmissioneId);
     }
 
+    /**
+     * Ottieni quanti biglietti sono stati vidimati
+     * sul dato mezzo.
+     */
+    public long ottieniQuantiBigliettiVidimatiSuMezzo(String mezzoTrasportoId) {
+        return bigliettiDAO.contaBigliettiVidimatiSuMezzoTrasporto(mezzoTrasportoId);
+    }
+    
+    
+    // public calcolaQuantiBigliettiVidimatiInPeriodo() {}
 
     // public mettiFuoriServizioDistributoreAutomatico() {}
     //
@@ -111,8 +121,6 @@ public class GestoreAziendaDAO {
     //
     // public obliteraBiglietto() {}
     //
-    // public calcolaQuantiBigliettiVidimatiSuMezzo() {}
-    //
-    // public calcolaQuantiBigliettiVidimatiInPeriodo() {}
+
     
 }

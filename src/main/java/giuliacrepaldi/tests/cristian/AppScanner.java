@@ -39,10 +39,10 @@ public class AppScanner {
 
         Utente u1 = new Utente("Cristian", "Cicale", 20, "cicacri");
         ud.salva(u1);
-
-        Tessera t1 = new Tessera(p1DB, 10, );
-
-        Abbonamento a1 = new Abbonamento(p1DB, 30, );
+        //
+        // Tessera t1 = new Tessera(p1DB, 10, );
+        //
+        // Abbonamento a1 = new Abbonamento(p1DB, 30, );
 
         System.out.println("GESTIONALE-TRASPORTI-PUBBLICI");
         System.out.println("Seleziona ruolo: ");
@@ -228,13 +228,13 @@ public class AppScanner {
 
             List<MezzoTrasporto> mezzi = em.createQuery("SELECT m FROM MezzoTrasporto m", MezzoTrasporto.class).getResultList();
             for (MezzoTrasporto mezzo : mezzi) {
-                int vidimatiSuMezzo = bigliettiDAO.contaBigliettiVidimatiSuMezzoTrasporto(mezzo);
+                long vidimatiSuMezzo = bigliettiDAO.contaBigliettiVidimatiSuMezzoTrasporto(mezzo);
                 System.out.println("Biglietti vidimati sul mezzo " + mezzo.getTipoMezzo() + " (" + mezzo.getMezzoDiTrasportoId() + "): " + vidimatiSuMezzo);
             }
 
             LocalDate oggi = LocalDate.now();
             LocalDate trentaGiorniFa = oggi.minusDays(30);
-            int vidimatiUltimi30Giorni = bigliettiDAO.contaBigliettiVidimatiInPeriodo(trentaGiorniFa, oggi);
+            long vidimatiUltimi30Giorni = bigliettiDAO.contaBigliettiVidimatiInPeriodo(trentaGiorniFa, oggi);
             System.out.println("Biglietti vidimati negli ultimi 30 giorni (" + trentaGiorniFa + " - " + oggi + "): " + vidimatiUltimi30Giorni);
 
         } catch (Exception e) {
