@@ -1,24 +1,26 @@
 package giuliacrepaldi.dao;
 
-import giuliacrepaldi.entities.Abbonamento;
-import giuliacrepaldi.entities.Biglietto;
-import giuliacrepaldi.entities.Tessera;
+import giuliacrepaldi.entities.*;
 import giuliacrepaldi.exceptions.abbonamento.AbbonamentoNonTrovatoException;
 import giuliacrepaldi.exceptions.abbonamento.AbbonamentoSalvataggioException;
 import giuliacrepaldi.exceptions.biglietto.BigliettoGiaObliteratoException;
 import giuliacrepaldi.exceptions.biglietto.BigliettoNonTrovatoException;
+import giuliacrepaldi.exceptions.mezzo_trasporto.MezzoTrasportoNonInServizioException;
 import giuliacrepaldi.exceptions.mezzo_trasporto.MezzoTrasportoNonTrovatoException;
 import giuliacrepaldi.exceptions.miscellanous.StringaUUIDNonValidaException;
+import giuliacrepaldi.exceptions.percorrenza.PercorrenzaSalvataggioException;
 import giuliacrepaldi.exceptions.punto_emissione.PuntoEmissioneNonTrovatoException;
 import giuliacrepaldi.exceptions.tessera.TesseraGiaEsistenteException;
 import giuliacrepaldi.exceptions.tessera.TesseraNonTrovataException;
 import giuliacrepaldi.exceptions.tessera.TesseraRinnovoException;
 import giuliacrepaldi.exceptions.tessera.TesseraSalvataggioException;
+import giuliacrepaldi.exceptions.tratta.TrattaNonTrovataException;
 import giuliacrepaldi.exceptions.vendita_trasporto.VenditaTrasportoSalvataggioException;
 import jakarta.persistence.EntityManager;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 
 public class GestoreAziendaDAO {
 
@@ -47,6 +49,7 @@ public class GestoreAziendaDAO {
         this.tratteDAO = new TratteDAO(entityManager);
         this.utentiDAO = new UtentiDAO(entityManager);
         this.venditeTrasportiDAO = new VenditeTrasportiDAO(entityManager);
+        this.mezziTrasportoDAO = new MezziTrasportoDAO(entityManager);
     }
 
     /**
@@ -119,7 +122,7 @@ public class GestoreAziendaDAO {
      * Ottieni quanti biglietti sono stati vidimati
      * sul dato mezzo.
      */
-    public long ottieniQuantiBigliettiVidimatiSuMezzo(String mezzoTrasportoId) {
+    public long ottieniQuantiBigliettiVidimatiSuMezzoTrasporto(String mezzoTrasportoId) {
         return bigliettiDAO.contaBigliettiVidimatiSuMezzoTrasporto(mezzoTrasportoId);
     }
 
@@ -148,24 +151,53 @@ public class GestoreAziendaDAO {
         return mezziTrasportoDAO.inServizio(mezzoTrasportoId);
     }
 
+    
     /**
      * Verifica se il mezzo dato è in manutenzione (si/no).
      */
     public boolean mezzoEInManutenzione(String mezzoTrasportoId) {
         return mezziTrasportoDAO.eInManutenzione(mezzoTrasportoId);
     }
+
     
+    /**
+     * Ottieni la flotta mezzi/parco mezzi.
+     */
+    public List<MezzoTrasporto> ottieniTuttiMezziTrasporto() {
+        return mezziTrasportoDAO.findAll();
+    }
+
     
-    // public mezzoEInManutenzione() {}
+    /**
+     * Associa una tratta a un mezzo di trasporto in servizio. 
+     */
+    public void associaTrattaAMezzoTrasportoInServizio(String trattaId, String mezzoTrasportoId, long tempoEffettivoPercorrenza, LocalDateTime dataEOraPercorrenza) throws MezzoTrasportoNonTrovatoException, TrattaNonTrovataException, MezzoTrasportoNonInServizioException, PercorrenzaSalvataggioException, StringaUUIDNonValidaException {
+        mezziTrasportoDAO.associaTrattaAMezzoTrasportoInServizio(trattaId, mezzoTrasportoId, tempoEffettivoPercorrenza, dataEOraPercorrenza);
+    }
+
+
+    /**
+     * Metti un mezzo di trasporto in servizio.
+     */
+    public void mettiInServizio(String mezzoTrasportoId) throws MezzoTrasportoNonTrovatoException, StringaUUIDNonValidaException {
+        mezziTrasportoDAO.mettiInServizio(mezzoTrasportoId);
+    }
+
     
+    /**
+     * Ottieni tutti i periodi di manutenzione del mezzo di trasporto dato.
+     */
+    public List<Manutenzione> ottieniTutteManutenzioniDiMezzo(String mezzoTrasportoId, LocalDate dataInizio, LocalDate dataFine) throws MezzoTrasportoNonTrovatoException, StringaUUIDNonValidaException {
+        return manutenzioniDAO.findAll(mezzoTrasportoId, dataInizio, dataFine);    
+    }
     
+
     // public mettiFuoriServizioDistributoreAutomatico() {}
     //
     // public mettiInServizioDistributoreAutomatico() {}
     //
     //
     //
-    // public ottieniTuttiPeriodiManutenzioneDiMezzo() {}
     //
     // public ottieniTuttiPeriodiServizioDiMezzo() {}
     //

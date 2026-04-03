@@ -3,6 +3,7 @@ package giuliacrepaldi.tests.cristian;
 import giuliacrepaldi.dao.*;
 import giuliacrepaldi.entities.*;
 import giuliacrepaldi.enums.TipoAbbonamento;
+import giuliacrepaldi.enums.TipoMezzo;
 import giuliacrepaldi.enums.TipologiaPuntoEmissione;
 import giuliacrepaldi.exceptions.punto_emissione.PuntoEmissioneNonTrovatoException;
 import jakarta.persistence.EntityManager;
@@ -26,6 +27,7 @@ public class AppScanner {
         AbbonamentiDAO ad = new AbbonamentiDAO(em);
         UtentiDAO ud = new UtentiDAO(em);
         TessereDAO td = new TessereDAO(em);
+        MezziTrasportoDAO md = new MezziTrasportoDAO(em);
 
         PuntoEmissione p1 = new PuntoEmissione("Napoli", TipologiaPuntoEmissione.DISTRIBUTORE_AUTOMATICO, true);
 //        ped.salva(p1);
@@ -45,6 +47,9 @@ public class AppScanner {
 
         Abbonamento a1 = new Abbonamento(p1DB, 30, t1DB, TipoAbbonamento.SETTIMANALE);
 //        ad.salva(a1);
+
+        MezzoTrasporto m1 = new MezzoTrasporto(TipoMezzo.TRAM);
+//        md.salva(m1);
 
         System.out.println("GESTIONALE-TRASPORTI-PUBBLICI");
         System.out.println("Seleziona ruolo: ");
