@@ -2,7 +2,10 @@ package giuliacrepaldi.dao;
 
 import giuliacrepaldi.entities.Abbonamento;
 import giuliacrepaldi.exceptions.abbonamento.AbbonamentoNonTrovatoException;
+import giuliacrepaldi.exceptions.abbonamento.AbbonamentoRimozioneException;
 import giuliacrepaldi.exceptions.abbonamento.AbbonamentoSalvataggioException;
+import giuliacrepaldi.exceptions.biglietto.BigliettoNonTrovatoException;
+import giuliacrepaldi.exceptions.biglietto.BigliettoRimozioneException;
 import giuliacrepaldi.exceptions.miscellanous.StringaUUIDNonValidaException;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
@@ -70,5 +73,47 @@ public class AbbonamentiDAO {
         Query query = em.createQuery("SELECT a FROM Abbonamento a");
         List<Abbonamento> tuttiGliAbbonamenti = query.getResultList();
         return tuttiGliAbbonamenti;
+    }
+
+    /**
+     * Rimuovi un abbonamento per ID.
+     */
+    public void rimuoviPerId(String targetId) throws AbbonamentoNonTrovatoException, AbbonamentoRimozioneException, StringaUUIDNonValidaException {
+
+        EntityTransaction transaction = em.getTransaction();
+
+        Query query = em.createQuery(
+                "DELETE FROM Abbonamento a WHERE a.venditaTrasportoId = :targetId"
+        );
+
+        // pass query params
+        try {
+
+            query.setParameter("targetId", UUID.fromString(targetId));
+
+        } catch (IllegalArgumentException ex) {
+            throw new StringaUUIDNonValidaException(targetId);
+        }
+
+        // execute query
+        try {
+
+            transaction.begin();
+            int affectedRows = query.executeUpdate();
+
+            if (affectedRows == 0) {
+                throw new AbbonamentoNonTrovatoException(targetId, "ID");
+            }
+
+            transaction.commit();
+
+        } catch (RuntimeException ex) {
+            transaction.rollback();
+            if (ex instanceof AbbonamentoNonTrovatoException) {
+                throw ex;
+            }
+            throw new AbbonamentoRimozioneException(targetId, "ID");
+        }
+
     }
 }
