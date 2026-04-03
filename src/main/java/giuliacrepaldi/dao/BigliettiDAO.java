@@ -4,12 +4,11 @@ import giuliacrepaldi.entities.Biglietto;
 import giuliacrepaldi.entities.MezzoTrasporto;
 import giuliacrepaldi.exceptions.biglietto.BigliettoGiaObliteratoException;
 import giuliacrepaldi.exceptions.biglietto.BigliettoNonTrovatoException;
+import giuliacrepaldi.exceptions.biglietto.BigliettoRimozioneException;
 import giuliacrepaldi.exceptions.miscellanous.StringaUUIDNonValidaException;
 import giuliacrepaldi.exceptions.vendita_trasporto.VenditaTrasportoSalvataggioException;
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.NoResultException;
-import jakarta.persistence.Query;
-import jakarta.persistence.TypedQuery;
+import jakarta.persistence.*;
+import jakarta.transaction.Transaction;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -133,5 +132,47 @@ public class BigliettiDAO {
         return tuttiBiglietti;
     }
 
+    /**
+     * Rimuovi un biglietto per ID.
+     */
+    public void rimuoviPerId(String targetId) throws BigliettoNonTrovatoException, BigliettoRimozioneException, StringaUUIDNonValidaException {
+
+        EntityTransaction transaction = entityManager.getTransaction();
+        
+        Query query = entityManager.createQuery(
+                "DELETE FROM Biglietto b WHERE b.venditaTrasportoId = :targetId"
+        );
+
+        // pass query params
+        try {
+
+            query.setParameter("targetId", UUID.fromString(targetId));
+
+        } catch (IllegalArgumentException ex) {
+            throw new StringaUUIDNonValidaException(targetId);
+        }
+
+        // execute query
+        try {
+            
+            transaction.begin();
+            int affectedRows = query.executeUpdate();
+            
+            if (affectedRows == 0) {
+                throw new BigliettoNonTrovatoException(targetId, "ID");
+            }
+            
+            transaction.commit();
+                    
+        } catch (RuntimeException ex) {
+            transaction.rollback();
+            if (ex instanceof BigliettoNonTrovatoException) {
+                throw ex;
+            }
+            throw new BigliettoRimozioneException(targetId, "ID");
+        }
+        
+    }
+    
 
 }

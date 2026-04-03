@@ -8,7 +8,9 @@ import giuliacrepaldi.exceptions.tessera.TesseraNonTrovataException;
 import giuliacrepaldi.exceptions.tessera.TesseraSalvataggioException;
 import jakarta.persistence.*;
 
+import java.time.LocalDate;
 import java.util.List;
+import java.util.Locale;
 import java.util.UUID;
 
 public class TessereDAO {
@@ -98,5 +100,41 @@ public class TessereDAO {
         List<Tessera> tutteLeTessere = query.getResultList();
         return tutteLeTessere;
     }
+
+    /**
+     * Rinnova la tessera con l'ID dato, solo se è scaduta.
+     * Se la tessera non era scaduta, non da errore, ma la lascia com'era.
+     */
+    // public void rinnovaTessera(String tesseraId) throws TesseraNonTrovataException, StringaUUIDNonValidaException {
+    //    
+    //     // trova la tessera
+    //     Tessera tessera = trovaPerId(tesseraId);
+    //
+    //     LocalDate oggi = LocalDate.now();
+    //    
+    //     TypedQuery<Tessera> query = entityManager.createQuery(
+    //             "UPDATE Tessera t SET t.dataInizioTessera = , t.dataFineTessera =  WHERE t.tessera = :tessera AND t.dataFineTessera <  ",
+    //             Tessera.class
+    //     );
+    //
+    //     // pass query params
+    //     try {
+    //
+    //         query.setParameter("targetId", UUID.fromString(targetId));
+    //
+    //     } catch (IllegalArgumentException ex) {
+    //         throw new StringaUUIDNonValidaException(targetId);
+    //     }
+    //
+    //     // execute query
+    //     try {
+    //
+    //         return query.getSingleResult();
+    //
+    //     } catch (NoResultException ex) {
+    //         throw new TesseraNonTrovataException(targetId, "ID");
+    //     }
+    //    
+    // }
 
 }
