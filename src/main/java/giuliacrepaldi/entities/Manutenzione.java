@@ -28,6 +28,9 @@ public class Manutenzione {
 
     @Column(name = "costo_manutenzione", nullable = false)
     private double costoManutenzione;
+    
+    @Column(name = "manutenzione_e_attiva", nullable = false)
+    private boolean manutenzioneEAttiva;
 
     protected Manutenzione (){}
 
@@ -44,6 +47,11 @@ public class Manutenzione {
         this.dataInizioManutenzione = dataInizioManutenzione;
         this.dataFineManutenzione = dataFineManutenzione;
         this.costoManutenzione = costoManutenzione;
+        this.setManutenzioneEAttiva(true);
+    }
+    
+    public void setManutenzioneEAttiva(boolean manutenzioneEAttiva) {
+        this.manutenzioneEAttiva = manutenzioneEAttiva;
     }
 
     public UUID getManutenzioneId() {
@@ -73,6 +81,7 @@ public class Manutenzione {
                 ", dataInizioManutenzione=" + dataInizioManutenzione +
                 ", dataFineManutenzione=" + dataFineManutenzione +
                 ", costoManutenzione=" + costoManutenzione +
+                ", manutenzioneEAttiva=" + manutenzioneEAttiva +
                 '}';
     }
 }

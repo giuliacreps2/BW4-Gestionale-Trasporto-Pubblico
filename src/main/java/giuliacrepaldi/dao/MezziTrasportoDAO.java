@@ -1,16 +1,21 @@
 package giuliacrepaldi.dao;
 
-import giuliacrepaldi.entities.Manutenzione;
-import giuliacrepaldi.entities.MezzoTrasporto;
+import giuliacrepaldi.entities.*;
+import giuliacrepaldi.exceptions.mezzo_trasporto.MezzoTrasportoNonInServizioException;
 import giuliacrepaldi.exceptions.mezzo_trasporto.MezzoTrasportoNonTrovatoException;
 import giuliacrepaldi.exceptions.mezzo_trasporto.MezzoTrasportoSalvataggioException;
 import giuliacrepaldi.exceptions.miscellanous.StringaUUIDNonValidaException;
+import giuliacrepaldi.exceptions.percorrenza.PercorrenzaSalvataggioException;
+import giuliacrepaldi.exceptions.tessera.TesseraRinnovoException;
+import giuliacrepaldi.exceptions.tessera.TesseraSalvataggioException;
+import giuliacrepaldi.exceptions.tratta.TrattaNonTrovataException;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
 import jakarta.persistence.Query;
 import jakarta.persistence.TypedQuery;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
@@ -58,18 +63,27 @@ public class MezziTrasportoDAO {
      */
     //2.boolean eInManutenzione(UUID mezzoId), dove somma manutenzioni in corso == 0
     public boolean eInManutenzione(MezzoTrasporto mezzoTrasporto) {
-        // TODO: verificare che il mezzo esista
         LocalDate today = LocalDate.now();
 
-        TypedQuery<Long> query = em.createQuery("SELECT COUNT(m) FROM Manutenzione m " +
-                "WHERE m.mezzoTrasporto = :mezzoTrasporto " +
-                "AND :today BETWEEN m.dataInizioManutenzione AND m.dataFineManutenzione", Long.class);
+        TypedQuery<Boolean> query = em.createQuery(
+                "SELECT COUNT(man) > 0 FROM Manutenzione man " +
+                "       WHERE man.mezzoTrasporto = :mezzoTrasporto " +
+                "       AND (:today BETWEEN man.dataInizioManutenzione AND man.dataFineManutenzione)" +
+                        "AND (man.manutenzioneEAttiva = true)", 
+                Boolean.class
+        );
 
         query.setParameter("mezzoTrasporto", mezzoTrasporto);
         query.setParameter("today", today);
-        Long quanteManutenzioni = query.getSingleResult();
+        
+        Boolean haManutenzione = query.getSingleResult();
 
-        return quanteManutenzioni > 0;
+        return haManutenzione;
+    }
+
+    public boolean eInManutenzione(String mezzoTrasportoId) throws MezzoTrasportoNonTrovatoException, StringaUUIDNonValidaException {
+        MezzoTrasporto mezzoTrasporto = trovaPerId(mezzoTrasportoId);
+        return eInManutenzione(mezzoTrasporto);
     }
 
     //3.boolean inServizio(UUID mezzoId)---> non in eInManutenzione()
@@ -77,6 +91,61 @@ public class MezziTrasportoDAO {
         return !eInManutenzione(mezzoTrasporto);
     }
 
+    public boolean inServizio(String mezzoTrasportoId) throws MezzoTrasportoNonTrovatoException, StringaUUIDNonValidaException {
+        MezzoTrasporto mezzoTrasporto = trovaPerId(mezzoTrasportoId);
+        return inServizio(mezzoTrasporto);
+    }
+
+
+    /**
+     * Metti un mezzo in servizio, se è in manutenzione.
+     * Se il mezzo di trasporto non è in manutenzione, nessun errore viene generato.
+     */
+    public void mettiInServizio(String mezzoTrasportoId) throws MezzoTrasportoNonTrovatoException, StringaUUIDNonValidaException {
+        
+        MezzoTrasporto mezzoTrasporto = trovaPerId(mezzoTrasportoId);
+        mettiInServizio(mezzoTrasporto);
+    }
+
+    
+    /**
+     * Metti un mezzo in servizio, se è in manutenzione.
+     * Se il mezzo di trasporto non è in manutenzione, nessun errore viene generato.
+     */
+    public void mettiInServizio(MezzoTrasporto mezzoTrasporto)  {
+
+        EntityTransaction transaction = em.getTransaction();
+        LocalDate today = LocalDate.now();
+        
+        Query query = em.createQuery(
+                "UPDATE Manutenzione man " +
+                        "SET man.manutenzioneEAttiva = false " +
+                        "WHERE man.mezzoTrasporto = :mezzoTrasporto " +
+                        "AND (:today BETWEEN man.dataInizioManutenzione AND man.dataFineManutenzione)"
+        );
+
+        // pass query params
+        query.setParameter("mezzoTrasporto", mezzoTrasporto);
+        query.setParameter("today", today);
+
+        // execute query
+        try {
+
+            transaction.begin();
+            
+            int affectedRows = query.executeUpdate();
+
+            transaction.commit();
+
+        } catch (RuntimeException ex) {
+            transaction.rollback();
+            throw new MezzoTrasportoSalvataggioException(mezzoTrasporto);
+        }
+        
+    }
+
+    
+    
     //4. findById
     public MezzoTrasporto trovaPerId(String targetId) throws MezzoTrasportoNonTrovatoException, StringaUUIDNonValidaException {
         try {
@@ -97,8 +166,55 @@ public class MezziTrasportoDAO {
     }
 
 
-    public List findAll() {
-        Query q = em.createQuery("SELECT m FROM MezzoTrasporto m");
-        return q.getResultList();
+    /**
+     * Ottieni tutti i mezzi di trasporto.
+     */
+    public List<MezzoTrasporto> findAll() {
+        TypedQuery<MezzoTrasporto> query = em.createQuery(
+                "SELECT m FROM MezzoTrasporto m", 
+                MezzoTrasporto.class
+        );
+        return query.getResultList();
     }
+
+    
+    /**
+     * Associa una tratta a un mezzo in servizio. 
+     * Significa aggiungere una percorrenza. 
+     */
+    public void associaTrattaAMezzoTrasportoInServizio(String trattaId, String mezzoTrasportoId, long tempoEffettivoPercorrenza, LocalDateTime dataEOraPercorrenza) throws MezzoTrasportoNonTrovatoException, TrattaNonTrovataException, MezzoTrasportoNonInServizioException, PercorrenzaSalvataggioException, StringaUUIDNonValidaException {
+        
+        Tratta tratta = new TratteDAO(em).trovaPerId(trattaId);
+        MezzoTrasporto mezzoTrasporto = trovaPerId(mezzoTrasportoId);
+        associaTrattaAMezzoTrasportoInServizio(tratta, mezzoTrasporto, tempoEffettivoPercorrenza, dataEOraPercorrenza);
+        
+    }
+
+    /**
+     * Associa una tratta a un mezzo in servizio. 
+     * Significa aggiungere una percorrenza. 
+     */
+    public void associaTrattaAMezzoTrasportoInServizio(Tratta tratta, MezzoTrasporto mezzoTrasporto, long tempoEffettivoPercorrenza, LocalDateTime dataEOraPercorrenza) throws MezzoTrasportoNonInServizioException, PercorrenzaSalvataggioException {
+
+        boolean eInServizio = inServizio(mezzoTrasporto);
+        
+        // il mezzo di trasporto non è in servizio
+        if (!eInServizio) {
+            throw new MezzoTrasportoNonInServizioException(mezzoTrasporto);
+        }
+        
+        // il mezzo di trasporto è in servizio, quindi si può
+        //  associare una tratta
+        Percorrenza percorrenza = new Percorrenza(
+                tempoEffettivoPercorrenza,
+                dataEOraPercorrenza,
+                tratta,
+                mezzoTrasporto
+        );
+        
+        new PercorrenzeDAO(em).salva(percorrenza);
+        
+    }
+    
+    
 }

@@ -52,6 +52,9 @@ public class AbbonamentiDAO {
         return found;
     }
 
+    /**
+     * Verifica se un abbonamento è valido (si/no).
+     */
     public boolean abbonamentoValido(String abbonamentoId) throws AbbonamentoNonTrovatoException, StringaUUIDNonValidaException {
         Abbonamento abbonamento = trovaPerId(abbonamentoId);
 

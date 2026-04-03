@@ -4,11 +4,14 @@ import giuliacrepaldi.dao.*;
 import giuliacrepaldi.entities.*;
 import giuliacrepaldi.enums.TipoAbbonamento;
 import giuliacrepaldi.enums.TipologiaPuntoEmissione;
+import giuliacrepaldi.exceptions.mezzo_trasporto.MezzoTrasportoNonTrovatoException;
 import giuliacrepaldi.exceptions.punto_emissione.PuntoEmissioneNonTrovatoException;
+import giuliacrepaldi.exceptions.tratta.TrattaNonTrovataException;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.Persistence;
 
+import java.time.Duration;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Scanner;
@@ -279,6 +282,194 @@ public class MenuAmministratore {
             System.out.println("Errore: " + e.getMessage());
         }
     }
+
+    private static UUID leggiUUID(Scanner scanner) {
+        while (true) {
+            String input = scanner.nextLine().trim();
+            if (input.isEmpty()) continue;
+            try {
+                return UUID.fromString(input);
+            } catch (IllegalArgumentException e) {
+                System.err.println("Formato UUID non valido! Riprova");
+            }
+        }
+    }
+
+    // 8
+    public static void statisticheMezzo(EntityManager em, Scanner scanner) {
+        MezziTrasportoDAO mezziDAO = new MezziTrasportoDAO(em);
+        BigliettiDAO bigliettiDAO = new BigliettiDAO(em);
+        PercorrenzeDAO percorrenzeDAO = new PercorrenzeDAO(em);
+
+        try {
+            System.out.print("Inserisci ID mezzo: ");
+            UUID idMezzo = leggiUUID(scanner);
+
+            MezzoTrasporto mezzo;
+            try {
+                mezzo = mezziDAO.trovaPerId(idMezzo);
+            } catch (MezzoTrasportoNonTrovatoException e) {
+                System.out.println("Mezzo non trovato!");
+                return;
+            }
+
+            int numeroBigliettiVidimati = Math.toIntExact(bigliettiDAO.contaBigliettiVidimatiSuMezzoTrasporto(mezzo));
+            List<Percorrenza> percorrenze = percorrenzeDAO.findPercorrenzaByMezzo(idMezzo);
+            int numeroPercorrenze = percorrenze.size();
+            boolean inManutenzione = mezziDAO.eInManutenzione(mezzo);
+            boolean inServizio = mezziDAO.inServizio(mezzo);
+
+            System.out.println("STATISTICHE MEZZO ");
+            System.out.println("Mezzo: " + mezzo);
+            System.out.println("Numero biglietti vidimati: " + numeroBigliettiVidimati);
+            System.out.println("Numero percorrenze effettuate: " + numeroPercorrenze);
+            System.out.println("In manutenzione: " + inManutenzione);
+            System.out.println("In servizio: " + inServizio);
+
+        } catch (RuntimeException e) {
+            System.out.println("Errore: " + e.getMessage());
+        }
+    }
+
+    // 9
+    public static void ottieniTempoPercorrenza(EntityManager em, Scanner scanner) {
+        PercorrenzeDAO percorrenzeDAO = new PercorrenzeDAO(em);
+        MezziTrasportoDAO mezziDAO = new MezziTrasportoDAO(em);
+        TratteDAO tratteDAO = new TratteDAO(em);
+
+        try {
+            System.out.print("Inserisci ID mezzo: ");
+            UUID idMezzo = leggiUUID(scanner);
+
+            System.out.print("Inserisci ID tratta: ");
+            UUID idTratta = leggiUUID(scanner);
+
+            MezzoTrasporto mezzo;
+            Tratta tratta;
+            try {
+                mezzo = mezziDAO.trovaPerId(idMezzo);
+            } catch (MezzoTrasportoNonTrovatoException e) {
+                System.out.println("Mezzo non trovato!");
+                return;
+            }
+            try {
+                tratta = tratteDAO.trovaPerId(idTratta.toString());
+            } catch (TrattaNonTrovataException e) {
+                System.out.println("Tratta non trovata!");
+                return;
+            }
+
+            Duration tempoMedio = percorrenzeDAO.getTempoMedioEffettivo(idMezzo, idTratta);
+            long ore = tempoMedio.toHours();
+            long minuti = tempoMedio.toMinutesPart();
+
+            System.out.println("TEMPO PERCORRENZA");
+            System.out.println("Mezzo: " + mezzo);
+            System.out.println("Tratta: " + tratta);
+            System.out.println("Tempo medio effettivo: " + ore + " ore e " + minuti + " minuti");
+
+        } catch (RuntimeException e) {
+            System.out.println("Errore: " + e.getMessage());
+        }
+    }
+
+    // 10
+    public static void ottieniZonaPartenzaArrivo(EntityManager em, Scanner scanner) {
+        TratteDAO tratteDAO = new TratteDAO(em);
+        try {
+            System.out.print("Inserisci ID tratta: ");
+            UUID idTratta = leggiUUID(scanner);
+
+            Tratta tratta;
+            try {
+                tratta = tratteDAO.trovaPerId(idTratta.toString());
+            } catch (TrattaNonTrovataException e) {
+                System.out.println("Tratta non trovata!");
+                return;
+            }
+            System.out.println(" ZONA PARTENZA / ARRIVO ");
+            System.out.println("Zona di partenza: " + tratta.getZonaPartenza());
+            System.out.println("Zona di arrivo: " + tratta.getZonaArrivo());
+
+        } catch (RuntimeException e) {
+            System.out.println("Errore: " + e.getMessage());
+        }
+    }
+
+    // 11
+    public static void verificaMezzoInServizio(EntityManager em, Scanner scanner) {
+        MezziTrasportoDAO mezziDAO = new MezziTrasportoDAO(em);
+        try {
+            System.out.print("Inserisci ID mezzo: ");
+            UUID idMezzo = leggiUUID(scanner);
+
+            MezzoTrasporto mezzo;
+            try {
+                mezzo = mezziDAO.trovaPerId(idMezzo);
+            } catch (MezzoTrasportoNonTrovatoException e) {
+                System.out.println("Mezzo non trovato!");
+                return;
+            }
+
+            boolean inServizio = mezziDAO.inServizio(mezzo);
+            System.out.println("=== STATO MEZZO ===");
+            System.out.println("Mezzo: " + mezzo);
+            if (inServizio) {
+                System.out.println("Il mezzo è IN SERVIZIO");
+            } else {
+                System.out.println("Il mezzo NON è in servizio (in manutenzione)");
+            }
+        } catch (RuntimeException e) {
+            System.out.println("Errore: " + e.getMessage());
+        }
+    }
+
+    // 12
+    public static void verificaDistributoreInServizio(EntityManager em, Scanner scanner) {
+        PuntiEmissioneDAO puntiDAO = new PuntiEmissioneDAO(em);
+        try {
+            System.out.print("Inserisci ID punto emissione: ");
+            UUID idPunto = leggiUUID(scanner);
+
+            PuntoEmissione punto;
+            try {
+                punto = puntiDAO.trovaPerId(idPunto);
+            } catch (PuntoEmissioneNonTrovatoException e) {
+                System.out.println("Punto di emissione non trovato!");
+                return;
+            }
+            System.out.println("STATO DISTRIBUTORE");
+            System.out.println("Punto: " + punto);
+            if (punto.isAttivo()) {
+                System.out.println("Il distributore è IN SERVIZIO");
+            } else {
+                System.out.println("Il distributore NON è in servizio");
+            }
+
+        } catch (RuntimeException e) {
+            System.out.println("Errore: " + e.getMessage());
+        }
+    }
+
+
+    // 13
+    public static void trovaMezziAzienda(EntityManager em) {
+        MezziTrasportoDAO mezziDAO = new MezziTrasportoDAO(em);
+        try {
+            List<MezzoTrasporto> mezzi = mezziDAO.findAll();
+            if (mezzi.isEmpty()) {
+                System.out.println("Nessun mezzo trovato!");
+                return;
+            }
+            System.out.println("MEZZI DELL'AZIENDA");
+            for (MezzoTrasporto mezzo : mezzi) {
+                System.out.println(mezzo);
+            }
+        } catch (RuntimeException e) {
+            System.out.println("Errore: " + e.getMessage());
+        }
+    }
+
 
     public static void mostraMenu(EntityManager em, Scanner scanner) {
         int scelta;

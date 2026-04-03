@@ -14,6 +14,7 @@ import jakarta.persistence.Persistence;
 import javax.swing.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.UUID;
 
 // qui vanno diversi tipi di test e sperimenti 
@@ -74,7 +75,7 @@ public class AppTest {
         // PuntoEmissione puntoEmissione1FromDB = puntiEmissioneDAO.findById(UUID.fromString("ea8feaae-62d2-4f5e-a73f-13838321ec58"));
         Biglietto biglietto1FromDB = bigliettiDAO.trovaPerId("46ee9149-3e57-4d96-8594-33ee48e7ce8d");
         MezzoTrasporto mezzoTrasporto1FromDB = mezziTrasportoDAO.trovaPerId("c4729d6b-6e27-4613-8d16-739a1b360c43");
-        Manutenzione manutenzione1FromDB = manutenzioniDAO.trovaPerId("30cf0185-be3f-4a3c-94e6-d3d841c92954");
+        Manutenzione manutenzione1FromDB = manutenzioniDAO.trovaPerId("acaaddab-b322-4aa4-a576-2f74f59e4c8e");
         Tratta tratta1FromDB = tratteDAO.trovaPerId("832e1f39-4966-4fe6-bbd6-45d0aaa8e27d");
         Percorrenza percorrenza1FromDB = percorrenzeDAO.trovaPerId("20d53217-fd31-4e27-9bfa-fd4b660f7400");
         
@@ -89,12 +90,28 @@ public class AppTest {
         // ******* OBLITERA BIGLIETTO
         // bigliettiDAO.obliteraBiglietto("46ee9149-3e57-4d96-8594-33ee48e7ce8d", "c4729d6b-6e27-4613-8d16-739a1b360c43");
         
+        // ******* ABBONAMENTO E' VALIDO
+        boolean abbonamento1EValido = abbonamentiDAO.abbonamentoValido("5d3869f9-18db-4f88-9bfe-1bf874af3aa6");
+        
+        // ******* MEZZO E' IN SERVIZIO
+        boolean mezzo1EInServizio = mezziTrasportoDAO.inServizio("c4729d6b-6e27-4613-8d16-739a1b360c43");
+        boolean mezzo1EInManutenzione = mezziTrasportoDAO.eInManutenzione("c4729d6b-6e27-4613-8d16-739a1b360c43");
+        
+        
+        // ***** MANUTENZIONI 
+        List<Manutenzione> manutenzioniDiMezzo1 = gestoreAziendaDAO.ottieniTutteManutenzioniDiMezzo(
+                "c4729d6b-6e27-4613-8d16-739a1b360c43",
+                LocalDate.now().minusYears(1),
+                LocalDate.now().plusYears(1)
+        );
         
         // ******** STATISTICHE
         long quantiBigliettiEAbbonamentiInPeriodo = venditeTrasportiDAO.ottieniQuantiBigliettiEAbbonamentiEmessiInPeriodo(
                 LocalDate.now().minusDays(3), 
                 LocalDate.now().plusDays(3)
         );
+        
+        List<MezzoTrasporto> tuttiMezziTrasporto = mezziTrasportoDAO.findAll();
         
         long quantiBigliettiEAbbonamentiInPuntoEmissione = venditeTrasportiDAO.ottieniQuantiBigliettiEAbbonamentiEmessiInPuntoEmissione("924d0962-c252-46d9-91d1-33f3a6c60a77");
         
@@ -104,6 +121,20 @@ public class AppTest {
                 LocalDateTime.now().minusYears(1), 
                 LocalDateTime.now().plusYears(1)
         );
+
+
+        // ****** ASSOCIA MEZZO DI TRASPORTO A TRATTA
+        // mezziTrasportoDAO.associaTrattaAMezzoTrasportoInServizio(
+        //         "832e1f39-4966-4fe6-bbd6-45d0aaa8e27d",
+        //         "c4729d6b-6e27-4613-8d16-739a1b360c43",
+        //         343,
+        //         LocalDateTime.now()
+        // );
+
+        // ****** METTI IN SERVIZIO UN MEZZO DI TRASPORTO
+        // mezziTrasportoDAO.mettiInServizio("c4729d6b-6e27-4613-8d16-739a1b360c43");
+        
+        
         
         // boolean utente1HaTessera = utentiDAO.utenteHaTessera(utente1);
         
@@ -114,11 +145,15 @@ public class AppTest {
         // System.out.println(manutenzione1FromDB);
         // System.out.println(tratta1FromDB);
         // System.out.println(percorrenza1FromDB);
-
+        // System.out.println(abbonamento1EValido);
+        // System.out.println(mezzo1EInServizio);
+        // System.out.println(mezzo1EInManutenzione);
+        //
         // biglietto1FromDB.setObliteratoDa();
         // System.out.println(puntoEmissione1FromDB);
         // System.out.println(biglietto1FromDB);
-                
+        // System.out.println(manutenzioniDiMezzo1);
+        
         //
         // System.out.println(puntoEmissione1FromDB);
         // System.out.println(utente1FromDB);
@@ -128,6 +163,8 @@ public class AppTest {
         // System.out.println(quantiBigliettiEAbbonamentiInPuntoEmissione);
         // System.out.println(quantiBigliettiVidimatiSuMezzo);
         // System.out.println(quantiBigliettiVidimatiInPeriodo);
+        // System.out.println(tuttiMezziTrasporto);
+        // System.out.println(gestoreAziendaDAO.ottieniTuttiMezziTrasporto());
         
 
         // System.out.println(puntoEmissione1FromDB);
@@ -167,12 +204,12 @@ public class AppTest {
         //         TipoAbbonamento.SETTIMANALE
         // );
         
-        // Manutenzione manutenzione1 = new Manutenzione(
-        //         mezzoTrasporto1FromDB,
-        //         LocalDate.now(),
-        //         LocalDate.now().plusMonths(1),
-        //         45.23
-        // );
+        Manutenzione manutenzione1 = new Manutenzione(
+                mezzoTrasporto1FromDB,
+                LocalDate.now(),
+                LocalDate.now().plusMonths(1),
+                45.23
+        );
         
         // Tratta tratta1 = new Tratta(
         //         234,
@@ -181,12 +218,12 @@ public class AppTest {
         //         "milano"
         // );
         
-        Percorrenza percorrenza1 = new Percorrenza(
-                354,
-                LocalDateTime.now(),
-                tratta1FromDB,
-                mezzoTrasporto1FromDB
-        );
+        // Percorrenza percorrenza1 = new Percorrenza(
+        //         354,
+        //         LocalDateTime.now(),
+        //         tratta1FromDB,
+        //         mezzoTrasporto1FromDB
+        // );
 
         // System.out.println(tratta1);
         
