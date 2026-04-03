@@ -1,12 +1,8 @@
 package giuliacrepaldi.tests.cristian;
 
 
-import giuliacrepaldi.dao.AbbonamentiDAO;
-import giuliacrepaldi.dao.BigliettiDAO;
-import giuliacrepaldi.dao.PuntiEmissioneDAO;
-import giuliacrepaldi.entities.Biglietto;
-import giuliacrepaldi.entities.MezzoTrasporto;
-import giuliacrepaldi.entities.PuntoEmissione;
+import giuliacrepaldi.dao.*;
+import giuliacrepaldi.entities.*;
 import giuliacrepaldi.enums.TipologiaPuntoEmissione;
 import giuliacrepaldi.exceptions.punto_emissione.PuntoEmissioneNonTrovatoException;
 import jakarta.persistence.EntityManager;
@@ -14,6 +10,8 @@ import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.EntityTransaction;
 import jakarta.persistence.Persistence;
 
+import java.time.LocalDate;
+import java.util.List;
 import java.util.Scanner;
 import java.util.UUID;
 
@@ -223,6 +221,64 @@ public class AppScanner {
         }
     }
 
+    public static void creaTessera(EntityManager em, Scanner scanner) {
+        try {
+            TessereDAO tessereDAO = new TessereDAO(em);
+            PuntiEmissioneDAO puntiDAO = new PuntiEmissioneDAO(em);
+            UtentiDAO utentiDAO = new UtentiDAO(em); // supponendo ci sia un DAO Utente
+
+            System.out.println("Inserisci ID utente:");
+            String idUtente = scanner.nextLine();
+            Utente utente = utentiDAO.trovaPerId(idUtente);
+
+            System.out.println("Inserisci ID punto emissione:");
+            String idPunto = scanner.nextLine();
+            PuntoEmissione punto = puntiDAO.trovaPerId(idPunto);
+
+            System.out.println("Inserisci prezzo tessera:");
+            double prezzo = Double.parseDouble(scanner.nextLine());
+
+            System.out.println("Inserisci data inizio tessera (YYYY-MM-DD):");
+            String dataInizioStr = scanner.nextLine();
+            LocalDate dataInizio = LocalDate.parse(dataInizioStr);
+
+            Tessera tessera = new Tessera(punto, prezzo, utente, dataInizio);
+
+            tessereDAO.salva(tessera);
+
+            System.out.println("Tessera creata con successo!");
+            System.out.println(tessera);
+
+        } catch (Exception e) {
+            System.out.println("Errore nella creazione della tessera: " + e.getMessage());
+        }
+    }
+
+    public static void statisticheBiglietti(EntityManager em) {
+        try {
+            BigliettiDAO bigliettiDAO = new BigliettiDAO(em);
+
+            System.out.println(" STATISTICHE BIGLIETTI ");
+
+            int totaleBiglietti = bigliettiDAO.findAll().size();
+            System.out.println("Totale biglietti emessi: " + totaleBiglietti);
+
+            List<MezzoTrasporto> mezzi = em.createQuery("SELECT m FROM MezzoTrasporto m", MezzoTrasporto.class).getResultList();
+            for (MezzoTrasporto mezzo : mezzi) {
+                int vidimatiSuMezzo = bigliettiDAO.contaBigliettiVidimatiSuMezzoTrasporto(mezzo);
+                System.out.println("Biglietti vidimati sul mezzo " + mezzo.getTipoMezzo() + " (" + mezzo.getMezzoDiTrasportoId() + "): " + vidimatiSuMezzo);
+            }
+
+            LocalDate oggi = LocalDate.now();
+            LocalDate trentaGiorniFa = oggi.minusDays(30);
+            int vidimatiUltimi30Giorni = bigliettiDAO.contaBigliettiVidimatiInPeriodo(trentaGiorniFa, oggi);
+            System.out.println("Biglietti vidimati negli ultimi 30 giorni (" + trentaGiorniFa + " - " + oggi + "): " + vidimatiUltimi30Giorni);
+
+        } catch (Exception e) {
+            System.out.println("Errore durante il calcolo delle statistiche: " + e.getMessage());
+        }
+    }
+
     public static void menuAmministratore() {
         int scelta;
         do {
@@ -270,6 +326,23 @@ public class AppScanner {
                     }
                     break;
 
+                case 4:
+                    EntityManager em4 = entityManagerFactory.createEntityManager();
+                    try {
+                        creaTessera(em4, scanner);
+                    } finally {
+                        em4.close();
+                    }
+                    break;
+
+                case 5:
+                    EntityManager em5 = entityManagerFactory.createEntityManager();
+                    try {
+                        statisticheBiglietti(em5);
+                    } finally {
+                        em5.close();
+                    }
+                    break;
             }
         } while (scelta != 0);
     }
