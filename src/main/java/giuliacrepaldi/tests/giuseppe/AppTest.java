@@ -57,7 +57,7 @@ public class AppTest {
         );
 
         MezzoTrasporto mezzoTrasporto1 = new MezzoTrasporto(TipoMezzo.AUTOBUS);
-        
+         
         
         // mezziTrasportoDAO.salva(mezzoTrasporto1);
         // puntiEmissioneDAO.salva(puntoEmissione1);
