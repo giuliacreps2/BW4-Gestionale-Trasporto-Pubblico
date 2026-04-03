@@ -79,8 +79,10 @@ public class AppTest {
         Percorrenza percorrenza1FromDB = percorrenzeDAO.trovaPerId("20d53217-fd31-4e27-9bfa-fd4b660f7400");
         
         // ******** RIMOZIONE PER ID
-        bigliettiDAO.rimuoviPerId("9f1ed116-b630-42b9-9356-f0dd7f9d1e95");
+        // bigliettiDAO.rimuoviPerId("9f1ed116-b630-42b9-9356-f0dd7f9d1e95");
         
+        // ******** RINNOVA TESSERA
+        // tessereDAO.rinnovaTessera("416eb551-7374-4115-b59d-f621ec869c2d");
         
         // boolean utente1HaTessera = utentiDAO.utenteHaTessera(utente1);
 
