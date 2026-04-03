@@ -91,6 +91,8 @@ public class AppTest {
                 LocalDate.now().plusDays(3)
         );
         
+        long quantiBigliettiEAbbonamentiInPuntoEmissione = venditeTrasportiDAO.ottieniQuantiBigliettiEAbbonamentiEmessiInPuntoEmissione("924d0962-c252-46d9-91d1-33f3a6c60a77");
+        
         // boolean utente1HaTessera = utentiDAO.utenteHaTessera(utente1);
         
         // System.out.println(tessera1FromDB);
@@ -111,6 +113,7 @@ public class AppTest {
         // System.out.println(biglietto1FromDB);
 
         // System.out.println(quantiBigliettiEAbbonamentiInPeriodo);
+        // System.out.println(quantiBigliettiEAbbonamentiInPuntoEmissione);
         
 
         // System.out.println(puntoEmissione1FromDB);

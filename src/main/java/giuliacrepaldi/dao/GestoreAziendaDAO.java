@@ -5,6 +5,7 @@ import giuliacrepaldi.entities.Biglietto;
 import giuliacrepaldi.entities.Tessera;
 import giuliacrepaldi.exceptions.abbonamento.AbbonamentoSalvataggioException;
 import giuliacrepaldi.exceptions.miscellanous.StringaUUIDNonValidaException;
+import giuliacrepaldi.exceptions.punto_emissione.PuntoEmissioneNonTrovatoException;
 import giuliacrepaldi.exceptions.tessera.TesseraGiaEsistenteException;
 import giuliacrepaldi.exceptions.tessera.TesseraNonTrovataException;
 import giuliacrepaldi.exceptions.tessera.TesseraRinnovoException;
@@ -84,9 +85,16 @@ public class GestoreAziendaDAO {
     public long ottieniQuantiBigliettiEAbbonamentiEmessiInPeriodo(LocalDate dataInizio, LocalDate dataFine) {
         return venditeTrasportiDAO.ottieniQuantiBigliettiEAbbonamentiEmessiInPeriodo(dataInizio, dataFine);
     }
-    
-    // public calcolaQuanteVenditeTrasportoInPuntoEmissione() {}
-    //
+
+    /**
+     * Ottieni quanti biglietti e abbonamenti 
+     * sono stati emessi in un punto emissione.
+     */
+    public long ottieniQuantiBigliettiEAbbonamentiEmessiInPuntoEmissione(String puntoEmissioneId)  throws PuntoEmissioneNonTrovatoException, StringaUUIDNonValidaException {
+        return venditeTrasportiDAO.ottieniQuantiBigliettiEAbbonamentiEmessiInPuntoEmissione(puntoEmissioneId);
+    }
+
+
     // public mettiFuoriServizioDistributoreAutomatico() {}
     //
     // public mettiInServizioDistributoreAutomatico() {}

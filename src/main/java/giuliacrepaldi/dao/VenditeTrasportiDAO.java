@@ -2,8 +2,11 @@ package giuliacrepaldi.dao;
 
 import giuliacrepaldi.entities.Biglietto;
 import giuliacrepaldi.entities.MezzoTrasporto;
+import giuliacrepaldi.entities.PuntoEmissione;
 import giuliacrepaldi.entities.VenditaTrasporto;
 import giuliacrepaldi.exceptions.biglietto.BigliettoSalvataggioException;
+import giuliacrepaldi.exceptions.miscellanous.StringaUUIDNonValidaException;
+import giuliacrepaldi.exceptions.punto_emissione.PuntoEmissioneNonTrovatoException;
 import giuliacrepaldi.exceptions.vendita_trasporto.VenditaTrasportoSalvataggioException;
 import giuliacrepaldi.interfaces.exceptions.BigliettoGenericException;
 import jakarta.persistence.EntityManager;
@@ -70,6 +73,31 @@ public class VenditeTrasportiDAO {
 
         return result;
         
+    }
+
+    /**
+     * Ottieni quanti biglietti e abbonamenti 
+     * sono stati emessi in un punto emissione.
+     */
+    public long ottieniQuantiBigliettiEAbbonamentiEmessiInPuntoEmissione(String puntoEmissioneId) throws PuntoEmissioneNonTrovatoException, StringaUUIDNonValidaException {
+
+        PuntoEmissione puntoEmissione = new PuntiEmissioneDAO(entityManager).trovaPerId(puntoEmissioneId);
+        
+        TypedQuery<Long> query = entityManager.createQuery(
+                "SELECT COUNT(v) AS totale " +
+                        "FROM VenditaTrasporto v " +
+                        "WHERE " +
+                        "   (v.puntoEmissione = :puntoEmissione)" +
+                        "   AND (TYPE(v) IN (Abbonamento, Biglietto))",
+                Long.class
+        );
+
+        query.setParameter("puntoEmissione", puntoEmissione);
+
+        Long result = query.getSingleResult();
+
+        return result;
+
     }
     
 }
