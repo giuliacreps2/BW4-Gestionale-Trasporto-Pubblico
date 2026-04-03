@@ -14,6 +14,7 @@ import jakarta.persistence.Persistence;
 import javax.swing.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.UUID;
 
 // qui vanno diversi tipi di test e sperimenti 
@@ -102,6 +103,8 @@ public class AppTest {
                 LocalDate.now().plusDays(3)
         );
         
+        List<MezzoTrasporto> tuttiMezziTrasporto = mezziTrasportoDAO.findAll();
+        
         long quantiBigliettiEAbbonamentiInPuntoEmissione = venditeTrasportiDAO.ottieniQuantiBigliettiEAbbonamentiEmessiInPuntoEmissione("924d0962-c252-46d9-91d1-33f3a6c60a77");
         
         long quantiBigliettiVidimatiSuMezzo = bigliettiDAO.contaBigliettiVidimatiSuMezzoTrasporto("c4729d6b-6e27-4613-8d16-739a1b360c43");
@@ -139,6 +142,8 @@ public class AppTest {
         // System.out.println(quantiBigliettiEAbbonamentiInPuntoEmissione);
         // System.out.println(quantiBigliettiVidimatiSuMezzo);
         // System.out.println(quantiBigliettiVidimatiInPeriodo);
+        // System.out.println(tuttiMezziTrasporto);
+        System.out.println(gestoreAziendaDAO.ottieniTuttiMezziTrasporto());
         
 
         // System.out.println(puntoEmissione1FromDB);

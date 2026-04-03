@@ -2,6 +2,7 @@ package giuliacrepaldi.dao;
 
 import giuliacrepaldi.entities.Abbonamento;
 import giuliacrepaldi.entities.Biglietto;
+import giuliacrepaldi.entities.MezzoTrasporto;
 import giuliacrepaldi.entities.Tessera;
 import giuliacrepaldi.exceptions.abbonamento.AbbonamentoNonTrovatoException;
 import giuliacrepaldi.exceptions.abbonamento.AbbonamentoSalvataggioException;
@@ -19,6 +20,7 @@ import jakarta.persistence.EntityManager;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 
 public class GestoreAziendaDAO {
 
@@ -47,6 +49,7 @@ public class GestoreAziendaDAO {
         this.tratteDAO = new TratteDAO(entityManager);
         this.utentiDAO = new UtentiDAO(entityManager);
         this.venditeTrasportiDAO = new VenditeTrasportiDAO(entityManager);
+        this.mezziTrasportoDAO = new MezziTrasportoDAO(entityManager);
     }
 
     /**
@@ -119,7 +122,7 @@ public class GestoreAziendaDAO {
      * Ottieni quanti biglietti sono stati vidimati
      * sul dato mezzo.
      */
-    public long ottieniQuantiBigliettiVidimatiSuMezzo(String mezzoTrasportoId) {
+    public long ottieniQuantiBigliettiVidimatiSuMezzoTrasporto(String mezzoTrasportoId) {
         return bigliettiDAO.contaBigliettiVidimatiSuMezzoTrasporto(mezzoTrasportoId);
     }
 
@@ -148,15 +151,21 @@ public class GestoreAziendaDAO {
         return mezziTrasportoDAO.inServizio(mezzoTrasportoId);
     }
 
+    
     /**
      * Verifica se il mezzo dato è in manutenzione (si/no).
      */
     public boolean mezzoEInManutenzione(String mezzoTrasportoId) {
         return mezziTrasportoDAO.eInManutenzione(mezzoTrasportoId);
     }
+
     
-    
-    // public mezzoEInManutenzione() {}
+    /**
+     * Ottieni la flotta mezzi/parco mezzi.
+     */
+    public List<MezzoTrasporto> ottieniTuttiMezziTrasporto() {
+        return mezziTrasportoDAO.findAll();
+    }
     
     
     // public mettiFuoriServizioDistributoreAutomatico() {}

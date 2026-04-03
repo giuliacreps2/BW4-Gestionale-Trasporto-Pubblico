@@ -111,8 +111,15 @@ public class MezziTrasportoDAO {
     }
 
 
-    public List findAll() {
-        Query q = em.createQuery("SELECT m FROM MezzoTrasporto m");
-        return q.getResultList();
+    /**
+     * Ottieni tutti i mezzi di trasporto.
+     */
+    public List<MezzoTrasporto> findAll() {
+        TypedQuery<MezzoTrasporto> query = em.createQuery(
+                "SELECT m FROM MezzoTrasporto m", 
+                MezzoTrasporto.class
+        );
+        return query.getResultList();
     }
+    
 }
