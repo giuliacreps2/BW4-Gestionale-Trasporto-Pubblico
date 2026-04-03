@@ -89,6 +89,12 @@ public class AppTest {
         // ******* OBLITERA BIGLIETTO
         // bigliettiDAO.obliteraBiglietto("46ee9149-3e57-4d96-8594-33ee48e7ce8d", "c4729d6b-6e27-4613-8d16-739a1b360c43");
         
+        // ******* ABBONAMENTO E' VALIDO
+        boolean abbonamento1EValido = abbonamentiDAO.abbonamentoValido("5d3869f9-18db-4f88-9bfe-1bf874af3aa6");
+        
+        // ******* MEZZO E' IN SERVIZIO
+        boolean mezzo1EInServizio = mezziTrasportoDAO.inServizio("c4729d6b-6e27-4613-8d16-739a1b360c43");
+        boolean mezzo1EInManutenzione = mezziTrasportoDAO.eInManutenzione("c4729d6b-6e27-4613-8d16-739a1b360c43");
         
         // ******** STATISTICHE
         long quantiBigliettiEAbbonamentiInPeriodo = venditeTrasportiDAO.ottieniQuantiBigliettiEAbbonamentiEmessiInPeriodo(
@@ -105,6 +111,8 @@ public class AppTest {
                 LocalDateTime.now().plusYears(1)
         );
         
+        
+        
         // boolean utente1HaTessera = utentiDAO.utenteHaTessera(utente1);
         
         // System.out.println(tessera1FromDB);
@@ -114,11 +122,14 @@ public class AppTest {
         // System.out.println(manutenzione1FromDB);
         // System.out.println(tratta1FromDB);
         // System.out.println(percorrenza1FromDB);
-
+        // System.out.println(abbonamento1EValido);
+        // System.out.println(mezzo1EInServizio);
+        // System.out.println(mezzo1EInManutenzione);
+        //
         // biglietto1FromDB.setObliteratoDa();
         // System.out.println(puntoEmissione1FromDB);
         // System.out.println(biglietto1FromDB);
-                
+        
         //
         // System.out.println(puntoEmissione1FromDB);
         // System.out.println(utente1FromDB);

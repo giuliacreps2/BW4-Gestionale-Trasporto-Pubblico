@@ -1,7 +1,6 @@
 package giuliacrepaldi.dao;
 
 import giuliacrepaldi.entities.PuntoEmissione;
-import giuliacrepaldi.entities.Tratta;
 import giuliacrepaldi.exceptions.miscellanous.StringaUUIDNonValidaException;
 import giuliacrepaldi.exceptions.punto_emissione.PuntoEmissioneNonTrovatoException;
 import giuliacrepaldi.exceptions.punto_emissione.PuntoEmissioneRimozioneException;
@@ -24,7 +23,7 @@ public class PuntiEmissioneDAO {
      */
     public void salva(PuntoEmissione puntoEmissione) throws PuntoEmissioneSalvataggioException {
         EntityTransaction transaction = entityManager.getTransaction();
-        
+
         try {
             transaction.begin();
             entityManager.persist(puntoEmissione);
@@ -33,7 +32,7 @@ public class PuntiEmissioneDAO {
             transaction.rollback();
             throw new PuntoEmissioneSalvataggioException(puntoEmissione);
         }
-        
+
     }
 
     /**
@@ -43,7 +42,7 @@ public class PuntiEmissioneDAO {
         return trovaPerId(targetId.toString());
     }
 
-    
+
     /**
      * Trova un punto emissione per ID.
      */
@@ -53,30 +52,30 @@ public class PuntiEmissioneDAO {
                 "SELECT p FROM PuntoEmissione p WHERE p.puntoEmissioneId = :targetId",
                 PuntoEmissione.class
         );
-        
+
         // pass params
         try {
-            
+
             query.setParameter("targetId", UUID.fromString(targetId));
 
-        } catch(IllegalArgumentException ex) {
+        } catch (IllegalArgumentException ex) {
             throw new StringaUUIDNonValidaException(targetId);
         }
 
         // execute query
         try {
-            
+
             return query.getSingleResult();
-            
+
         } catch (NoResultException ex) {
             throw new PuntoEmissioneNonTrovatoException(targetId, "ID");
         }
 
     }
 
-    
+
     /**
-     * Trova un punto emissione per ID e rimuovilo. 
+     * Trova un punto emissione per ID e rimuovilo.
      */
     public void findByIdAndDelete(UUID id) throws PuntoEmissioneNonTrovatoException, PuntoEmissioneRimozioneException {
         PuntoEmissione puntoEmissioneTrovato = this.trovaPerId(id);
@@ -107,20 +106,20 @@ public class PuntiEmissioneDAO {
         }
 
         EntityTransaction transaction = entityManager.getTransaction();
-        
+
         try {
-            
+
             transaction.begin();
             puntoEmissioneTrovato.setCitta(nuovaCitta);
             puntoEmissioneTrovato.setAttivo(nuovoStato);
             entityManager.persist(puntoEmissioneTrovato);
             transaction.commit();
-            
+
         } catch (RuntimeException e) {
             transaction.rollback();
             throw new PuntoEmissioneSalvataggioException(puntoEmissioneTrovato);
         }
-        
+
     }
 
     public List<PuntoEmissione> findAll() {
@@ -128,4 +127,5 @@ public class PuntiEmissioneDAO {
         List<PuntoEmissione> tuttiIPuntiDiEmissione = query.getResultList();
         return tuttiIPuntiDiEmissione;
     }
+
 }

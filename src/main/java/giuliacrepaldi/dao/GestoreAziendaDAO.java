@@ -3,6 +3,7 @@ package giuliacrepaldi.dao;
 import giuliacrepaldi.entities.Abbonamento;
 import giuliacrepaldi.entities.Biglietto;
 import giuliacrepaldi.entities.Tessera;
+import giuliacrepaldi.exceptions.abbonamento.AbbonamentoNonTrovatoException;
 import giuliacrepaldi.exceptions.abbonamento.AbbonamentoSalvataggioException;
 import giuliacrepaldi.exceptions.biglietto.BigliettoGiaObliteratoException;
 import giuliacrepaldi.exceptions.biglietto.BigliettoNonTrovatoException;
@@ -48,6 +49,12 @@ public class GestoreAziendaDAO {
         this.venditeTrasportiDAO = new VenditeTrasportiDAO(entityManager);
     }
 
+    /**
+     * **************************************************++
+     *  CONSEGNE DEL PROGETTO
+     * **************************************************++
+     * */
+    
     
     /**
      * Aggiungi/aggiorna un biglietto.
@@ -124,17 +131,39 @@ public class GestoreAziendaDAO {
     public long ottieniQuantiBigliettiVidimatiInPeriodo(LocalDateTime dataEOraInizio, LocalDateTime dataEOraFine) {
         return bigliettiDAO.contaBigliettiVidimatiInPeriodo(dataEOraInizio, dataEOraFine);
     }
-    
 
+
+    /**
+     * Verifica se un abbonamento è valido (si/no).
+     */
+    public boolean abbonamentoEValido(String abbonamentoId) throws AbbonamentoNonTrovatoException, StringaUUIDNonValidaException {
+        return abbonamentiDAO.abbonamentoValido(abbonamentoId);
+    }
+
+    
+    /**
+     * Verifica se il mezzo dato è in servizio (si/no).
+     */
+    public boolean mezzoEInServizio(String mezzoTrasportoId) {
+        return mezziTrasportoDAO.inServizio(mezzoTrasportoId);
+    }
+
+    /**
+     * Verifica se il mezzo dato è in manutenzione (si/no).
+     */
+    public boolean mezzoEInManutenzione(String mezzoTrasportoId) {
+        return mezziTrasportoDAO.eInManutenzione(mezzoTrasportoId);
+    }
+    
+    
+    // public mezzoEInManutenzione() {}
+    
+    
     // public mettiFuoriServizioDistributoreAutomatico() {}
     //
     // public mettiInServizioDistributoreAutomatico() {}
     //
-    // public abbonamentoEValido() {}
     //
-    // public mezzoEInServizio() {}
-    //
-    // public mezzoEInManutenzione() {}
     //
     // public ottieniTuttiPeriodiManutenzioneDiMezzo() {}
     //
@@ -142,5 +171,35 @@ public class GestoreAziendaDAO {
     //
     //
 
+
+    /**
+     * **************************************************++
+     *  SALVA
+     * **************************************************++
+     * */
+
+    // public void salvaBiglietto() {}
+    //
+    // public void salvaAbbonamento() {}
+    //
+    // public void salvaTessera() {}
+    //
+    // public void salvaMezzoTrasporto() {}
+    //
+    // ....
+
+    /**
+     * **************************************************++
+     *  TROVA PER ID
+     * **************************************************++
+     * */
+    
+    // public Biglietto trovaBigliettoPerId() {}
+    //
+    // public Abbonamento trovaAbbonamentoPerId() {}
+    //
+    // public Tessera trovaTesseraPerId() {}
+    
+    // .....     
     
 }

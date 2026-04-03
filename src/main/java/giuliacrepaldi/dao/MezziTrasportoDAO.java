@@ -58,24 +58,46 @@ public class MezziTrasportoDAO {
      */
     //2.boolean eInManutenzione(UUID mezzoId), dove somma manutenzioni in corso == 0
     public boolean eInManutenzione(MezzoTrasporto mezzoTrasporto) {
-        // TODO: verificare che il mezzo esista
         LocalDate today = LocalDate.now();
 
-        TypedQuery<Integer> query = em.createQuery("SELECT COUNT(m) FROM Manutenzione m " +
+        TypedQuery<Long> query = em.createQuery("SELECT COUNT(m) FROM Manutenzione m " +
                 "WHERE m.mezzoTrasporto = :mezzoTrasporto " +
-                "AND :today BETWEEN m.dataInizioManutenzione AND m.dataFineManutenzione", Integer.class);
+                "AND :today BETWEEN m.dataInizioManutenzione AND m.dataFineManutenzione", Long.class);
 
         query.setParameter("mezzoTrasporto", mezzoTrasporto);
         query.setParameter("today", today);
-        Integer quanteManutenzioni = query.getSingleResult();
+        Long quanteManutenzioni = query.getSingleResult();
+        return quanteManutenzioni;
+     /*   TypedQuery<Boolean> query = em.createQuery(
+                "SELECT COUNT(man) > 0 FROM Manutenzione man " +
+                "       WHERE man.mezzoTrasporto = :mezzoTrasporto " +
+                "       AND :today BETWEEN man.dataInizioManutenzione AND man.dataFineManutenzione", 
+                Boolean.class
+        );
 
-        return quanteManutenzioni > 0;
+        query.setParameter("mezzoTrasporto", mezzoTrasporto);
+        query.setParameter("today", today);
+        
+        Boolean haManutenzione = query.getSingleResult();
+
+        return haManutenzione;*/
+    }
+
+    public boolean eInManutenzione(String mezzoTrasportoId) throws MezzoTrasportoNonTrovatoException, StringaUUIDNonValidaException {
+        MezzoTrasporto mezzoTrasporto = trovaPerId(mezzoTrasportoId);
+        return eInManutenzione(mezzoTrasporto);
     }
 
     //3.boolean inServizio(UUID mezzoId)---> non in eInManutenzione()
     public boolean inServizio(MezzoTrasporto mezzoTrasporto) {
         return !eInManutenzione(mezzoTrasporto);
     }
+
+    public boolean inServizio(String mezzoTrasportoId) throws MezzoTrasportoNonTrovatoException, StringaUUIDNonValidaException {
+        MezzoTrasporto mezzoTrasporto = trovaPerId(mezzoTrasportoId);
+        return inServizio(mezzoTrasporto);
+    }
+
 
     //4. findById
     public MezzoTrasporto trovaPerId(String targetId) throws MezzoTrasportoNonTrovatoException, StringaUUIDNonValidaException {
