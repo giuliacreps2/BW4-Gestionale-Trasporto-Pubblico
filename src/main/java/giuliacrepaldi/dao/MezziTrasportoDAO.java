@@ -61,13 +61,13 @@ public class MezziTrasportoDAO {
         // TODO: verificare che il mezzo esista
         LocalDate today = LocalDate.now();
 
-        TypedQuery<Integer> query = em.createQuery("SELECT COUNT(m) FROM Manutenzione m " +
+        TypedQuery<Long> query = em.createQuery("SELECT COUNT(m) FROM Manutenzione m " +
                 "WHERE m.mezzoTrasporto = :mezzoTrasporto " +
-                "AND :today BETWEEN m.dataInizioManutenzione AND m.dataFineManutenzione", Integer.class);
+                "AND :today BETWEEN m.dataInizioManutenzione AND m.dataFineManutenzione", Long.class);
 
         query.setParameter("mezzoTrasporto", mezzoTrasporto);
         query.setParameter("today", today);
-        Integer quanteManutenzioni = query.getSingleResult();
+        Long quanteManutenzioni = query.getSingleResult();
 
         return quanteManutenzioni > 0;
     }

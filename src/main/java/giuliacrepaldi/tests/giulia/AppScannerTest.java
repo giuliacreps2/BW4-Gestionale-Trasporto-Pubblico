@@ -14,10 +14,7 @@ import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.Persistence;
 
 import java.time.LocalDate;
-import java.util.List;
-import java.util.Map;
-import java.util.Scanner;
-import java.util.UUID;
+import java.util.*;
 
 public class AppScannerTest {
 
@@ -197,19 +194,6 @@ public class AppScannerTest {
         System.out.println("0. Esci");
 
         int scelta = Integer.parseInt(scanner.nextLine());
-//        while (scelta < 0 || scelta > 2) {
-//            try {
-//                scelta = Integer.parseInt(scanner.nextLine());
-//                if (scelta < 0 || scelta > 2)
-//                    System.out.println("Inserisci una scelta valida");
-//            } catch (NumberFormatException e) {
-//                System.out.println("Inserisci un numero valido");
-//            }
-//        }
-//
-//        if (scelta == 0) return;
-//        Tessera tessera = null;
-
 
         //Crea nuova tessera
         Tessera tessera = null;
@@ -293,6 +277,8 @@ public class AppScannerTest {
                 break;
 
             case 2:
+                Tessera tessera1;
+
                 break;
 
         }
@@ -404,9 +390,71 @@ public class AppScannerTest {
                 break;
         }
 
-        System.out.println("Grazie per ");
+        System.out.println("Ti auguriamo buon viaggio!");
 
 
+    }
+
+    public static void verificaMezzoInServizio(EntityManager em, Scanner scanner) {
+        MezziTrasportoDAO mezziDAO = new MezziTrasportoDAO(em);
+        ConvertitoreUUID convertitore = new ConvertitoreUUID(em);
+
+        System.out.println("CERCA MEZZI DISPONIBILI");
+        Map<Integer, UUID> mappaMezzi = convertitore.mapMezziTrasporto();
+
+        int scelta = 0;
+        while (!mappaMezzi.containsKey(scelta)) {
+            System.out.println("Inserisci il numero del mezzo: ");
+            try {
+                scelta = Integer.parseInt(scanner.nextLine());
+                if (!mappaMezzi.containsKey(scelta)) System.out.println("Scelta non valida, riprova");
+            } catch (NumberFormatException e) {
+                System.out.println("Inserisci un numero valido");
+            }
+        }
+        try {
+            MezzoTrasporto mezzoTrasporto = mezziDAO.trovaPerId(mappaMezzi.get(scelta));
+            if (mezziDAO.eInManutenzione(mezzoTrasporto)) {
+                System.out.println("Il mezzo con id: " + mezzoTrasporto.getMezzoDiTrasportoId() + ", è in manutenzione!");
+            } else {
+                System.out.println("Il mezzo con id: " + mezzoTrasporto.getMezzoDiTrasportoId() + ", è in servizio!");
+            }
+        } catch (MezzoTrasportoNonTrovatoException e) {
+            System.out.println("Mezzo trasporto non trovato!");
+        }
+
+
+    }
+
+    public static void verificaDistributoreInServizio(EntityManager em, Scanner scanner) {
+        PuntiEmissioneDAO puntiEmissioneDAO = new PuntiEmissioneDAO(em);
+        ConvertitoreUUID convertitore = new ConvertitoreUUID(em);
+
+        System.out.println("CERCA DISTRIBUTORI DISPONIBILI");
+        Map<Integer, UUID> mappaDistributori = convertitore.mapPuntiEmissione();
+        List<PuntoEmissione> puntiEmissione = new ArrayList<>();
+        puntiEmissione.forEach(PuntoEmissione::getCitta);
+
+        int scelta = 0;
+        while (!mappaDistributori.containsKey(scelta)) {
+            System.out.println("Inserisci il numero della citta: ");
+            try {
+                scelta = Integer.parseInt(scanner.nextLine());
+                if (!mappaDistributori.containsKey(scelta)) System.out.println("Scelta invalida, riprova");
+            } catch (PuntoEmissioneNonTrovatoException e) {
+                System.out.println("Distributore non trovato!");
+            }
+        }
+        try {
+            PuntoEmissione puntoEmissione = puntiEmissioneDAO.trovaPerId(mappaDistributori.get(scelta));
+            if (puntoEmissione.isAttivo()) {
+                System.out.println("Il distributore è attivo!");
+            } else {
+                System.out.println("Il distributore non è attivo!");
+            }
+        } catch (PuntoEmissioneNonTrovatoException e) {
+            System.out.println("Distributore non trovato!");
+        }
     }
 
     public static void menuUtente() {
@@ -417,8 +465,8 @@ public class AppScannerTest {
             // System.out.println("1. Crea biglietto");
             System.out.println("2. Crea abbonamento");
             // System.out.println("3. Oblitera il biglietto");
-            System.out.println("4. Cerca zona partenza/arrivo");
-            System.out.println("5. Verifica se un mezzo è in servizio");
+            //System.out.println("4. Cerca zona partenza/arrivo");
+            //System.out.println("5. Verifica se un mezzo è in servizio");
             System.out.println("6. Verifica se un distributore è in servizio");
             //System.out.println("0. Esci");
             scelta = Integer.parseInt(scanner.nextLine());
@@ -438,6 +486,14 @@ public class AppScannerTest {
                 case 4:
                     EntityManager em4 = entityManagerFactory.createEntityManager();
                     trovaZonaPartenzaArrivo(em4, scanner);
+                    break;
+                case 5:
+                    EntityManager em5 = entityManagerFactory.createEntityManager();
+                    verificaMezzoInServizio(em5, scanner);
+                    break;
+                case 6:
+                    EntityManager em6 = entityManagerFactory.createEntityManager();
+                    verificaDistributoreInServizio(em6, scanner);
                     break;
                 case 0:
                     System.out.println("Alla prossima!");
