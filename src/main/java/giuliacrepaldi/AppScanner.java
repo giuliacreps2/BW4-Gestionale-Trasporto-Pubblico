@@ -16,7 +16,7 @@ import java.util.Scanner;
 // qui va la richiesta del progetto: solo lo scanner
 public class AppScanner {
 
-    private static final EntityManagerFactory emf = Persistence.createEntityManagerFactory("GESTIONALE-TRASPORTI-PUBBLICI");
+    private static final EntityManagerFactory emf = Persistence.createEntityManagerFactory("GESTIONALE-TRASPORTI-PUBBLICI-giulia");
     static Scanner scanner = new Scanner(System.in);
 
     public static void main(String[] args) {
@@ -67,7 +67,7 @@ public class AppScanner {
         //Abbonamenti
         Abbonamento a1 = new Abbonamento(p1DB, 30, t1DB, TipoAbbonamento.SETTIMANALE);
 
-        
+
 //        ped.salva(p1);
 //        bd.salva(b1);
 //        ud.salva(u1);
