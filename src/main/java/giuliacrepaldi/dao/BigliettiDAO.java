@@ -5,6 +5,7 @@ import giuliacrepaldi.entities.MezzoTrasporto;
 import giuliacrepaldi.exceptions.biglietto.BigliettoGiaObliteratoException;
 import giuliacrepaldi.exceptions.biglietto.BigliettoNonTrovatoException;
 import giuliacrepaldi.exceptions.biglietto.BigliettoRimozioneException;
+import giuliacrepaldi.exceptions.mezzo_trasporto.MezzoTrasportoNonTrovatoException;
 import giuliacrepaldi.exceptions.miscellanous.StringaUUIDNonValidaException;
 import giuliacrepaldi.exceptions.vendita_trasporto.VenditaTrasportoSalvataggioException;
 import jakarta.persistence.*;
@@ -77,29 +78,41 @@ public class BigliettiDAO {
     /**
      * Ottieni il totale dei biglietti vidimati sul mezzo di trasporto in input.
      */
-    public int contaBigliettiVidimatiSuMezzoTrasporto(MezzoTrasporto mezzoTrasporto) {
+    public long contaBigliettiVidimatiSuMezzoTrasporto(MezzoTrasporto mezzoTrasporto) {
 
         // trova i biglietti il cui mezzo di trasporto
         // su cui sono stati obliterati, è uguale al 
         // mezzo di trasporto in input. conta quanti
         // sono questi biglietti.
 
-        TypedQuery<Integer> query = entityManager.createQuery(
+        TypedQuery<Long> query = entityManager.createQuery(
                 "SELECT COUNT(b.venditaTrasportoId) AS totale FROM Biglietto b WHERE b.obliteratoDa = :mezzoTrasporto",
-                Integer.class
+                Long.class
         );
 
         query.setParameter("mezzoTrasporto", mezzoTrasporto);
 
-        Integer result = query.getSingleResult();
+        Long result = query.getSingleResult();
 
         return result;
     }
 
+    
+    /**
+     * Ottieni il totale dei biglietti vidimati sul mezzo di trasporto in input.
+     */
+    public long contaBigliettiVidimatiSuMezzoTrasporto(String mezzoTrasportoId) throws MezzoTrasportoNonTrovatoException, StringaUUIDNonValidaException {
+
+        MezzoTrasporto mezzoTrasporto = new MezziTrasportoDAO(entityManager).trovaPerId(mezzoTrasportoId);     
+       
+        return contaBigliettiVidimatiSuMezzoTrasporto(mezzoTrasporto);
+    }
+    
+
     /**
      * Ottieni il totale dei biglietti vidimati nel periodo dato.
      */
-    public int contaBigliettiVidimatiInPeriodo(LocalDate dataInizio, LocalDate dataFine) {
+    public long contaBigliettiVidimatiInPeriodo(LocalDate dataInizio, LocalDate dataFine) {
 
         // trova i biglietti vidimati la cui data di inizio obliterazione,
         // rientrano nel periodo in input. siccome i biglietti devono essere vidimati,
@@ -108,20 +121,20 @@ public class BigliettiDAO {
         //   DIOB = data inizio obliterazione biglietto
         //   dataInizioInput   <= DIOB <=  dataFineInput
 
-        TypedQuery<Integer> query = entityManager.createQuery(
+        TypedQuery<Long> query = entityManager.createQuery(
                 "SELECT COUNT(b.venditaTrasportoId) AS totale " +
                         "FROM Biglietto b " +
                         "WHERE " +
                         "   b.dataEOraInizioObliterazione BETWEEN :dataInizio AND :dataFine" +
                         "   AND b.obliteratoDa IS NULL",
-                Integer.class
+                Long.class
         );
 
         query.setParameter("dataInizio", dataInizio);
         query.setParameter("dataFine", dataFine);
 
         // execute query
-        Integer result = query.getSingleResult();
+        Long result = query.getSingleResult();
 
         return result;
     }

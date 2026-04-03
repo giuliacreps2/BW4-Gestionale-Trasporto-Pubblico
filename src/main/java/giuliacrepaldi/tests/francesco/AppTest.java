@@ -127,7 +127,7 @@ public class AppTest {
                 System.out.println("Mezzo non trovato!");
                 return;
             }
-            int numeroBigliettiVidimati = bigliettiDAO.contaBigliettiVidimatiSuMezzoTrasporto(mezzo);
+            long numeroBigliettiVidimati = bigliettiDAO.contaBigliettiVidimatiSuMezzoTrasporto(mezzo);
             List<Percorrenza> percorrenze = percorrenzeDAO.findPercorrenzaByMezzo(idMezzo);
             int numeroPercorrenze = percorrenze.size();
             boolean inManutenzione = mezziDAO.eInManutenzione(mezzo);
