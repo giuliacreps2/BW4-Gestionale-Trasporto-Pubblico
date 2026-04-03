@@ -4,10 +4,20 @@ import giuliacrepaldi.entities.Abbonamento;
 import giuliacrepaldi.entities.Biglietto;
 import giuliacrepaldi.entities.Tessera;
 import giuliacrepaldi.exceptions.abbonamento.AbbonamentoSalvataggioException;
+import giuliacrepaldi.exceptions.biglietto.BigliettoGiaObliteratoException;
+import giuliacrepaldi.exceptions.biglietto.BigliettoNonTrovatoException;
+import giuliacrepaldi.exceptions.mezzo_trasporto.MezzoTrasportoNonTrovatoException;
+import giuliacrepaldi.exceptions.miscellanous.StringaUUIDNonValidaException;
+import giuliacrepaldi.exceptions.punto_emissione.PuntoEmissioneNonTrovatoException;
 import giuliacrepaldi.exceptions.tessera.TesseraGiaEsistenteException;
+import giuliacrepaldi.exceptions.tessera.TesseraNonTrovataException;
+import giuliacrepaldi.exceptions.tessera.TesseraRinnovoException;
 import giuliacrepaldi.exceptions.tessera.TesseraSalvataggioException;
 import giuliacrepaldi.exceptions.vendita_trasporto.VenditaTrasportoSalvataggioException;
 import jakarta.persistence.EntityManager;
+
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 public class GestoreAziendaDAO {
 
@@ -38,6 +48,7 @@ public class GestoreAziendaDAO {
         this.venditeTrasportiDAO = new VenditeTrasportiDAO(entityManager);
     }
 
+    
     /**
      * Aggiungi/aggiorna un biglietto.
      */
@@ -45,6 +56,7 @@ public class GestoreAziendaDAO {
         bigliettiDAO.salva(biglietto);
     }
 
+    
     /**
      * Aggiungi/aggiorna un abbonamento.
      */
@@ -60,14 +72,60 @@ public class GestoreAziendaDAO {
         tessereDAO.salva(tessera);
     }
 
-    // public rinnovaTessera() {
-    //
-    // }
-    //
-    // public calcolaQuanteVenditeTrasportoInPeriodo() {}
-    //
-    // public calcolaQuanteVenditeTrasportoInPuntoEmissione() {}
-    //
+    
+    /**
+     * Rinnova una tessera. 
+     * Verifica quali eccezioni vengono lanciate nel metodo finale. 
+     */
+    public void rinnovaTessera(String tesseraId) throws TesseraNonTrovataException, TesseraRinnovoException, StringaUUIDNonValidaException {
+        tessereDAO.rinnovaTessera(tesseraId);
+    }
+
+
+    /**
+     * Ottieni quanti biglietti e abbonamenti 
+     * sono stati emessi nel periodo dato.
+     */
+    public long ottieniQuantiBigliettiEAbbonamentiEmessiInPeriodo(LocalDate dataInizio, LocalDate dataFine) {
+        return venditeTrasportiDAO.ottieniQuantiBigliettiEAbbonamentiEmessiInPeriodo(dataInizio, dataFine);
+    }
+
+    
+    /**
+     * Ottieni quanti biglietti e abbonamenti 
+     * sono stati emessi in un punto emissione.
+     */
+    public long ottieniQuantiBigliettiEAbbonamentiEmessiInPuntoEmissione(String puntoEmissioneId)  throws PuntoEmissioneNonTrovatoException, StringaUUIDNonValidaException {
+        return venditeTrasportiDAO.ottieniQuantiBigliettiEAbbonamentiEmessiInPuntoEmissione(puntoEmissioneId);
+    }
+    
+    
+    /**
+     * Oblitera un biglietto su un mezzo di trasporto.
+     */
+    public void obliteraBiglietto(String bigliettoId, String mezzoTrasportoId)  throws BigliettoNonTrovatoException, MezzoTrasportoNonTrovatoException, BigliettoGiaObliteratoException, VenditaTrasportoSalvataggioException, StringaUUIDNonValidaException {
+        bigliettiDAO.obliteraBiglietto(bigliettoId, mezzoTrasportoId);
+    }
+
+
+    /**
+     * Ottieni quanti biglietti sono stati vidimati
+     * sul dato mezzo.
+     */
+    public long ottieniQuantiBigliettiVidimatiSuMezzo(String mezzoTrasportoId) {
+        return bigliettiDAO.contaBigliettiVidimatiSuMezzoTrasporto(mezzoTrasportoId);
+    }
+
+    
+    /**
+     * Ottieni quanti biglietti sono stati vidimati
+     * in un dato periodo.
+     */
+    public long ottieniQuantiBigliettiVidimatiInPeriodo(LocalDateTime dataEOraInizio, LocalDateTime dataEOraFine) {
+        return bigliettiDAO.contaBigliettiVidimatiInPeriodo(dataEOraInizio, dataEOraFine);
+    }
+    
+
     // public mettiFuoriServizioDistributoreAutomatico() {}
     //
     // public mettiInServizioDistributoreAutomatico() {}
@@ -82,10 +140,7 @@ public class GestoreAziendaDAO {
     //
     // public ottieniTuttiPeriodiServizioDiMezzo() {}
     //
-    // public obliteraBiglietto() {}
     //
-    // public calcolaQuantiBigliettiVidimatiSuMezzo() {}
-    //
-    // public calcolaQuantiBigliettiVidimatiInPeriodo() {}
+
     
 }
