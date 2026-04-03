@@ -101,6 +101,11 @@ public class GestoreAziendaDAO {
     public long ottieniQuantiBigliettiVidimatiSuMezzo(String mezzoTrasportoId) {
         return bigliettiDAO.contaBigliettiVidimatiSuMezzoTrasporto(mezzoTrasportoId);
     }
+
+    /**
+     * 
+     */
+    // public obliteraBiglietto() {}
     
     
     // public calcolaQuantiBigliettiVidimatiInPeriodo() {}
@@ -119,7 +124,6 @@ public class GestoreAziendaDAO {
     //
     // public ottieniTuttiPeriodiServizioDiMezzo() {}
     //
-    // public obliteraBiglietto() {}
     //
 
     

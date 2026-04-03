@@ -60,6 +60,7 @@ public class BigliettiDAO {
         new VenditeTrasportiDAO(entityManager).salva(biglietto);
     }
 
+    
     /**
      * Oblitera un biglietto su un mezzo di trasporto.
      */
@@ -71,6 +72,18 @@ public class BigliettiDAO {
 
         biglietto.setObliteratoDa(mezzoTrasporto);
         salva(biglietto);
+
+    }
+
+    /**
+     * Oblitera un biglietto su un mezzo di trasporto.
+     */
+    public void obliteraBiglietto(String bigliettoId, String mezzoTrasportoId) throws BigliettoNonTrovatoException, MezzoTrasportoNonTrovatoException, BigliettoGiaObliteratoException, VenditaTrasportoSalvataggioException {
+        
+        Biglietto biglietto = trovaPerId(bigliettoId);
+        MezzoTrasporto mezzoTrasporto = new MezziTrasportoDAO(entityManager).trovaPerId(mezzoTrasportoId);
+        
+        obliteraBiglietto(biglietto, mezzoTrasporto);
 
     }
 
@@ -86,7 +99,7 @@ public class BigliettiDAO {
         // sono questi biglietti.
 
         TypedQuery<Long> query = entityManager.createQuery(
-                "SELECT COUNT(b.venditaTrasportoId) AS totale FROM Biglietto b WHERE b.obliteratoDa = :mezzoTrasporto",
+                "SELECT COUNT(b) AS totale FROM Biglietto b WHERE b.obliteratoDa = :mezzoTrasporto",
                 Long.class
         );
 

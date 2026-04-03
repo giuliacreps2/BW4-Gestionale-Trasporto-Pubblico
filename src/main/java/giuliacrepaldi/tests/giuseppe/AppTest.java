@@ -78,12 +78,17 @@ public class AppTest {
         Tratta tratta1FromDB = tratteDAO.trovaPerId("832e1f39-4966-4fe6-bbd6-45d0aaa8e27d");
         Percorrenza percorrenza1FromDB = percorrenzeDAO.trovaPerId("20d53217-fd31-4e27-9bfa-fd4b660f7400");
         
+        
         // ******** RIMOZIONE PER ID
         // bigliettiDAO.rimuoviPerId("1e62a537-a823-452c-9f95-d94a947646b1");
         
         
         // ******** RINNOVA TESSERA
         // tessereDAO.rinnovaTessera("416eb551-7374-4115-b59d-f621ec869c2d");
+        
+        // ******* OBLITERA BIGLIETTO
+        // bigliettiDAO.obliteraBiglietto("46ee9149-3e57-4d96-8594-33ee48e7ce8d", "c4729d6b-6e27-4613-8d16-739a1b360c43");
+        
         
         // ******** STATISTICHE
         long quantiBigliettiEAbbonamentiInPeriodo = venditeTrasportiDAO.ottieniQuantiBigliettiEAbbonamentiEmessiInPeriodo(
@@ -93,7 +98,7 @@ public class AppTest {
         
         long quantiBigliettiEAbbonamentiInPuntoEmissione = venditeTrasportiDAO.ottieniQuantiBigliettiEAbbonamentiEmessiInPuntoEmissione("924d0962-c252-46d9-91d1-33f3a6c60a77");
         
-        long quantiBigliettiVidimatiSuMezzo = bigliettiDAO.contaBigliettiVidimatiSuMezzoTrasporto("c4729d6b-6e27-4613-8d16-739a1b360c43");
+        // long quantiBigliettiVidimatiSuMezzo = bigliettiDAO.contaBigliettiVidimatiSuMezzoTrasporto("c4729d6b-6e27-4613-8d16-739a1b360c43");
         
         // boolean utente1HaTessera = utentiDAO.utenteHaTessera(utente1);
         
@@ -116,6 +121,7 @@ public class AppTest {
 
         // System.out.println(quantiBigliettiEAbbonamentiInPeriodo);
         // System.out.println(quantiBigliettiEAbbonamentiInPuntoEmissione);
+        // System.out.println(quantiBigliettiVidimatiSuMezzo);
         
 
         // System.out.println(puntoEmissione1FromDB);
