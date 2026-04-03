@@ -69,7 +69,8 @@ public class MezziTrasportoDAO {
         TypedQuery<Boolean> query = em.createQuery(
                 "SELECT COUNT(man) > 0 FROM Manutenzione man " +
                 "       WHERE man.mezzoTrasporto = :mezzoTrasporto " +
-                "       AND :today BETWEEN man.dataInizioManutenzione AND man.dataFineManutenzione", 
+                "       AND (:today BETWEEN man.dataInizioManutenzione AND man.dataFineManutenzione)" +
+                        "AND (man.manutenzioneEAttiva = true)", 
                 Boolean.class
         );
 
@@ -94,6 +95,15 @@ public class MezziTrasportoDAO {
     public boolean inServizio(String mezzoTrasportoId) throws MezzoTrasportoNonTrovatoException, StringaUUIDNonValidaException {
         MezzoTrasporto mezzoTrasporto = trovaPerId(mezzoTrasportoId);
         return inServizio(mezzoTrasporto);
+    }
+
+
+    /**
+     * Metti un mezzo in servizio, se è in manutenzione.
+     * Se 
+     */
+    public void mettiInServizioSeInManutenzione() {
+        
     }
 
 

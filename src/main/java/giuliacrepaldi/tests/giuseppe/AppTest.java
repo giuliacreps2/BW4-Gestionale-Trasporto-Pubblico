@@ -75,7 +75,7 @@ public class AppTest {
         // PuntoEmissione puntoEmissione1FromDB = puntiEmissioneDAO.findById(UUID.fromString("ea8feaae-62d2-4f5e-a73f-13838321ec58"));
         Biglietto biglietto1FromDB = bigliettiDAO.trovaPerId("46ee9149-3e57-4d96-8594-33ee48e7ce8d");
         MezzoTrasporto mezzoTrasporto1FromDB = mezziTrasportoDAO.trovaPerId("c4729d6b-6e27-4613-8d16-739a1b360c43");
-        Manutenzione manutenzione1FromDB = manutenzioniDAO.trovaPerId("30cf0185-be3f-4a3c-94e6-d3d841c92954");
+        Manutenzione manutenzione1FromDB = manutenzioniDAO.trovaPerId("acaaddab-b322-4aa4-a576-2f74f59e4c8e");
         Tratta tratta1FromDB = tratteDAO.trovaPerId("832e1f39-4966-4fe6-bbd6-45d0aaa8e27d");
         Percorrenza percorrenza1FromDB = percorrenzeDAO.trovaPerId("20d53217-fd31-4e27-9bfa-fd4b660f7400");
         
@@ -117,12 +117,12 @@ public class AppTest {
 
 
         // ****** ASSOCIA MEZZO DI TRASPORTO A TRATTA
-        mezziTrasportoDAO.associaTrattaAMezzoTrasportoInServizio(
-                "832e1f39-4966-4fe6-bbd6-45d0aaa8e27d",
-                "c4729d6b-6e27-4613-8d16-739a1b360c43",
-                343,
-                LocalDateTime.now()
-        );
+        // mezziTrasportoDAO.associaTrattaAMezzoTrasportoInServizio(
+        //         "832e1f39-4966-4fe6-bbd6-45d0aaa8e27d",
+        //         "c4729d6b-6e27-4613-8d16-739a1b360c43",
+        //         343,
+        //         LocalDateTime.now()
+        // );
         
         
         // boolean utente1HaTessera = utentiDAO.utenteHaTessera(utente1);
@@ -192,12 +192,12 @@ public class AppTest {
         //         TipoAbbonamento.SETTIMANALE
         // );
         
-        // Manutenzione manutenzione1 = new Manutenzione(
-        //         mezzoTrasporto1FromDB,
-        //         LocalDate.now(),
-        //         LocalDate.now().plusMonths(1),
-        //         45.23
-        // );
+        Manutenzione manutenzione1 = new Manutenzione(
+                mezzoTrasporto1FromDB,
+                LocalDate.now(),
+                LocalDate.now().plusMonths(1),
+                45.23
+        );
         
         // Tratta tratta1 = new Tratta(
         //         234,
@@ -206,12 +206,12 @@ public class AppTest {
         //         "milano"
         // );
         
-        Percorrenza percorrenza1 = new Percorrenza(
-                354,
-                LocalDateTime.now(),
-                tratta1FromDB,
-                mezzoTrasporto1FromDB
-        );
+        // Percorrenza percorrenza1 = new Percorrenza(
+        //         354,
+        //         LocalDateTime.now(),
+        //         tratta1FromDB,
+        //         mezzoTrasporto1FromDB
+        // );
 
         // System.out.println(tratta1);
         
