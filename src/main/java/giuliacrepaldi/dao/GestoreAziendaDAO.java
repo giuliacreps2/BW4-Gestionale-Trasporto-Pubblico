@@ -1,9 +1,6 @@
 package giuliacrepaldi.dao;
 
-import giuliacrepaldi.entities.Abbonamento;
-import giuliacrepaldi.entities.Biglietto;
-import giuliacrepaldi.entities.MezzoTrasporto;
-import giuliacrepaldi.entities.Tessera;
+import giuliacrepaldi.entities.*;
 import giuliacrepaldi.exceptions.abbonamento.AbbonamentoNonTrovatoException;
 import giuliacrepaldi.exceptions.abbonamento.AbbonamentoSalvataggioException;
 import giuliacrepaldi.exceptions.biglietto.BigliettoGiaObliteratoException;
@@ -186,6 +183,14 @@ public class GestoreAziendaDAO {
         mezziTrasportoDAO.mettiInServizio(mezzoTrasportoId);
     }
 
+    
+    /**
+     * Ottieni tutti i periodi di manutenzione del mezzo di trasporto dato.
+     */
+    public List<Manutenzione> ottieniTutteManutenzioniDiMezzo(String mezzoTrasportoId, LocalDate dataInizio, LocalDate dataFine) throws MezzoTrasportoNonTrovatoException, StringaUUIDNonValidaException {
+        return manutenzioniDAO.findAll(mezzoTrasportoId, dataInizio, dataFine);    
+    }
+    
 
     // public mettiFuoriServizioDistributoreAutomatico() {}
     //
@@ -193,7 +198,6 @@ public class GestoreAziendaDAO {
     //
     //
     //
-    // public ottieniTuttiPeriodiManutenzioneDiMezzo() {}
     //
     // public ottieniTuttiPeriodiServizioDiMezzo() {}
     //

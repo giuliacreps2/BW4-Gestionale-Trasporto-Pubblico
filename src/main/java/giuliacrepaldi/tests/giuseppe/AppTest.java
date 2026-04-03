@@ -98,6 +98,13 @@ public class AppTest {
         boolean mezzo1EInManutenzione = mezziTrasportoDAO.eInManutenzione("c4729d6b-6e27-4613-8d16-739a1b360c43");
         
         
+        // ***** MANUTENZIONI 
+        List<Manutenzione> manutenzioniDiMezzo1 = gestoreAziendaDAO.ottieniTutteManutenzioniDiMezzo(
+                "c4729d6b-6e27-4613-8d16-739a1b360c43",
+                LocalDate.now().minusYears(1),
+                LocalDate.now().plusYears(1)
+        );
+        
         // ******** STATISTICHE
         long quantiBigliettiEAbbonamentiInPeriodo = venditeTrasportiDAO.ottieniQuantiBigliettiEAbbonamentiEmessiInPeriodo(
                 LocalDate.now().minusDays(3), 
@@ -145,6 +152,7 @@ public class AppTest {
         // biglietto1FromDB.setObliteratoDa();
         // System.out.println(puntoEmissione1FromDB);
         // System.out.println(biglietto1FromDB);
+        // System.out.println(manutenzioniDiMezzo1);
         
         //
         // System.out.println(puntoEmissione1FromDB);

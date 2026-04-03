@@ -6,6 +6,7 @@ import giuliacrepaldi.entities.Tessera;
 import giuliacrepaldi.exceptions.manutenzione.ManutenzioneDiMezzoNonEsisteException;
 import giuliacrepaldi.exceptions.manutenzione.ManutenzioneNonTrovataException;
 import giuliacrepaldi.exceptions.manutenzione.ManutenzioneSalvataggioException;
+import giuliacrepaldi.exceptions.mezzo_trasporto.MezzoTrasportoNonTrovatoException;
 import giuliacrepaldi.exceptions.miscellanous.StringaUUIDNonValidaException;
 import giuliacrepaldi.exceptions.tessera.TesseraNonTrovataException;
 import jakarta.persistence.EntityManager;
@@ -73,19 +74,28 @@ public class ManutenzioniDAO {
     
 
     //2.findAll con BETWEEN — manutenzioni in un periodo
-    public List<Manutenzione> findAll(String mezzoID, LocalDate dataInizio, LocalDate dataFine) {
+    public List<Manutenzione> findAll(String mezzoID, LocalDate dataInizio, LocalDate dataFine) throws MezzoTrasportoNonTrovatoException, StringaUUIDNonValidaException {
+        
+        MezzoTrasporto mezzoTrasporto = new MezziTrasportoDAO(em).trovaPerId(mezzoID);
+        
         try {
             UUID uuid = UUID.fromString(mezzoID);
-            return em.createQuery("SELECT m FROM Manutenzione m " +
-                            "WHERE m.mezzoTrasporto.mezzoDiTrasportoId = :mezzoID AND m.dataInizioManutenzione BETWEEN :dataInizio " +
-                            "AND :dataFine", Manutenzione.class)
-                    .setParameter("mezzoID", uuid)
+            
+            return em.createQuery("SELECT man FROM Manutenzione man " +
+                            "WHERE " +
+                                    "man.mezzoTrasporto = :mezzoTrasporto " +
+                                    "AND man.dataInizioManutenzione BETWEEN :dataInizio AND :dataFine", 
+                            Manutenzione.class
+                    )
+                    
+                    .setParameter("mezzoTrasporto", mezzoTrasporto)
                     .setParameter("dataInizio", dataInizio)
                     .setParameter("dataFine", dataFine)
                     .getResultList();
+            
         } catch (IllegalArgumentException e) {
-            throw new IllegalArgumentException("UUID non valido " + mezzoID);
-        }
+            throw new StringaUUIDNonValidaException(mezzoID);
+        } 
     }
 
 
