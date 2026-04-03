@@ -5,6 +5,7 @@ import giuliacrepaldi.entities.Utente;
 import giuliacrepaldi.exceptions.miscellanous.StringaUUIDNonValidaException;
 import giuliacrepaldi.exceptions.tessera.TesseraGiaEsistenteException;
 import giuliacrepaldi.exceptions.tessera.TesseraNonTrovataException;
+import giuliacrepaldi.exceptions.tessera.TesseraRinnovoException;
 import giuliacrepaldi.exceptions.tessera.TesseraSalvataggioException;
 import jakarta.persistence.*;
 
@@ -103,38 +104,57 @@ public class TessereDAO {
 
     /**
      * Rinnova la tessera con l'ID dato, solo se è scaduta.
-     * Se la tessera non era scaduta, non da errore, ma la lascia com'era.
+     * Se la tessera non era scaduta, lancia un'eccezione dicendo che
+     * la tessera non si può rinnovare se non è scaduta.
      */
-    // public void rinnovaTessera(String tesseraId) throws TesseraNonTrovataException, StringaUUIDNonValidaException {
-    //    
-    //     // trova la tessera
-    //     Tessera tessera = trovaPerId(tesseraId);
-    //
-    //     LocalDate oggi = LocalDate.now();
-    //    
-    //     TypedQuery<Tessera> query = entityManager.createQuery(
-    //             "UPDATE Tessera t SET t.dataInizioTessera = , t.dataFineTessera =  WHERE t.tessera = :tessera AND t.dataFineTessera <  ",
-    //             Tessera.class
-    //     );
-    //
-    //     // pass query params
-    //     try {
-    //
-    //         query.setParameter("targetId", UUID.fromString(targetId));
-    //
-    //     } catch (IllegalArgumentException ex) {
-    //         throw new StringaUUIDNonValidaException(targetId);
-    //     }
-    //
-    //     // execute query
-    //     try {
-    //
-    //         return query.getSingleResult();
-    //
-    //     } catch (NoResultException ex) {
-    //         throw new TesseraNonTrovataException(targetId, "ID");
-    //     }
-    //    
-    // }
+    public void rinnovaTessera(String tesseraId) throws TesseraNonTrovataException, TesseraRinnovoException, StringaUUIDNonValidaException {
+
+        // trova la tessera
+        Tessera tessera = trovaPerId(tesseraId);
+        
+        EntityTransaction transaction = entityManager.getTransaction();
+
+        LocalDate oggi = LocalDate.now();
+        LocalDate oggiTraUnAnno = oggi.plusYears(1);
+
+        Query query = entityManager.createQuery(
+                "UPDATE Tessera t " +
+                        "SET t.dataInizioTessera = :oggi, t.dataFineTessera = :oggiTraUnAnno " +
+                        "WHERE t.venditaTrasportoId = :tesseraId AND t.dataFineTessera < :oggi"
+        );
+
+        // pass query params
+        try {
+
+            query.setParameter("tesseraId", UUID.fromString(tesseraId));
+            query.setParameter("oggi", oggi);
+            query.setParameter("oggiTraUnAnno", oggiTraUnAnno);
+
+        } catch (IllegalArgumentException ex) {
+            throw new StringaUUIDNonValidaException(tesseraId);
+        }
+
+        // execute query
+        try {
+            
+            transaction.begin();
+            int affectedRows = query.executeUpdate();
+            
+            if (affectedRows == 0) {
+                throw new TesseraRinnovoException(tesseraId);
+            }
+            
+            transaction.commit();
+            
+        } catch (RuntimeException ex) {
+            transaction.rollback();
+            System.out.println(ex);
+            if(ex instanceof TesseraRinnovoException) {
+                throw ex;
+            }
+            throw new TesseraSalvataggioException(tessera);
+        }
+
+    }
 
 }
