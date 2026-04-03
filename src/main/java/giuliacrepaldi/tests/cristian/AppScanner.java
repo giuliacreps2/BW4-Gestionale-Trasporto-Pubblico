@@ -104,89 +104,33 @@ public class AppScanner {
         } while (scelta != 0);
     }
 
-    public static void gestisciBiglietto(EntityManager em, Scanner scanner) {
+    public static void deleteBiglietto(EntityManager em, Scanner scanner) {
         try {
             BigliettiDAO bigliettiDAO = new BigliettiDAO(em);
-            PuntiEmissioneDAO puntiDAO = new PuntiEmissioneDAO(em);
 
-            System.out.println("Inserisci ID biglietto:");
+            System.out.println("Inserisci ID biglietto da eliminare:");
             String idBiglietto = scanner.nextLine();
 
-            System.out.println("Cosa vuoi fare?");
-            System.out.println("1. Update");
-            System.out.println("2. Delete");
-            int sceltaGestione = Integer.parseInt(scanner.nextLine());
+            // chiama direttamente il metodo rimuoviPerId
+            bigliettiDAO.rimuoviPerId(idBiglietto);
 
-            switch (sceltaGestione) {
-
-                case 1:
-                    System.out.println("Inserisci ID nuovo punto emissione:");
-                    String idPunto = scanner.nextLine();
-
-                    System.out.println("Inserisci nuovo prezzo:");
-                    double prezzo = Double.parseDouble(scanner.nextLine());
-
-                    PuntoEmissione punto = puntiDAO.trovaPerId(idPunto);
-
-                    bigliettiDAO.findByIdAndUpdate(idBiglietto, punto, prezzo);
-
-                    System.out.println("Biglietto aggiornato!");
-                    break;
-
-                case 2:
-                    bigliettiDAO.findByIdAndDelete(idBiglietto);
-                    System.out.println("Biglietto eliminato!");
-                    break;
-
-                default:
-                    System.out.println("Scelta non valida");
-            }
+            System.out.println("Biglietto eliminato!");
 
         } catch (Exception e) {
             System.out.println("Errore: " + e.getMessage());
         }
     }
 
-    public static void gestisciAbbonamento(EntityManager em, Scanner scanner) {
+    public static void deleteAbbonamento(EntityManager em, Scanner scanner) {
         try {
             AbbonamentiDAO abbonamentiDAO = new AbbonamentiDAO(em);
-            PuntiEmissioneDAO puntiDAO = new PuntiEmissioneDAO(em);
 
-            System.out.println("Inserisci ID abbonamento:");
+            System.out.println("Inserisci ID abbonamento da eliminare:");
             String idAbb = scanner.nextLine();
 
-            System.out.println("Cosa vuoi fare?");
-            System.out.println("1. Update");
-            System.out.println("2. Delete");
-            int sceltaAbb = Integer.parseInt(scanner.nextLine());
+            abbonamentiDAO.rimuoviPerId(idAbb);
 
-            switch (sceltaAbb) {
-
-                case 1:
-                    System.out.println("Inserisci ID nuovo punto emissione:");
-                    String idPunto = scanner.nextLine();
-
-                    System.out.println("Inserisci nuovo prezzo:");
-                    double prezzo = Double.parseDouble(scanner.nextLine());
-
-                    System.out.println("Abbonamento attivo? (true/false):");
-                    boolean attivo = Boolean.parseBoolean(scanner.nextLine());
-
-                    PuntoEmissione punto = puntiDAO.trovaPerId(idPunto);
-
-                    abbonamentiDAO.findByIdAndUpdate(idAbb, punto, prezzo, attivo);
-
-                    System.out.println("Abbonamento aggiornato!");
-                    break;
-
-                case 2:
-                    abbonamentiDAO.findByIdAndDelete(idAbb);
-                    System.out.println("Abbonamento eliminato!");
-                    break;
-
-                default:
-                    System.out.println("Scelta non valida");
-            }
+            System.out.println("Abbonamento eliminato!");
 
         } catch (Exception e) {
             System.out.println("Errore: " + e.getMessage());
@@ -225,7 +169,7 @@ public class AppScanner {
         try {
             TessereDAO tessereDAO = new TessereDAO(em);
             PuntiEmissioneDAO puntiDAO = new PuntiEmissioneDAO(em);
-            UtentiDAO utentiDAO = new UtentiDAO(em); // supponendo ci sia un DAO Utente
+            UtentiDAO utentiDAO = new UtentiDAO(em);
 
             System.out.println("Inserisci ID utente:");
             String idUtente = scanner.nextLine();
@@ -279,6 +223,31 @@ public class AppScanner {
         }
     }
 
+    public static void statisticheAbbonamento(EntityManager em, Scanner scanner) {
+        try {
+            AbbonamentiDAO abbonamentiDAO = new AbbonamentiDAO(em);
+
+            System.out.println("Inserisci ID abbonamento:");
+            String idAbb = scanner.nextLine();
+
+            Abbonamento abbonamento = abbonamentiDAO.trovaPerId(idAbb);
+
+            boolean valido = abbonamentiDAO.abbonamentoValido(idAbb);
+
+            System.out.println("Abbonamento trovato:");
+            System.out.println(abbonamento);
+
+            if (valido) {
+                System.out.println("L'abbonamento è ATTIVO e valido.");
+            } else {
+                System.out.println("L'abbonamento NON è valido o è scaduto.");
+            }
+
+        } catch (Exception e) {
+            System.out.println("Errore: " + e.getMessage());
+        }
+    }
+
     public static void menuAmministratore() {
         int scelta;
         do {
@@ -302,7 +271,7 @@ public class AppScanner {
                 case 1:
                     EntityManager em = entityManagerFactory.createEntityManager();
                     try {
-                        gestisciBiglietto(em, scanner);
+                        deleteBiglietto(em, scanner);
                     } finally {
                         em.close();
                     }
@@ -311,7 +280,7 @@ public class AppScanner {
                 case 2:
                     EntityManager em2 = entityManagerFactory.createEntityManager();
                     try {
-                        gestisciAbbonamento(em2, scanner);
+                        deleteAbbonamento(em2, scanner);
                     } finally {
                         em2.close();
                     }
@@ -341,6 +310,15 @@ public class AppScanner {
                         statisticheBiglietti(em5);
                     } finally {
                         em5.close();
+                    }
+                    break;
+
+                case 6:
+                    EntityManager em6 = entityManagerFactory.createEntityManager();
+                    try {
+                        statisticheBiglietti(em6);
+                    } finally {
+                        em6.close();
                     }
                     break;
             }
