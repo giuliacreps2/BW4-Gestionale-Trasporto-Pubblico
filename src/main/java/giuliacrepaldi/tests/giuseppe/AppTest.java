@@ -66,6 +66,7 @@ public class AppTest {
         // utentiDAO.salva(utente1);
         // mezziTrasportoDAO.salva(mezzoTrasporto1);
         
+        // ******** TROVA PER ID 
         Utente utente1FromDB = utentiDAO.trovaPerId("f26ea746-96e8-45a6-9361-7ec19bf33558");
         Tessera tessera1FromDB = tessereDAO.trovaPerId("416eb551-7374-4115-b59d-f621ec869c2d");
         PuntoEmissione puntoEmissione1FromDB = puntiEmissioneDAO.trovaPerId("924d0962-c252-46d9-91d1-33f3a6c60a77");
@@ -76,6 +77,11 @@ public class AppTest {
         Manutenzione manutenzione1FromDB = manutenzioniDAO.trovaPerId("30cf0185-be3f-4a3c-94e6-d3d841c92954");
         Tratta tratta1FromDB = tratteDAO.trovaPerId("832e1f39-4966-4fe6-bbd6-45d0aaa8e27d");
         Percorrenza percorrenza1FromDB = percorrenzeDAO.trovaPerId("20d53217-fd31-4e27-9bfa-fd4b660f7400");
+        
+        // ******** RIMOZIONE PER ID
+        bigliettiDAO.rimuoviPerId("9f1ed116-b630-42b9-9356-f0dd7f9d1e95");
+        
+        
         // boolean utente1HaTessera = utentiDAO.utenteHaTessera(utente1);
 
         // System.out.println(tessera1FromDB);
@@ -120,10 +126,10 @@ public class AppTest {
         //
         //
         //
-        // Biglietto biglietto1 = new Biglietto(
-        //         puntoEmissione1FromDB,
-        //         23.45
-        // );
+        Biglietto biglietto1 = new Biglietto(
+                puntoEmissione1FromDB,
+                23.45
+        );
         
         //
         // Abbonamento abbonamento1 = new Abbonamento(
