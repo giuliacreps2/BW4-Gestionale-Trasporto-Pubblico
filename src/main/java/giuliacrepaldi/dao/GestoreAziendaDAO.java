@@ -140,14 +140,30 @@ public class GestoreAziendaDAO {
         return abbonamentiDAO.abbonamentoValido(abbonamentoId);
     }
 
+    
+    /**
+     * Verifica se il mezzo dato è in servizio (si/no).
+     */
+    public boolean mezzoEInServizio(String mezzoTrasportoId) {
+        return mezziTrasportoDAO.inServizio(mezzoTrasportoId);
+    }
+
+    /**
+     * Verifica se il mezzo dato è in manutenzione (si/no).
+     */
+    public boolean mezzoEInManutenzione(String mezzoTrasportoId) {
+        return mezziTrasportoDAO.eInManutenzione(mezzoTrasportoId);
+    }
+    
+    
+    // public mezzoEInManutenzione() {}
+    
+    
     // public mettiFuoriServizioDistributoreAutomatico() {}
     //
     // public mettiInServizioDistributoreAutomatico() {}
     //
     //
-    // public mezzoEInServizio() {}
-    //
-    // public mezzoEInManutenzione() {}
     //
     // public ottieniTuttiPeriodiManutenzioneDiMezzo() {}
     //
