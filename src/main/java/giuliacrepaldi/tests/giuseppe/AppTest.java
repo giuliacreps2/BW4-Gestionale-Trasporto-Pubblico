@@ -97,6 +97,7 @@ public class AppTest {
         boolean mezzo1EInServizio = mezziTrasportoDAO.inServizio("c4729d6b-6e27-4613-8d16-739a1b360c43");
         boolean mezzo1EInManutenzione = mezziTrasportoDAO.eInManutenzione("c4729d6b-6e27-4613-8d16-739a1b360c43");
         
+        
         // ******** STATISTICHE
         long quantiBigliettiEAbbonamentiInPeriodo = venditeTrasportiDAO.ottieniQuantiBigliettiEAbbonamentiEmessiInPeriodo(
                 LocalDate.now().minusDays(3), 
@@ -113,7 +114,15 @@ public class AppTest {
                 LocalDateTime.now().minusYears(1), 
                 LocalDateTime.now().plusYears(1)
         );
-        
+
+
+        // ****** ASSOCIA MEZZO DI TRASPORTO A TRATTA
+        mezziTrasportoDAO.associaTrattaAMezzoTrasportoInServizio(
+                "832e1f39-4966-4fe6-bbd6-45d0aaa8e27d",
+                "c4729d6b-6e27-4613-8d16-739a1b360c43",
+                343,
+                LocalDateTime.now()
+        );
         
         
         // boolean utente1HaTessera = utentiDAO.utenteHaTessera(utente1);
@@ -143,7 +152,7 @@ public class AppTest {
         // System.out.println(quantiBigliettiVidimatiSuMezzo);
         // System.out.println(quantiBigliettiVidimatiInPeriodo);
         // System.out.println(tuttiMezziTrasporto);
-        System.out.println(gestoreAziendaDAO.ottieniTuttiMezziTrasporto());
+        // System.out.println(gestoreAziendaDAO.ottieniTuttiMezziTrasporto());
         
 
         // System.out.println(puntoEmissione1FromDB);

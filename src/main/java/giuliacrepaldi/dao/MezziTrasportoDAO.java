@@ -2,15 +2,21 @@ package giuliacrepaldi.dao;
 
 import giuliacrepaldi.entities.Manutenzione;
 import giuliacrepaldi.entities.MezzoTrasporto;
+import giuliacrepaldi.entities.Percorrenza;
+import giuliacrepaldi.entities.Tratta;
+import giuliacrepaldi.exceptions.mezzo_trasporto.MezzoTrasportoNonInServizioException;
 import giuliacrepaldi.exceptions.mezzo_trasporto.MezzoTrasportoNonTrovatoException;
 import giuliacrepaldi.exceptions.mezzo_trasporto.MezzoTrasportoSalvataggioException;
 import giuliacrepaldi.exceptions.miscellanous.StringaUUIDNonValidaException;
+import giuliacrepaldi.exceptions.percorrenza.PercorrenzaSalvataggioException;
+import giuliacrepaldi.exceptions.tratta.TrattaNonTrovataException;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
 import jakarta.persistence.Query;
 import jakarta.persistence.TypedQuery;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
@@ -121,5 +127,45 @@ public class MezziTrasportoDAO {
         );
         return query.getResultList();
     }
+
+    
+    /**
+     * Associa una tratta a un mezzo in servizio. 
+     * Significa aggiungere una percorrenza. 
+     */
+    public void associaTrattaAMezzoTrasportoInServizio(String trattaId, String mezzoTrasportoId, long tempoEffettivoPercorrenza, LocalDateTime dataEOraPercorrenza) throws MezzoTrasportoNonTrovatoException, TrattaNonTrovataException, MezzoTrasportoNonInServizioException, PercorrenzaSalvataggioException, StringaUUIDNonValidaException {
+        
+        Tratta tratta = new TratteDAO(em).trovaPerId(trattaId);
+        MezzoTrasporto mezzoTrasporto = trovaPerId(mezzoTrasportoId);
+        associaTrattaAMezzoTrasportoInServizio(tratta, mezzoTrasporto, tempoEffettivoPercorrenza, dataEOraPercorrenza);
+        
+    }
+
+    /**
+     * Associa una tratta a un mezzo in servizio. 
+     * Significa aggiungere una percorrenza. 
+     */
+    public void associaTrattaAMezzoTrasportoInServizio(Tratta tratta, MezzoTrasporto mezzoTrasporto, long tempoEffettivoPercorrenza, LocalDateTime dataEOraPercorrenza) throws MezzoTrasportoNonInServizioException, PercorrenzaSalvataggioException {
+
+        boolean eInServizio = inServizio(mezzoTrasporto);
+        
+        // il mezzo di trasporto non è in servizio
+        if (!eInServizio) {
+            throw new MezzoTrasportoNonInServizioException(mezzoTrasporto);
+        }
+        
+        // il mezzo di trasporto è in servizio, quindi si può
+        //  associare una tratta
+        Percorrenza percorrenza = new Percorrenza(
+                tempoEffettivoPercorrenza,
+                dataEOraPercorrenza,
+                tratta,
+                mezzoTrasporto
+        );
+        
+        new PercorrenzeDAO(em).salva(percorrenza);
+        
+    }
+    
     
 }

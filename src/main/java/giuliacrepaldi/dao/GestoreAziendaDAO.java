@@ -8,13 +8,16 @@ import giuliacrepaldi.exceptions.abbonamento.AbbonamentoNonTrovatoException;
 import giuliacrepaldi.exceptions.abbonamento.AbbonamentoSalvataggioException;
 import giuliacrepaldi.exceptions.biglietto.BigliettoGiaObliteratoException;
 import giuliacrepaldi.exceptions.biglietto.BigliettoNonTrovatoException;
+import giuliacrepaldi.exceptions.mezzo_trasporto.MezzoTrasportoNonInServizioException;
 import giuliacrepaldi.exceptions.mezzo_trasporto.MezzoTrasportoNonTrovatoException;
 import giuliacrepaldi.exceptions.miscellanous.StringaUUIDNonValidaException;
+import giuliacrepaldi.exceptions.percorrenza.PercorrenzaSalvataggioException;
 import giuliacrepaldi.exceptions.punto_emissione.PuntoEmissioneNonTrovatoException;
 import giuliacrepaldi.exceptions.tessera.TesseraGiaEsistenteException;
 import giuliacrepaldi.exceptions.tessera.TesseraNonTrovataException;
 import giuliacrepaldi.exceptions.tessera.TesseraRinnovoException;
 import giuliacrepaldi.exceptions.tessera.TesseraSalvataggioException;
+import giuliacrepaldi.exceptions.tratta.TrattaNonTrovataException;
 import giuliacrepaldi.exceptions.vendita_trasporto.VenditaTrasportoSalvataggioException;
 import jakarta.persistence.EntityManager;
 
@@ -166,8 +169,16 @@ public class GestoreAziendaDAO {
     public List<MezzoTrasporto> ottieniTuttiMezziTrasporto() {
         return mezziTrasportoDAO.findAll();
     }
+
     
-    
+    /**
+     * Associa una tratta a un mezzo di trasporto in servizio. 
+     */
+    public void associaTrattaAMezzoTrasportoInServizio(String trattaId, String mezzoTrasportoId, long tempoEffettivoPercorrenza, LocalDateTime dataEOraPercorrenza) throws MezzoTrasportoNonTrovatoException, TrattaNonTrovataException, MezzoTrasportoNonInServizioException, PercorrenzaSalvataggioException, StringaUUIDNonValidaException {
+        mezziTrasportoDAO.associaTrattaAMezzoTrasportoInServizio(trattaId, mezzoTrasportoId, tempoEffettivoPercorrenza, dataEOraPercorrenza);
+    }
+
+
     // public mettiFuoriServizioDistributoreAutomatico() {}
     //
     // public mettiInServizioDistributoreAutomatico() {}
