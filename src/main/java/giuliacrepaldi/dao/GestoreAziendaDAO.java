@@ -49,6 +49,12 @@ public class GestoreAziendaDAO {
         this.venditeTrasportiDAO = new VenditeTrasportiDAO(entityManager);
     }
 
+    /**
+     * **************************************************++
+     *  CONSEGNE DEL PROGETTO
+     * **************************************************++
+     * */
+    
     
     /**
      * Aggiungi/aggiorna un biglietto.
@@ -149,5 +155,35 @@ public class GestoreAziendaDAO {
     //
     //
 
+
+    /**
+     * **************************************************++
+     *  SALVA
+     * **************************************************++
+     * */
+
+    // public void salvaBiglietto() {}
+    //
+    // public void salvaAbbonamento() {}
+    //
+    // public void salvaTessera() {}
+    //
+    // public void salvaMezzoTrasporto() {}
+    //
+    // ....
+
+    /**
+     * **************************************************++
+     *  TROVA PER ID
+     * **************************************************++
+     * */
+    
+    // public Biglietto trovaBigliettoPerId() {}
+    //
+    // public Abbonamento trovaAbbonamentoPerId() {}
+    //
+    // public Tessera trovaTesseraPerId() {}
+    
+    // .....     
     
 }
