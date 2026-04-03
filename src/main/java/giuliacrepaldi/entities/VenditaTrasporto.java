@@ -43,6 +43,8 @@ public abstract class VenditaTrasporto {
     }
 
     public VenditaTrasporto(PuntoEmissione puntoEmissione) {
+        this.puntoEmissione = puntoEmissione;
+        this.dataVendita = LocalDate.now();
     }
 
     public LocalDate getDataVendita() {
