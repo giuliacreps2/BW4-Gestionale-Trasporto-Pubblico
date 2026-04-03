@@ -219,6 +219,34 @@ public class AppTest {
                 System.out.println("Errore: " + e.getMessage());
             }
         }
+        //11
+    public static void verificaMezzoInServizio(EntityManager em, Scanner scanner) {
+        MezziTrasportoDAO mezziDAO = new MezziTrasportoDAO(em);
+        try {
+            System.out.print("Inserisci ID mezzo: ");
+            UUID idMezzo = UUID.fromString(scanner.nextLine());
+            MezzoTrasporto mezzo;
+            try {
+                mezzo = mezziDAO.trovaPerId(idMezzo);
+            } catch (MezzoTrasportoNonTrovatoException e) {
+                System.out.println("Mezzo non trovato!");
+                return;
+            }
+            boolean inServizio = mezziDAO.inServizio(mezzo);
+            System.out.println("=== STATO MEZZO ===");
+            System.out.println("Mezzo: " + mezzo);
+            if (inServizio) {
+                System.out.println("Il mezzo è IN SERVIZIO");
+            } else {
+                System.out.println("Il mezzo NON è in servizio (in manutenzione)");
+            }
+        } catch (IllegalArgumentException e) {
+            System.out.println("UUID non valido!");
+        } catch (RuntimeException e) {
+            System.out.println("Errore: " + e.getMessage());
+        }
+    }
+    //12
 
 
     public static void menuAmministratore(){
@@ -243,13 +271,35 @@ public class AppTest {
             switch (scelta){
                 case 8:
                     EntityManager em8 = entityManagerFactory.createEntityManager();
-                    statisticheMezzo(em8, scanner);
-                    em8.close();
+                    try {
+                        statisticheMezzo(em8, scanner);
+                    } finally {
+                        em8.close();
+                    }
                     break;
                 case 9:
                     EntityManager em9 = entityManagerFactory.createEntityManager();
-                    ottieniTempoPercorrenza(em9, scanner);
-                    em9.close();
+                    try {
+                        ottieniTempoPercorrenza(em9, scanner);
+                    } finally {
+                        em9.close();
+                    }
+                    break;
+                case 10:
+                    EntityManager em10 = entityManagerFactory.createEntityManager();
+                    try {
+                        ottieniZonaPartenzaArrivo(em10, scanner);
+                    } finally {
+                        em10.close();
+                    }
+                    break;
+                case 11:
+                    EntityManager em11 = entityManagerFactory.createEntityManager();
+                    try {
+                        verificaMezzoInServizio(em11, scanner);
+                    } finally {
+                        em11.close();
+                    }
                     break;
 
 
