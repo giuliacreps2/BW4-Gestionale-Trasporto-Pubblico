@@ -1,8 +1,8 @@
 package giuliacrepaldi.tests.cristian;
 
-
 import giuliacrepaldi.dao.*;
 import giuliacrepaldi.entities.*;
+import giuliacrepaldi.enums.TipoAbbonamento;
 import giuliacrepaldi.enums.TipologiaPuntoEmissione;
 import giuliacrepaldi.exceptions.punto_emissione.PuntoEmissioneNonTrovatoException;
 import jakarta.persistence.EntityManager;
@@ -20,29 +20,32 @@ public class AppScanner {
     private static final EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("GESTIONALE-TRASPORTI-PUBBLICI-cristian");
     static Scanner scanner = new Scanner(System.in);
 
-
-
     public static void main(String[] args) {
         EntityManager em = entityManagerFactory.createEntityManager();
         BigliettiDAO bd = new BigliettiDAO(em);
         PuntiEmissioneDAO ped = new PuntiEmissioneDAO(em);
         AbbonamentiDAO ad = new AbbonamentiDAO(em);
         UtentiDAO ud = new UtentiDAO(em);
+        TessereDAO td = new TessereDAO(em);
 
-//        PuntoEmissione p1 = new PuntoEmissione("Napoli", TipologiaPuntoEmissione.DISTRIBUTORE_AUTOMATICO, true);
+        PuntoEmissione p1 = new PuntoEmissione("Napoli", TipologiaPuntoEmissione.DISTRIBUTORE_AUTOMATICO, true);
 //        ped.salva(p1);
-//
+
           PuntoEmissione p1DB = ped.trovaPerId("d2c20c0c-1068-4e3f-b094-a65ffd5cffb4");
 //
-//        Biglietto b1 = new Biglietto(p1DB, 20.50);
+        Biglietto b1 = new Biglietto(p1DB, 20.50);
 //        bd.salva(b1);
 
         Utente u1 = new Utente("Cristian", "Cicale", 20, "cicacri");
-        ud.salva(u1);
+//        ud.salva(u1);
+        Utente u1DB = ud.trovaPerId("49659281-0070-43ff-9183-deb559eb5309");
 
-        Tessera t1 = new Tessera(p1DB, 10, );
+        Tessera t1 = new Tessera(p1DB, 10, u1DB, LocalDate.now());
+//        td.salva(t1);
+        Tessera t1DB = td.trovaPerId("795b384c-0aa6-498d-8929-64951c3e4c4a");
 
-        Abbonamento a1 = new Abbonamento(p1DB, 30, );
+        Abbonamento a1 = new Abbonamento(p1DB, 30, t1DB, TipoAbbonamento.SETTIMANALE);
+//        ad.salva(a1);
 
         System.out.println("GESTIONALE-TRASPORTI-PUBBLICI");
         System.out.println("Seleziona ruolo: ");
@@ -66,17 +69,14 @@ public class AppScanner {
 
 
         try {
-            // 1. Mostra punti disponibili
             System.out.println(" PUNTI EMISSIONE DISPONIBILI ");
             puntiDAO.findAll().forEach(p ->
                     System.out.println(p.getPuntoEmissioneId() + " - " + p.getTipologiaPuntoEmissione())
             );
 
-            // 2. Input ID
             System.out.print("Inserisci ID punto emissione: ");
             UUID idPunto = UUID.fromString(scanner.nextLine());
 
-            // 3. Recupero dal DB
             PuntoEmissione punto;
 
             try {
@@ -86,8 +86,6 @@ public class AppScanner {
                 return;
             }
 
-            //Per questioni di usabilità proporrei:
-            // System.out.print("Vuoi una corsa da 2,50 o il giornaliero da 5,60? ");
             System.out.print("Inserisci prezzo: ");
             double prezzo = Double.parseDouble(scanner.nextLine());
 
@@ -412,5 +410,3 @@ public class AppScanner {
         } while (scelta != 0);
     }
 }
-
-
