@@ -1,10 +1,11 @@
 package giuliacrepaldi.tests.francesco;
 
 
-
 import giuliacrepaldi.dao.*;
-import giuliacrepaldi.entities.*;
-import giuliacrepaldi.enums.TipologiaPuntoEmissione;
+import giuliacrepaldi.entities.MezzoTrasporto;
+import giuliacrepaldi.entities.Percorrenza;
+import giuliacrepaldi.entities.PuntoEmissione;
+import giuliacrepaldi.entities.Tratta;
 import giuliacrepaldi.exceptions.mezzo_trasporto.MezzoTrasportoNonTrovatoException;
 import giuliacrepaldi.exceptions.punto_emissione.PuntoEmissioneNonTrovatoException;
 import giuliacrepaldi.exceptions.tratta.TrattaNonTrovataException;
@@ -24,8 +25,8 @@ import static giuliacrepaldi.tests.cristian.AppScanner.menuUtente;
 // e fai gli esperimenti che ti interessano     
 public class AppTest {
 
-    static Scanner scanner = new Scanner(System.in);
     private static final EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("GESTIONALE-TRASPORTI-PUBBLICI-francesco");
+    static Scanner scanner = new Scanner(System.in);
 
     public static void main(String[] args) {
         EntityManager em = entityManagerFactory.createEntityManager();
@@ -37,26 +38,27 @@ public class AppTest {
         System.out.println("2 Amministratore");
 
         int sceltaRuolo = Integer.parseInt(scanner.nextLine());
-        if (sceltaRuolo==1){
+        if (sceltaRuolo == 1) {
             menuUtente();
-        } else if (sceltaRuolo==2) {
+        } else if (sceltaRuolo == 2) {
             menuAmministratore();
         } else {
             System.out.println("Scelta non valida");
         }
     }
 
-  // public static void creaBiglietto(EntityManager em, Scanner scanner) {
+    // public static void creaBiglietto(EntityManager em, Scanner scanner) {
 //
 //     BigliettiDAO bigliettiDAO = new BigliettiDAO(em);
 //     PuntiEmissioneDAO puntiDAO = new PuntiEmissioneDAO(em);
 //
 //     try {
-////              // 1. Mostra punti disponibili
-////              System.out.println("=== PUNTI EMISSIONE DISPONIBILI ===");
-////              puntiDAO.findAll().forEach(p ->
-////                      System.out.println(p.getId() + " - " + p.getTipologia())
-////              );
+
+    /// /              // 1. Mostra punti disponibili
+    /// /              System.out.println("=== PUNTI EMISSIONE DISPONIBILI ===");
+    /// /              puntiDAO.findAll().forEach(p ->
+    /// /                      System.out.println(p.getId() + " - " + p.getTipologia())
+    /// /              );
 //
 //         // 2. Input ID
 //         System.out.print("Inserisci ID punto emissione: ");
@@ -108,54 +110,54 @@ public class AppTest {
 //    }
 
 
-
     //INIZIO METODI MENU AMMINISTRATORE DA 8 A 13+ ESCI
-private static UUID leggiUUID(Scanner scanner) {
-    while (true) {
-        String input = scanner.nextLine().trim();
-        if (input.isEmpty()) continue;
-        try {
-            return UUID.fromString(input);
-        } catch (IllegalArgumentException e) {
-            System.err.println("Formato UUID non valido! Riprova");
+    private static UUID leggiUUID(Scanner scanner) {
+        while (true) {
+            String input = scanner.nextLine().trim();
+            if (input.isEmpty()) continue;
+            try {
+                return UUID.fromString(input);
+            } catch (IllegalArgumentException e) {
+                System.err.println("Formato UUID non valido! Riprova");
+            }
         }
     }
-}
-// 8
-public static void statisticheMezzo(EntityManager em, Scanner scanner) {
-    MezziTrasportoDAO mezziDAO = new MezziTrasportoDAO(em);
-    BigliettiDAO bigliettiDAO = new BigliettiDAO(em);
-    PercorrenzeDAO percorrenzeDAO = new PercorrenzeDAO(em);
 
-    try {
-        System.out.print("Inserisci ID mezzo: ");
-        UUID idMezzo = leggiUUID(scanner);
+    // 8
+    public static void statisticheMezzo(EntityManager em, Scanner scanner) {
+        MezziTrasportoDAO mezziDAO = new MezziTrasportoDAO(em);
+        BigliettiDAO bigliettiDAO = new BigliettiDAO(em);
+        PercorrenzeDAO percorrenzeDAO = new PercorrenzeDAO(em);
 
-        MezzoTrasporto mezzo;
         try {
-            mezzo = mezziDAO.trovaPerId(idMezzo);
-        } catch (MezzoTrasportoNonTrovatoException e) {
-            System.out.println("Mezzo non trovato!");
-            return;
+            System.out.print("Inserisci ID mezzo: ");
+            UUID idMezzo = leggiUUID(scanner);
+
+            MezzoTrasporto mezzo;
+            try {
+                mezzo = mezziDAO.trovaPerId(idMezzo);
+            } catch (MezzoTrasportoNonTrovatoException e) {
+                System.out.println("Mezzo non trovato!");
+                return;
+            }
+
+            int numeroBigliettiVidimati = Math.toIntExact(bigliettiDAO.contaBigliettiVidimatiSuMezzoTrasporto(mezzo));
+            List<Percorrenza> percorrenze = percorrenzeDAO.findPercorrenzaByMezzo(idMezzo);
+            int numeroPercorrenze = percorrenze.size();
+            boolean inManutenzione = mezziDAO.eInManutenzione(mezzo);
+            boolean inServizio = mezziDAO.inServizio(mezzo);
+
+            System.out.println("STATISTICHE MEZZO ");
+            System.out.println("Mezzo: " + mezzo);
+            System.out.println("Numero biglietti vidimati: " + numeroBigliettiVidimati);
+            System.out.println("Numero percorrenze effettuate: " + numeroPercorrenze);
+            System.out.println("In manutenzione: " + inManutenzione);
+            System.out.println("In servizio: " + inServizio);
+
+        } catch (RuntimeException e) {
+            System.out.println("Errore: " + e.getMessage());
         }
-
-        int numeroBigliettiVidimati = Math.toIntExact(bigliettiDAO.contaBigliettiVidimatiSuMezzoTrasporto(mezzo));
-        List<Percorrenza> percorrenze = percorrenzeDAO.findPercorrenzaByMezzo(idMezzo);
-        int numeroPercorrenze = percorrenze.size();
-        boolean inManutenzione = mezziDAO.eInManutenzione(mezzo);
-        boolean inServizio = mezziDAO.inServizio(mezzo);
-
-        System.out.println("STATISTICHE MEZZO ");
-        System.out.println("Mezzo: " + mezzo);
-        System.out.println("Numero biglietti vidimati: " + numeroBigliettiVidimati);
-        System.out.println("Numero percorrenze effettuate: " + numeroPercorrenze);
-        System.out.println("In manutenzione: " + inManutenzione);
-        System.out.println("In servizio: " + inServizio);
-
-    } catch (RuntimeException e) {
-        System.out.println("Errore: " + e.getMessage());
     }
-}
 
     // 9
     public static void ottieniTempoPercorrenza(EntityManager em, Scanner scanner) {
@@ -278,7 +280,6 @@ public static void statisticheMezzo(EntityManager em, Scanner scanner) {
     }
 
 
-
     // 13
     public static void trovaMezziAzienda(EntityManager em) {
         MezziTrasportoDAO mezziDAO = new MezziTrasportoDAO(em);
@@ -298,7 +299,7 @@ public static void statisticheMezzo(EntityManager em, Scanner scanner) {
     }
 
 
-    public static void menuAmministratore(){
+    public static void menuAmministratore() {
         int scelta;
         do {
             System.out.println("Menu Amministratore");
@@ -317,7 +318,7 @@ public static void statisticheMezzo(EntityManager em, Scanner scanner) {
             System.out.println("13. Trova i mezzi dell'azienda");
             System.out.println("0. Esci");
             scelta = Integer.parseInt(scanner.nextLine());
-            switch (scelta){
+            switch (scelta) {
                 case 8:
                     EntityManager em8 = entityManagerFactory.createEntityManager();
                     try {
@@ -368,7 +369,7 @@ public static void statisticheMezzo(EntityManager em, Scanner scanner) {
                     break;
 
             }
-        }while (scelta != 0);
+        } while (scelta != 0);
     }
 
 }

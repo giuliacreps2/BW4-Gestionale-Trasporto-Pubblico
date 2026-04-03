@@ -22,10 +22,10 @@ public class AppScanner {
         int scelta = Integer.parseInt(scanner.nextLine());
         switch (scelta) {
             case 1:
-                //MenuUtente.mostraMenu(em, scanner);
+                MenuUtente.mostraMenu(em, scanner);
                 break;
             case 2:
-                //MenuAmministratore.mostraMenu(em, scanner);
+                MenuAmministratore.mostraMenu(em, scanner);
                 break;
             default:
                 System.out.println("Scelta non valida");

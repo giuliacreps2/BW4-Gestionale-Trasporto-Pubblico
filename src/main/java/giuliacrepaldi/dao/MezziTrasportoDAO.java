@@ -59,28 +59,28 @@ public class MezziTrasportoDAO {
     //2.boolean eInManutenzione(UUID mezzoId), dove somma manutenzioni in corso == 0
     public boolean eInManutenzione(MezzoTrasporto mezzoTrasporto) {
         LocalDate today = LocalDate.now();
-
-        TypedQuery<Long> query = em.createQuery("SELECT COUNT(m) FROM Manutenzione m " +
-                "WHERE m.mezzoTrasporto = :mezzoTrasporto " +
-                "AND :today BETWEEN m.dataInizioManutenzione AND m.dataFineManutenzione", Long.class);
-
-        query.setParameter("mezzoTrasporto", mezzoTrasporto);
-        query.setParameter("today", today);
-        Long quanteManutenzioni = query.getSingleResult();
-        return quanteManutenzioni;
-     /*   TypedQuery<Boolean> query = em.createQuery(
+//
+//        TypedQuery<Long> query = em.createQuery("SELECT COUNT(m) FROM Manutenzione m " +
+//                "WHERE m.mezzoTrasporto = :mezzoTrasporto " +
+//                "AND :today BETWEEN m.dataInizioManutenzione AND m.dataFineManutenzione", Long.class);
+//
+//        query.setParameter("mezzoTrasporto", mezzoTrasporto);
+//        query.setParameter("today", today);
+//        Long quanteManutenzioni = query.getSingleResult();
+//        return quanteManutenzioni;
+        TypedQuery<Boolean> query = em.createQuery(
                 "SELECT COUNT(man) > 0 FROM Manutenzione man " +
-                "       WHERE man.mezzoTrasporto = :mezzoTrasporto " +
-                "       AND :today BETWEEN man.dataInizioManutenzione AND man.dataFineManutenzione", 
+                        "       WHERE man.mezzoTrasporto = :mezzoTrasporto " +
+                        "       AND :today BETWEEN man.dataInizioManutenzione AND man.dataFineManutenzione",
                 Boolean.class
         );
 
         query.setParameter("mezzoTrasporto", mezzoTrasporto);
         query.setParameter("today", today);
-        
+
         Boolean haManutenzione = query.getSingleResult();
 
-        return haManutenzione;*/
+        return haManutenzione;
     }
 
     public boolean eInManutenzione(String mezzoTrasportoId) throws MezzoTrasportoNonTrovatoException, StringaUUIDNonValidaException {

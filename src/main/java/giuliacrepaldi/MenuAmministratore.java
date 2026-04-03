@@ -1,4 +1,4 @@
-package giuliacrepaldi.tests.cristian;
+package giuliacrepaldi;
 
 import giuliacrepaldi.dao.*;
 import giuliacrepaldi.entities.*;
@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.Scanner;
 import java.util.UUID;
 
-public class AppScanner {
+public class MenuAmministratore {
 
     private static final EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("GESTIONALE-TRASPORTI-PUBBLICI-cristian");
     static Scanner scanner = new Scanner(System.in);
@@ -46,19 +46,6 @@ public class AppScanner {
         Abbonamento a1 = new Abbonamento(p1DB, 30, t1DB, TipoAbbonamento.SETTIMANALE);
 //        ad.salva(a1);
 
-        System.out.println("GESTIONALE-TRASPORTI-PUBBLICI");
-        System.out.println("Seleziona ruolo: ");
-        System.out.println("1 Utente");
-        System.out.println("2 Amministratore");
-
-        int sceltaRuolo = Integer.parseInt(scanner.nextLine());
-        if (sceltaRuolo == 1) {
-            menuUtente();
-        } else if (sceltaRuolo == 2) {
-            menuAmministratore();
-        } else {
-            System.out.println("Scelta non valida");
-        }
     }
 
     public static void creaBiglietto(EntityManager em, Scanner scanner) {
@@ -98,27 +85,6 @@ public class AppScanner {
         } catch (RuntimeException e) {
             System.out.println("Errore: " + e.getMessage());
         }
-    }
-
-    public static void menuUtente() {
-        int scelta;
-        do {
-            System.out.println("MENU UTENTE");
-            System.out.println("Scelta: ");
-            System.out.println("1. Crea biglietto");
-            System.out.println("2. Crea abbonamento");
-            System.out.println("3. Ottieni zona partenza/arrivo");
-            System.out.println("4. Verifica se un mezzo è in servizio");
-            System.out.println("5. Verifica se un distributore è in servizio");
-            System.out.println("0. Esci");
-            scelta = Integer.parseInt(scanner.nextLine());
-            switch (scelta) {
-                case 1:
-                    EntityManager em = entityManagerFactory.createEntityManager();
-                    creaBiglietto(em, scanner);
-                    break;
-            }
-        } while (scelta != 0);
     }
 
     public static void deleteBiglietto(EntityManager em, Scanner scanner) {
@@ -314,7 +280,7 @@ public class AppScanner {
         }
     }
 
-    public static void menuAmministratore() {
+    public static void mostraMenu(EntityManager em, Scanner scanner) {
         int scelta;
         do {
             System.out.println("Menu Amministratore");
@@ -335,11 +301,11 @@ public class AppScanner {
             scelta = Integer.parseInt(scanner.nextLine());
             switch (scelta) {
                 case 1:
-                    EntityManager em = entityManagerFactory.createEntityManager();
+                    EntityManager em1 = entityManagerFactory.createEntityManager();
                     try {
-                        deleteBiglietto(em, scanner);
+                        deleteBiglietto(em1, scanner);
                     } finally {
-                        em.close();
+                        em1.close();
                     }
                     break;
 
