@@ -98,7 +98,12 @@ public class AppTest {
         
         long quantiBigliettiEAbbonamentiInPuntoEmissione = venditeTrasportiDAO.ottieniQuantiBigliettiEAbbonamentiEmessiInPuntoEmissione("924d0962-c252-46d9-91d1-33f3a6c60a77");
         
-        // long quantiBigliettiVidimatiSuMezzo = bigliettiDAO.contaBigliettiVidimatiSuMezzoTrasporto("c4729d6b-6e27-4613-8d16-739a1b360c43");
+        long quantiBigliettiVidimatiSuMezzo = bigliettiDAO.contaBigliettiVidimatiSuMezzoTrasporto("c4729d6b-6e27-4613-8d16-739a1b360c43");
+
+        long quantiBigliettiVidimatiInPeriodo = bigliettiDAO.contaBigliettiVidimatiInPeriodo(
+                LocalDateTime.now().minusYears(1), 
+                LocalDateTime.now().plusYears(1)
+        );
         
         // boolean utente1HaTessera = utentiDAO.utenteHaTessera(utente1);
         
@@ -122,6 +127,7 @@ public class AppTest {
         // System.out.println(quantiBigliettiEAbbonamentiInPeriodo);
         // System.out.println(quantiBigliettiEAbbonamentiInPuntoEmissione);
         // System.out.println(quantiBigliettiVidimatiSuMezzo);
+        // System.out.println(quantiBigliettiVidimatiInPeriodo);
         
 
         // System.out.println(puntoEmissione1FromDB);

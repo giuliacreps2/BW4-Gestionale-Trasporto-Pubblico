@@ -12,6 +12,7 @@ import jakarta.persistence.*;
 import jakarta.transaction.Transaction;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
@@ -124,8 +125,9 @@ public class BigliettiDAO {
 
     /**
      * Ottieni il totale dei biglietti vidimati nel periodo dato.
+     * (data e ora)
      */
-    public long contaBigliettiVidimatiInPeriodo(LocalDate dataInizio, LocalDate dataFine) {
+    public long contaBigliettiVidimatiInPeriodo(LocalDateTime dataEOraInizio, LocalDateTime dataEOraFine) {
 
         // trova i biglietti vidimati la cui data di inizio obliterazione,
         // rientrano nel periodo in input. siccome i biglietti devono essere vidimati,
@@ -135,22 +137,38 @@ public class BigliettiDAO {
         //   dataInizioInput   <= DIOB <=  dataFineInput
 
         TypedQuery<Long> query = entityManager.createQuery(
-                "SELECT COUNT(b.venditaTrasportoId) AS totale " +
+                "SELECT COUNT(b) AS totale " +
                         "FROM Biglietto b " +
                         "WHERE " +
-                        "   b.dataEOraInizioObliterazione BETWEEN :dataInizio AND :dataFine" +
-                        "   AND b.obliteratoDa IS NULL",
+                        "   b.dataEOraInizioObliterazione BETWEEN :dataEOraInizio AND :dataEOraFine" +
+                        "   AND b.obliteratoDa IS NOT NULL",
                 Long.class
         );
 
-        query.setParameter("dataInizio", dataInizio);
-        query.setParameter("dataFine", dataFine);
+        query.setParameter("dataEOraInizio", dataEOraInizio);
+        query.setParameter("dataEOraFine", dataEOraFine);
 
         // execute query
         Long result = query.getSingleResult();
 
         return result;
     }
+
+    
+    /**
+     * Ottieni il totale dei biglietti vidimati nel periodo dato.
+     * (solo data)
+     */
+    public long contaBigliettiVidimatiInPeriodo(LocalDate dataInizio, LocalDate dataFine) {
+        
+        // ora 00:00:00 (mezzanotte) della data di inizio
+        LocalDateTime inizioGiornoDiDataInizio = dataInizio.atStartOfDay();     
+        // ora 23:59:59 del giorno di fine
+        LocalDateTime fineGiornoDiDataFine = dataFine.atTime(23, 59, 59, 999_999_999);
+
+        return contaBigliettiVidimatiInPeriodo(inizioGiornoDiDataInizio, fineGiornoDiDataFine);
+    }
+    
 
     public List<Biglietto> findAll() {
         Query query = entityManager.createQuery("SELECT b FROM Biglietto b");

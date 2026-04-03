@@ -17,6 +17,7 @@ import giuliacrepaldi.exceptions.vendita_trasporto.VenditaTrasportoSalvataggioEx
 import jakarta.persistence.EntityManager;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 public class GestoreAziendaDAO {
 
@@ -97,8 +98,16 @@ public class GestoreAziendaDAO {
     public long ottieniQuantiBigliettiEAbbonamentiEmessiInPuntoEmissione(String puntoEmissioneId)  throws PuntoEmissioneNonTrovatoException, StringaUUIDNonValidaException {
         return venditeTrasportiDAO.ottieniQuantiBigliettiEAbbonamentiEmessiInPuntoEmissione(puntoEmissioneId);
     }
-
     
+    
+    /**
+     * Oblitera un biglietto su un mezzo di trasporto.
+     */
+    public void obliteraBiglietto(String bigliettoId, String mezzoTrasportoId)  throws BigliettoNonTrovatoException, MezzoTrasportoNonTrovatoException, BigliettoGiaObliteratoException, VenditaTrasportoSalvataggioException, StringaUUIDNonValidaException {
+        bigliettiDAO.obliteraBiglietto(bigliettoId, mezzoTrasportoId);
+    }
+
+
     /**
      * Ottieni quanti biglietti sono stati vidimati
      * sul dato mezzo.
@@ -109,14 +118,13 @@ public class GestoreAziendaDAO {
 
     
     /**
-     * Oblitera un biglietto su un mezzo di trasporto.
+     * Ottieni quanti biglietti sono stati vidimati
+     * in un dato periodo.
      */
-    public void obliteraBiglietto(String bigliettoId, String mezzoTrasportoId)  throws BigliettoNonTrovatoException, MezzoTrasportoNonTrovatoException, BigliettoGiaObliteratoException, VenditaTrasportoSalvataggioException, StringaUUIDNonValidaException {
-        bigliettiDAO.obliteraBiglietto(bigliettoId, mezzoTrasportoId);
+    public long ottieniQuantiBigliettiVidimatiInPeriodo(LocalDateTime dataEOraInizio, LocalDateTime dataEOraFine) {
+        return bigliettiDAO.contaBigliettiVidimatiInPeriodo(dataEOraInizio, dataEOraFine);
     }
     
-    
-    // public calcolaQuantiBigliettiVidimatiInPeriodo() {}
 
     // public mettiFuoriServizioDistributoreAutomatico() {}
     //
