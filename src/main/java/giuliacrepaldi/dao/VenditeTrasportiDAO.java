@@ -8,6 +8,9 @@ import giuliacrepaldi.exceptions.vendita_trasporto.VenditaTrasportoSalvataggioEx
 import giuliacrepaldi.interfaces.exceptions.BigliettoGenericException;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
+import jakarta.persistence.TypedQuery;
+
+import java.time.LocalDate;
 
 public class VenditeTrasportiDAO {
 
@@ -42,6 +45,31 @@ public class VenditeTrasportiDAO {
      */
     public void obliteraBiglietto(Biglietto biglietto, MezzoTrasporto mezzoTrasporto) {
         new BigliettiDAO(entityManager).obliteraBiglietto(biglietto, mezzoTrasporto);
+    }
+
+    
+    /**
+     * Ottieni quanti biglietti e abbonamenti 
+     * sono stati emessi nel periodo dato.
+     */
+    public long ottieniQuantiBigliettiEAbbonamentiEmessiInPeriodo(LocalDate dataInizio, LocalDate dataFine) {
+        
+        TypedQuery<Long> query = entityManager.createQuery(
+                "SELECT COUNT(v) AS totale " +
+                        "FROM VenditaTrasporto v " +
+                        "WHERE " +
+                        "   (v.dataVendita BETWEEN :dataInizio AND :dataFine)" +
+                        "   AND (TYPE(v) IN (Abbonamento, Biglietto))",
+                Long.class
+        );
+
+        query.setParameter("dataInizio", dataInizio);
+        query.setParameter("dataFine", dataFine);
+
+        Long result = query.getSingleResult();
+
+        return result;
+        
     }
     
 }

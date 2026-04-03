@@ -5,6 +5,7 @@ import giuliacrepaldi.helpers.Validatore;
 import jakarta.persistence.*;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Entity
@@ -26,8 +27,12 @@ public abstract class VenditaTrasporto {
     @Column(nullable = false)
     private double prezzo;
 
+    // quando questa vendita trasporto è stata fatta,
+    // indipendentemente da quale vendita sia, e
+    // da quali proprietà addizionali di tempo quelle vendite hanno
     @Column(name = "data_vendita", nullable = false)
     private LocalDate dataVendita;
+    
 
     protected VenditaTrasporto() {
     }

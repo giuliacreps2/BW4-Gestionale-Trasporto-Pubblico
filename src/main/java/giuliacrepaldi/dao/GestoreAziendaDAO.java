@@ -4,7 +4,10 @@ import giuliacrepaldi.entities.Abbonamento;
 import giuliacrepaldi.entities.Biglietto;
 import giuliacrepaldi.entities.Tessera;
 import giuliacrepaldi.exceptions.abbonamento.AbbonamentoSalvataggioException;
+import giuliacrepaldi.exceptions.miscellanous.StringaUUIDNonValidaException;
 import giuliacrepaldi.exceptions.tessera.TesseraGiaEsistenteException;
+import giuliacrepaldi.exceptions.tessera.TesseraNonTrovataException;
+import giuliacrepaldi.exceptions.tessera.TesseraRinnovoException;
 import giuliacrepaldi.exceptions.tessera.TesseraSalvataggioException;
 import giuliacrepaldi.exceptions.vendita_trasporto.VenditaTrasportoSalvataggioException;
 import jakarta.persistence.EntityManager;
@@ -38,6 +41,7 @@ public class GestoreAziendaDAO {
         this.venditeTrasportiDAO = new VenditeTrasportiDAO(entityManager);
     }
 
+    
     /**
      * Aggiungi/aggiorna un biglietto.
      */
@@ -45,6 +49,7 @@ public class GestoreAziendaDAO {
         bigliettiDAO.salva(biglietto);
     }
 
+    
     /**
      * Aggiungi/aggiorna un abbonamento.
      */
@@ -60,12 +65,24 @@ public class GestoreAziendaDAO {
         tessereDAO.salva(tessera);
     }
 
-    // public rinnovaTessera() {
-    //
+    
+    /**
+     * Rinnova una tessera. 
+     * Verifica quali eccezioni vengono lanciate nel metodo finale. 
+     */
+    public void rinnovaTessera(String tesseraId) throws TesseraNonTrovataException, TesseraRinnovoException, StringaUUIDNonValidaException {
+        tessereDAO.rinnovaTessera(tesseraId);
+    }
+
+
+    /**
+     * Ottieni quanti biglietti e abbonamenti 
+     * sono stati emessi nel periodo dato.
+     */
+    // public int ottieniQuantiBigliettiEAbbonamentiEmessiInPeriodo() {
+    //    
     // }
-    //
-    // public calcolaQuanteVenditeTrasportoInPeriodo() {}
-    //
+    
     // public calcolaQuanteVenditeTrasportoInPuntoEmissione() {}
     //
     // public mettiFuoriServizioDistributoreAutomatico() {}
