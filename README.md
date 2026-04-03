@@ -1,6 +1,70 @@
-
 ```
+GESTIONALE AZIENDALE TRASPORTO PUBBLICO
 
+Progetto di gestione integrata: Java, JPA & PostgreSQL
+Questo progetto nasce dall'esigenza di automatizzare e monitorare le operazioni di una compagnia di trasporti pubblici. 
+L'obiettivo principale è stato creare un'architettura solida capace di gestire la complessità dei titoli di viaggio, 
+la logistica dei mezzi e la reportistica aziendale, garantendo coerenza tra i dati e facilità d'uso.
+
+---------------------------------------------------------------------------------------------------------------------------------------------------
+
+Architettura e Scelte Tecniche
+
+Core Stack
+- Java 17 & JPA (Hibernate): Gestione della persistenza tramite Object-Relational Mapping (ORM).
+- PostgreSQL: Database relazionale per una gestione robusta e transazionale dei dati.
+- Trello: Utilizzato come strumento di Project Management per il coordinamento del workflow di gruppo.
+
+Caratteristiche di Rilievo
+- UUID Management: Utilizzo di identificativi univoci universali per garantire l'integrità dei dati. 
+  Abbiamo implementato un Converter UUID/Integer custom per semplificare l'interazione via CLI, rendendo l'input dei dati rapido 
+  senza compromettere la struttura del DB.
+- DAO Pattern: Separazione netta tra la logica di business e l'accesso ai dati, facilitando la manutenibilità e il testing del codice.
+- Validazione Dinamica: Controllo in tempo reale della validità di tessere/abbonamenti e dello stato operativo dei mezzi (Servizio vs Manutenzione).
+
+---------------------------------------------------------------------------------------------------------------------------------------------------
+
+Robustezza e Gestione delle Eccezioni
+
+Per garantire la stabilità del sistema ed evitare il crash dell'applicazione durante l'interazione con l'utente (Scanner CLI) o il Database, 
+abbiamo implementato un sistema gerarchico di gestione degli errori:
+
+- Input Validation: Gestione delle eccezioni di tipo InputMismatchException per prevenire errori di inserimento dati nello Scanner.
+- Data Integrity: Gestione delle eccezioni JPA/Hibernate (es. EntityNotFoundException o PersistenceException) per gestire correttamente 
+  tentativi di accesso a dati inesistenti o violazioni di vincoli sul database.
+- Graceful Shutdown: Ogni blocco critico è protetto da strutture try-catch localizzate, assicurando che un errore in una 
+  singola operazione (es. una vidimazione fallita) non interrompa l'intera esecuzione del programma, ma restituisca un feedback chiaro all'utente.
+
+---------------------------------------------------------------------------------------------------------------------------------------------------
+
+Organizzazione delle Funzionalità
+L'applicazione implementa un sistema di Role-Based Access, garantendo sicurezza e separazione delle responsabilità.
+
+Utente Semplice
+Focalizzato sull'accessibilità ai servizi:
+
+- Emissione: Creazione di biglietti e abbonamenti nominativi.
+- Consultazione: Verifica dello stato dei mezzi, orari e dettagli delle tratte.
+- Validazione: Vidimazione dei titoli a bordo tramite associazione dinamica tra mezzo e biglietto.
+
+Amministratore di Sistema
+- Focalizzato sulla gestione e l'analisi strategica:
+- Asset Management: Gestione completa (CRUD) di punti vendita, tessere e parco mezzi.
+- Manutenzione: Monitoraggio dei periodi di fermo tecnico e storico degli interventi sui veicoli.
+- Analytics: Reportistica su vendite totali, emissioni per punto vendita e calcolo del tempo medio di percorrenza effettivo per ogni tratta.
+
+------------------------------------------------------------------------------------------------------------------------------------------------
+
+Struttura del Database (ERD)
+Il modello poggia su un'architettura relazionale ottimizzata:
+
+- Anagrafica: Utenti ➔ Tessere.
+- Vendite: Punti_di_Emissione ➔ Biglietti / Abbonamenti.
+- Logistica: Mezzi ➔ Tratte ➔ Percorrenze (per il tracciamento dei KPI di performance).
+
+------------------------------------------------------------------------------------------------------------------------------------------------
+        
+         
          ****** DAO
                 
          distingui tipi di utente diversi
