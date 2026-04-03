@@ -1,13 +1,17 @@
 package giuliacrepaldi.tests.cristian;
 
 
+import giuliacrepaldi.dao.AbbonamentiDAO;
 import giuliacrepaldi.dao.BigliettiDAO;
 import giuliacrepaldi.dao.PuntiEmissioneDAO;
 import giuliacrepaldi.entities.Biglietto;
+import giuliacrepaldi.entities.MezzoTrasporto;
 import giuliacrepaldi.entities.PuntoEmissione;
+import giuliacrepaldi.enums.TipologiaPuntoEmissione;
 import giuliacrepaldi.exceptions.punto_emissione.PuntoEmissioneNonTrovatoException;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
+import jakarta.persistence.EntityTransaction;
 import jakarta.persistence.Persistence;
 
 import java.util.Scanner;
@@ -102,6 +106,123 @@ public class AppScanner {
         } while (scelta != 0);
     }
 
+    public static void gestisciBiglietto(EntityManager em, Scanner scanner) {
+        try {
+            BigliettiDAO bigliettiDAO = new BigliettiDAO(em);
+            PuntiEmissioneDAO puntiDAO = new PuntiEmissioneDAO(em);
+
+            System.out.println("Inserisci ID biglietto:");
+            String idBiglietto = scanner.nextLine();
+
+            System.out.println("Cosa vuoi fare?");
+            System.out.println("1. Update");
+            System.out.println("2. Delete");
+            int sceltaGestione = Integer.parseInt(scanner.nextLine());
+
+            switch (sceltaGestione) {
+
+                case 1:
+                    System.out.println("Inserisci ID nuovo punto emissione:");
+                    String idPunto = scanner.nextLine();
+
+                    System.out.println("Inserisci nuovo prezzo:");
+                    double prezzo = Double.parseDouble(scanner.nextLine());
+
+                    PuntoEmissione punto = puntiDAO.trovaPerId(idPunto);
+
+                    bigliettiDAO.findByIdAndUpdate(idBiglietto, punto, prezzo);
+
+                    System.out.println("Biglietto aggiornato!");
+                    break;
+
+                case 2:
+                    bigliettiDAO.findByIdAndDelete(idBiglietto);
+                    System.out.println("Biglietto eliminato!");
+                    break;
+
+                default:
+                    System.out.println("Scelta non valida");
+            }
+
+        } catch (Exception e) {
+            System.out.println("Errore: " + e.getMessage());
+        }
+    }
+
+    public static void gestisciAbbonamento(EntityManager em, Scanner scanner) {
+        try {
+            AbbonamentiDAO abbonamentiDAO = new AbbonamentiDAO(em);
+            PuntiEmissioneDAO puntiDAO = new PuntiEmissioneDAO(em);
+
+            System.out.println("Inserisci ID abbonamento:");
+            String idAbb = scanner.nextLine();
+
+            System.out.println("Cosa vuoi fare?");
+            System.out.println("1. Update");
+            System.out.println("2. Delete");
+            int sceltaAbb = Integer.parseInt(scanner.nextLine());
+
+            switch (sceltaAbb) {
+
+                case 1:
+                    System.out.println("Inserisci ID nuovo punto emissione:");
+                    String idPunto = scanner.nextLine();
+
+                    System.out.println("Inserisci nuovo prezzo:");
+                    double prezzo = Double.parseDouble(scanner.nextLine());
+
+                    System.out.println("Abbonamento attivo? (true/false):");
+                    boolean attivo = Boolean.parseBoolean(scanner.nextLine());
+
+                    PuntoEmissione punto = puntiDAO.trovaPerId(idPunto);
+
+                    abbonamentiDAO.findByIdAndUpdate(idAbb, punto, prezzo, attivo);
+
+                    System.out.println("Abbonamento aggiornato!");
+                    break;
+
+                case 2:
+                    abbonamentiDAO.findByIdAndDelete(idAbb);
+                    System.out.println("Abbonamento eliminato!");
+                    break;
+
+                default:
+                    System.out.println("Scelta non valida");
+            }
+
+        } catch (Exception e) {
+            System.out.println("Errore: " + e.getMessage());
+        }
+    }
+
+    public static void creaPuntoEmissione(EntityManager em, Scanner scanner) {
+        try {
+            PuntiEmissioneDAO puntiDAO = new PuntiEmissioneDAO(em);
+
+            System.out.println("Inserisci città del punto emissione:");
+            String citta = scanner.nextLine();
+
+            System.out.println("Seleziona tipologia del punto emissione:");
+            for (TipologiaPuntoEmissione t : TipologiaPuntoEmissione.values()) {
+                System.out.println(t.ordinal() + 1 + ". " + t);
+            }
+            int sceltaTipo = Integer.parseInt(scanner.nextLine());
+            TipologiaPuntoEmissione tipologia = TipologiaPuntoEmissione.values()[sceltaTipo - 1];
+
+            System.out.println("Il punto emissione è attivo? (true/false):");
+            boolean attivo = Boolean.parseBoolean(scanner.nextLine());
+
+            PuntoEmissione nuovoPunto = new PuntoEmissione(citta, tipologia, attivo);
+
+            puntiDAO.salva(nuovoPunto);
+
+            System.out.println("Punto emissione creato con successo! ID: " + nuovoPunto.getPuntoEmissioneId());
+
+        } catch (Exception e) {
+            System.out.println("Errore durante la creazione del punto emissione: " + e.getMessage());
+        }
+    }
+
     public static void menuAmministratore() {
         int scelta;
         do {
@@ -122,6 +243,32 @@ public class AppScanner {
             System.out.println("0. Esci");
             scelta = Integer.parseInt(scanner.nextLine());
             switch (scelta) {
+                case 1:
+                    EntityManager em = entityManagerFactory.createEntityManager();
+                    try {
+                        gestisciBiglietto(em, scanner);
+                    } finally {
+                        em.close();
+                    }
+                    break;
+
+                case 2:
+                    EntityManager em2 = entityManagerFactory.createEntityManager();
+                    try {
+                        gestisciAbbonamento(em2, scanner);
+                    } finally {
+                        em2.close();
+                    }
+                    break;
+
+                case 3:
+                    EntityManager em3 = entityManagerFactory.createEntityManager();
+                    try {
+                        creaPuntoEmissione(em3, scanner);
+                    } finally {
+                        em3.close();
+                    }
+                    break;
 
             }
         } while (scelta != 0);
