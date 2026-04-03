@@ -14,6 +14,7 @@ import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.Persistence;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
 import java.util.UUID;
@@ -372,6 +373,42 @@ public class AppScannerTest {
         System.out.println(abbonamento);
     }
 
+    public static void trovaZonaPartenzaArrivo(EntityManager em, Scanner scanner) {
+        System.out.println("CERCA ZONA PARTENZA/ARRIVO");
+        System.out.println("1. PARTENZA");
+        System.out.println("2. ARRIVO");
+
+        int scelta = Integer.parseInt(scanner.nextLine());
+        TratteDAO tratteDAO = new TratteDAO(em);
+        List<Tratta> tratta;
+        switch (scelta) {
+            case 1:
+                System.out.println("Digita le prime lettere del luogo da cui vuoi partire");
+                String luogo = scanner.nextLine();
+                tratta = tratteDAO.findByZonaPartenza(luogo);
+                //System.out.println(tratta);
+                tratta.stream().forEach(t -> System.out.println(t.getZonaPartenza()));
+                if (tratta.isEmpty()) {
+                    System.out.println("Non c'è nessuna zona di partenza corrispondente");
+                }
+                break;
+            case 2:
+
+                System.out.println("Digita le prime lettere del luogo in cui vuoi arrivare");
+                String luogo2 = scanner.nextLine();
+                tratta = tratteDAO.findByZonaPartenza(luogo2);
+                tratta.stream().forEach(t -> System.out.println(t.getZonaArrivo()));
+                if (tratta.isEmpty()) {
+                    System.out.println("Non c'è nessuna zona di arrivo corrispondente. Prova con un'altra ricerca");
+                }
+                break;
+        }
+
+        System.out.println("Grazie per ");
+
+
+    }
+
     public static void menuUtente() {
         int scelta;
         do {
@@ -380,7 +417,7 @@ public class AppScannerTest {
             // System.out.println("1. Crea biglietto");
             System.out.println("2. Crea abbonamento");
             // System.out.println("3. Oblitera il biglietto");
-            System.out.println("4. Ottieni zona partenza/arrivo");
+            System.out.println("4. Cerca zona partenza/arrivo");
             System.out.println("5. Verifica se un mezzo è in servizio");
             System.out.println("6. Verifica se un distributore è in servizio");
             //System.out.println("0. Esci");
