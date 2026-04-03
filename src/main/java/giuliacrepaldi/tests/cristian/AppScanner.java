@@ -17,12 +17,32 @@ import java.util.UUID;
 
 public class AppScanner {
 
-    private static final EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("GESTIONALE-TRASPORTI-PUBBLICI-francesco");
+    private static final EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("GESTIONALE-TRASPORTI-PUBBLICI-cristian");
     static Scanner scanner = new Scanner(System.in);
+
+
 
     public static void main(String[] args) {
         EntityManager em = entityManagerFactory.createEntityManager();
         BigliettiDAO bd = new BigliettiDAO(em);
+        PuntiEmissioneDAO ped = new PuntiEmissioneDAO(em);
+        AbbonamentiDAO ad = new AbbonamentiDAO(em);
+        UtentiDAO ud = new UtentiDAO(em);
+
+//        PuntoEmissione p1 = new PuntoEmissione("Napoli", TipologiaPuntoEmissione.DISTRIBUTORE_AUTOMATICO, true);
+//        ped.salva(p1);
+//
+          PuntoEmissione p1DB = ped.trovaPerId("d2c20c0c-1068-4e3f-b094-a65ffd5cffb4");
+//
+//        Biglietto b1 = new Biglietto(p1DB, 20.50);
+//        bd.salva(b1);
+
+        Utente u1 = new Utente("Cristian", "Cicale", 20, "cicacri");
+        ud.salva(u1);
+
+        Tessera t1 = new Tessera(p1DB, 10, );
+
+        Abbonamento a1 = new Abbonamento(p1DB, 30, );
 
         System.out.println("GESTIONALE-TRASPORTI-PUBBLICI");
         System.out.println("Seleziona ruolo: ");
