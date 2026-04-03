@@ -8,6 +8,7 @@ import giuliacrepaldi.exceptions.biglietto.BigliettoGiaObliteratoException;
 import giuliacrepaldi.exceptions.biglietto.BigliettoNonTrovatoException;
 import giuliacrepaldi.exceptions.mezzo_trasporto.MezzoTrasportoNonTrovatoException;
 import giuliacrepaldi.exceptions.punto_emissione.PuntoEmissioneNonTrovatoException;
+import giuliacrepaldi.exceptions.tessera.TesseraNonTrovataException;
 import giuliacrepaldi.helpers.ConvertitoreUUID;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
@@ -264,8 +265,24 @@ public class MenuUtente {
                 break;
 
             case 2:
-                Tessera tessera1;
+                UUID tesseraId = null;
+                while (tesseraId == null) {
+                    System.out.print("Inserisci l'ID della tessera: ");
+                    try {
+                        tesseraId = UUID.fromString(scanner.nextLine().trim());
+                    } catch (IllegalArgumentException e) {
+                        System.out.println("ID non valido, riprova");
+                    }
+                }
 
+                try {
+                    tessera = tessereDAO.trovaPerId(String.valueOf(tesseraId));
+                } catch (TesseraNonTrovataException e) {
+                    System.out.println("Tessera non trovata!");
+                    return;
+                }
+
+                System.out.println("Tessera trovata: " + tessera);
                 break;
 
         }

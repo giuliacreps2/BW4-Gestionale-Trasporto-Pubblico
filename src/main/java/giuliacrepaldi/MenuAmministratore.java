@@ -63,7 +63,7 @@ public class MenuAmministratore {
                     System.out.println(p.getPuntoEmissioneId() + " - " + p.getTipologiaPuntoEmissione())
             );
 
-            System.out.print("Inserisci ID punto emissione: ");
+            System.out.print("Inserisci ID punto emissione: (es: )");
             UUID idPunto = UUID.fromString(scanner.nextLine());
 
             PuntoEmissione punto;
@@ -156,7 +156,7 @@ public class MenuAmministratore {
             PuntiEmissioneDAO puntiDAO = new PuntiEmissioneDAO(em);
             UtentiDAO utentiDAO = new UtentiDAO(em);
 
-            System.out.println("Inserisci ID utente:");
+            System.out.println("Inserisci ID utente: (es: )");
             String idUtente = scanner.nextLine();
             Utente utente = utentiDAO.trovaPerId(idUtente);
 
