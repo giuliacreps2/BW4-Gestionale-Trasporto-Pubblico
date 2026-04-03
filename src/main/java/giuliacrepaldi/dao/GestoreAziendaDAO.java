@@ -3,6 +3,7 @@ package giuliacrepaldi.dao;
 import giuliacrepaldi.entities.Abbonamento;
 import giuliacrepaldi.entities.Biglietto;
 import giuliacrepaldi.entities.Tessera;
+import giuliacrepaldi.exceptions.abbonamento.AbbonamentoNonTrovatoException;
 import giuliacrepaldi.exceptions.abbonamento.AbbonamentoSalvataggioException;
 import giuliacrepaldi.exceptions.biglietto.BigliettoGiaObliteratoException;
 import giuliacrepaldi.exceptions.biglietto.BigliettoNonTrovatoException;
@@ -124,13 +125,19 @@ public class GestoreAziendaDAO {
     public long ottieniQuantiBigliettiVidimatiInPeriodo(LocalDateTime dataEOraInizio, LocalDateTime dataEOraFine) {
         return bigliettiDAO.contaBigliettiVidimatiInPeriodo(dataEOraInizio, dataEOraFine);
     }
-    
+
+
+    /**
+     * Verifica se un abbonamento è valido (si/no).
+     */
+    public boolean abbonamentoEValido(String abbonamentoId) throws AbbonamentoNonTrovatoException, StringaUUIDNonValidaException {
+        return abbonamentiDAO.abbonamentoValido(abbonamentoId);
+    }
 
     // public mettiFuoriServizioDistributoreAutomatico() {}
     //
     // public mettiInServizioDistributoreAutomatico() {}
     //
-    // public abbonamentoEValido() {}
     //
     // public mezzoEInServizio() {}
     //
