@@ -7,7 +7,7 @@ import giuliacrepaldi.exceptions.mezzo_trasporto.MezzoTrasportoSalvataggioExcept
 import giuliacrepaldi.exceptions.miscellanous.StringaUUIDNonValidaException;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
-import jakarta.persistence.NoResultException;
+import jakarta.persistence.Query;
 import jakarta.persistence.TypedQuery;
 
 import java.time.LocalDate;
@@ -85,16 +85,20 @@ public class MezziTrasportoDAO {
             throw new StringaUUIDNonValidaException(targetId);
         }
     }
-    
+
     public MezzoTrasporto trovaPerId(UUID mezzoDiTrasportoId) throws MezzoTrasportoNonTrovatoException {
         MezzoTrasporto found = em.find(MezzoTrasporto.class, mezzoDiTrasportoId);
-        
+
         if (found == null) {
-            throw new MezzoTrasportoNonTrovatoException(mezzoDiTrasportoId);    
+            throw new MezzoTrasportoNonTrovatoException(mezzoDiTrasportoId);
         }
-        
+
         return found;
     }
-    
-    
+
+
+    public List findAll() {
+        Query q = em.createQuery("SELECT m FROM MezzoTrasporto m");
+        return q.getResultList();
+    }
 }
