@@ -12,6 +12,8 @@ import giuliacrepaldi.exceptions.tessera.TesseraSalvataggioException;
 import giuliacrepaldi.exceptions.vendita_trasporto.VenditaTrasportoSalvataggioException;
 import jakarta.persistence.EntityManager;
 
+import java.time.LocalDate;
+
 public class GestoreAziendaDAO {
 
     private final EntityManager entityManager;
@@ -79,9 +81,9 @@ public class GestoreAziendaDAO {
      * Ottieni quanti biglietti e abbonamenti 
      * sono stati emessi nel periodo dato.
      */
-    // public int ottieniQuantiBigliettiEAbbonamentiEmessiInPeriodo() {
-    //    
-    // }
+    public long ottieniQuantiBigliettiEAbbonamentiEmessiInPeriodo(LocalDate dataInizio, LocalDate dataFine) {
+        return venditeTrasportiDAO.ottieniQuantiBigliettiEAbbonamentiEmessiInPeriodo(dataInizio, dataFine);
+    }
     
     // public calcolaQuanteVenditeTrasportoInPuntoEmissione() {}
     //

@@ -1,11 +1,9 @@
 package giuliacrepaldi.dao;
 
 import giuliacrepaldi.entities.Tratta;
-import giuliacrepaldi.entities.Utente;
 import giuliacrepaldi.exceptions.miscellanous.StringaUUIDNonValidaException;
 import giuliacrepaldi.exceptions.tratta.TrattaNonTrovataException;
 import giuliacrepaldi.exceptions.tratta.TrattaSalvataggioException;
-import giuliacrepaldi.exceptions.utente.UtenteNonTrovatoException;
 import jakarta.persistence.*;
 
 import java.util.List;
@@ -23,19 +21,19 @@ public class TratteDAO {
     //1. save tratta
     public void salva(Tratta tratta) throws TrattaSalvataggioException {
         EntityTransaction transaction = em.getTransaction();
-        
+
         try {
-            
+
             transaction.begin();
             em.persist(tratta);
             transaction.commit();
-            
+
         } catch (RuntimeException e) {
             transaction.rollback();
             throw new TrattaSalvataggioException(tratta);
         }
     }
-    
+
 
     //Per cancellare la tratta è necessario cancellare prima la percorrenza collegata attraverso
     //il metodo deleteById apposito
@@ -51,7 +49,7 @@ public class TratteDAO {
 
     //2. findById trova tratta
     public Tratta trovaPerId(String targetId) throws TrattaNonTrovataException, StringaUUIDNonValidaException {
-        
+
         TypedQuery<Tratta> query = em.createQuery(
                 "SELECT t FROM Tratta t WHERE t.trattaId = :targetId",
                 Tratta.class
@@ -61,7 +59,7 @@ public class TratteDAO {
 
             query.setParameter("targetId", UUID.fromString(targetId));
 
-        } catch(IllegalArgumentException ex) {
+        } catch (IllegalArgumentException ex) {
             throw new StringaUUIDNonValidaException(targetId);
         }
 
@@ -73,8 +71,8 @@ public class TratteDAO {
         } catch (NoResultException ex) {
             throw new TrattaNonTrovataException(targetId, "ID");
         }
-        
-        
+
+
     }
 
     //3. findByZonaPartenza per cercare le tratte
@@ -83,6 +81,14 @@ public class TratteDAO {
         query.setParameter("zona", "%" + zonaPartenza + "%");
         List<Tratta> zonePartenza = query.getResultList();
         return zonePartenza;
+    }
+
+    //3.1 findByZonaArrivo per cercare le tratte
+    public List<Tratta> findByZonaArrivo(String zonaArrivo) {
+        Query query = em.createQuery("SELECT t FROM Tratta t WHERE LOWER(t.zonaPartenza) LIKE LOWER(:zona)");
+        query.setParameter("zona", "%" + zonaArrivo + "%");
+        List<Tratta> zoneArrivo = query.getResultList();
+        return zoneArrivo;
     }
 
 

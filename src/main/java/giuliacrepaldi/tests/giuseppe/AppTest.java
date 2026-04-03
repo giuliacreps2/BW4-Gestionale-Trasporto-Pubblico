@@ -72,20 +72,27 @@ public class AppTest {
         PuntoEmissione puntoEmissione1FromDB = puntiEmissioneDAO.trovaPerId("924d0962-c252-46d9-91d1-33f3a6c60a77");
         Abbonamento abbonamento1FromDB = abbonamentiDAO.trovaPerId("5d3869f9-18db-4f88-9bfe-1bf874af3aa6");
         // PuntoEmissione puntoEmissione1FromDB = puntiEmissioneDAO.findById(UUID.fromString("ea8feaae-62d2-4f5e-a73f-13838321ec58"));
-        Biglietto biglietto1FromDB = bigliettiDAO.trovaPerId("1e62a537-a823-452c-9f95-d94a947646b1");
+        Biglietto biglietto1FromDB = bigliettiDAO.trovaPerId("46ee9149-3e57-4d96-8594-33ee48e7ce8d");
         MezzoTrasporto mezzoTrasporto1FromDB = mezziTrasportoDAO.trovaPerId("c4729d6b-6e27-4613-8d16-739a1b360c43");
         Manutenzione manutenzione1FromDB = manutenzioniDAO.trovaPerId("30cf0185-be3f-4a3c-94e6-d3d841c92954");
         Tratta tratta1FromDB = tratteDAO.trovaPerId("832e1f39-4966-4fe6-bbd6-45d0aaa8e27d");
         Percorrenza percorrenza1FromDB = percorrenzeDAO.trovaPerId("20d53217-fd31-4e27-9bfa-fd4b660f7400");
         
         // ******** RIMOZIONE PER ID
-        // bigliettiDAO.rimuoviPerId("9f1ed116-b630-42b9-9356-f0dd7f9d1e95");
+        // bigliettiDAO.rimuoviPerId("1e62a537-a823-452c-9f95-d94a947646b1");
+        
         
         // ******** RINNOVA TESSERA
         // tessereDAO.rinnovaTessera("416eb551-7374-4115-b59d-f621ec869c2d");
         
+        // ******** STATISTICHE
+        long quantiBigliettiEAbbonamentiInPeriodo = venditeTrasportiDAO.ottieniQuantiBigliettiEAbbonamentiEmessiInPeriodo(
+                LocalDate.now().minusDays(3), 
+                LocalDate.now().plusDays(3)
+        );
+        
         // boolean utente1HaTessera = utentiDAO.utenteHaTessera(utente1);
-
+        
         // System.out.println(tessera1FromDB);
         // System.out.println(utente1HaTessera);
         // System.out.println(abbonamento1FromDB);
@@ -102,6 +109,8 @@ public class AppTest {
         // System.out.println(puntoEmissione1FromDB);
         // System.out.println(utente1FromDB);
         // System.out.println(biglietto1FromDB);
+
+        // System.out.println(quantiBigliettiEAbbonamentiInPeriodo);
         
 
         // System.out.println(puntoEmissione1FromDB);
