@@ -1,14 +1,13 @@
 package giuliacrepaldi.dao;
 
-import giuliacrepaldi.entities.Manutenzione;
-import giuliacrepaldi.entities.MezzoTrasporto;
-import giuliacrepaldi.entities.Percorrenza;
-import giuliacrepaldi.entities.Tratta;
+import giuliacrepaldi.entities.*;
 import giuliacrepaldi.exceptions.mezzo_trasporto.MezzoTrasportoNonInServizioException;
 import giuliacrepaldi.exceptions.mezzo_trasporto.MezzoTrasportoNonTrovatoException;
 import giuliacrepaldi.exceptions.mezzo_trasporto.MezzoTrasportoSalvataggioException;
 import giuliacrepaldi.exceptions.miscellanous.StringaUUIDNonValidaException;
 import giuliacrepaldi.exceptions.percorrenza.PercorrenzaSalvataggioException;
+import giuliacrepaldi.exceptions.tessera.TesseraRinnovoException;
+import giuliacrepaldi.exceptions.tessera.TesseraSalvataggioException;
 import giuliacrepaldi.exceptions.tratta.TrattaNonTrovataException;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
@@ -100,13 +99,53 @@ public class MezziTrasportoDAO {
 
     /**
      * Metti un mezzo in servizio, se è in manutenzione.
-     * Se 
+     * Se il mezzo di trasporto non è in manutenzione, nessun errore viene generato.
      */
-    public void mettiInServizioSeInManutenzione() {
+    public void mettiInServizio(String mezzoTrasportoId) throws MezzoTrasportoNonTrovatoException, StringaUUIDNonValidaException {
+        
+        MezzoTrasporto mezzoTrasporto = trovaPerId(mezzoTrasportoId);
+        mettiInServizio(mezzoTrasporto);
+    }
+
+    
+    /**
+     * Metti un mezzo in servizio, se è in manutenzione.
+     * Se il mezzo di trasporto non è in manutenzione, nessun errore viene generato.
+     */
+    public void mettiInServizio(MezzoTrasporto mezzoTrasporto)  {
+
+        EntityTransaction transaction = em.getTransaction();
+        LocalDate today = LocalDate.now();
+        
+        Query query = em.createQuery(
+                "UPDATE Manutenzione man " +
+                        "SET man.manutenzioneEAttiva = false " +
+                        "WHERE man.mezzoTrasporto = :mezzoTrasporto " +
+                        "AND (:today BETWEEN man.dataInizioManutenzione AND man.dataFineManutenzione)"
+        );
+
+        // pass query params
+        query.setParameter("mezzoTrasporto", mezzoTrasporto);
+        query.setParameter("today", today);
+
+        // execute query
+        try {
+
+            transaction.begin();
+            
+            int affectedRows = query.executeUpdate();
+
+            transaction.commit();
+
+        } catch (RuntimeException ex) {
+            transaction.rollback();
+            throw new MezzoTrasportoSalvataggioException(mezzoTrasporto);
+        }
         
     }
 
-
+    
+    
     //4. findById
     public MezzoTrasporto trovaPerId(String targetId) throws MezzoTrasportoNonTrovatoException, StringaUUIDNonValidaException {
         try {

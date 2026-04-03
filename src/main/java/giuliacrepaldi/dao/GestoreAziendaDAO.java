@@ -179,6 +179,14 @@ public class GestoreAziendaDAO {
     }
 
 
+    /**
+     * Metti un mezzo di trasporto in servizio.
+     */
+    public void mettiInServizio(String mezzoTrasportoId) throws MezzoTrasportoNonTrovatoException, StringaUUIDNonValidaException {
+        mezziTrasportoDAO.mettiInServizio(mezzoTrasportoId);
+    }
+
+
     // public mettiFuoriServizioDistributoreAutomatico() {}
     //
     // public mettiInServizioDistributoreAutomatico() {}

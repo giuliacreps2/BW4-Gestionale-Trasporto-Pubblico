@@ -123,6 +123,10 @@ public class AppTest {
         //         343,
         //         LocalDateTime.now()
         // );
+
+        // ****** METTI IN SERVIZIO UN MEZZO DI TRASPORTO
+        // mezziTrasportoDAO.mettiInServizio("c4729d6b-6e27-4613-8d16-739a1b360c43");
+        
         
         
         // boolean utente1HaTessera = utentiDAO.utenteHaTessera(utente1);
